@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
-<title>Sieve</title>
+<title>Info to Graphics</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style id="appcss">
 /* Layout: a light table. Sources rail left, the board as a sheet of icon-led figures in the middle, inspector right. Phones get three tabs. */
@@ -302,9 +302,9 @@ hr.sep{border:0;border-top:1px solid var(--rule);margin:18px 0}
 <body>
 <div class="app">
   <header class="bar">
-    <div class="mark" aria-label="Sieve">
+    <div class="mark" aria-label="Info to Graphics">
       <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6"/><g fill="var(--cobalt)"><circle cx="7" cy="8" r="1.4"/><circle cx="11" cy="8" r="1.4"/><circle cx="15" cy="8" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="13" cy="12" r="1.4"/><circle cx="11" cy="16" r="1.4"/></g></svg>
-      <span>Sieve</span>
+      <span>Info to Graphics</span>
     </div>
     <input id="boardTitle" class="board-title" aria-label="Board name" spellcheck="false">
     <div class="bar-actions">
@@ -362,7 +362,8 @@ hr.sep{border:0;border-top:1px solid var(--rule);margin:18px 0}
 const $ = s => document.querySelector(s);
 const uid = () => Math.random().toString(36).slice(2, 9);
 const clone = o => JSON.parse(JSON.stringify(o));
-const LS = 'sieve.v3';
+const LS = 'info-to-graphics.v1';
+const LS_OLD = 'sieve.v3';
 const SVGNS = 'http://www.w3.org/2000/svg';
 
 /* ---------- Icons ---------- */
@@ -437,7 +438,7 @@ let selected = null, iconTarget = null;
 let past = [], future = [];
 
 function load(){
-  try{ const raw = localStorage.getItem(LS); if (raw){ const s = JSON.parse(raw); if (s && s.boards && s.boards.length) return s; } }catch(e){}
+  try{ const raw = localStorage.getItem(LS) || localStorage.getItem(LS_OLD); if (raw){ const s = JSON.parse(raw); if (s && s.boards && s.boards.length) return s; } }catch(e){}
   const b = exampleBoard(); return { boards:[b], current:b.id };
 }
 let saveT;
@@ -1100,11 +1101,11 @@ $('#exportBtn').addEventListener('click', () => {
     h('div', {class:'row-btns', style:'flex-direction:column;align-items:stretch'},
       h('button', {class:'btn', onclick:() => exportHTML()}, 'Board as a web page (.html)'),
       h('button', {class:'btn', onclick:() => exportSVG()}, 'Board as an image (.svg)'),
-      h('button', {class:'btn', onclick:() => saveFile(slug() + '.sieve.json', JSON.stringify(board, null, 2))}, 'Editable board file (.json)'),
+      h('button', {class:'btn', onclick:() => saveFile(slug() + '.board.json', JSON.stringify(board, null, 2))}, 'Editable board file (.json)'),
       h('label', {class:'btn', for:'importIn', style:'justify-content:center'}, 'Open a board file…')),
     h('input', {type:'file', id:'importIn', accept:'.json', hidden:true, onchange:async e => {
       try{ const b = JSON.parse(await e.target.files[0].text()); if (!Array.isArray(b.visuals)) throw 0; b.id = uid(); b.example = false; b.sources ||= []; store.boards.unshift(b); store.current = b.id; board = b; past = []; future = []; syncUndo(); commit(); toast('Board opened'); }
-      catch{ toast('That file is not a Sieve board'); }
+      catch{ toast('That file is not an Info to Graphics board'); }
     }}));
   setTab('edit');
 });
