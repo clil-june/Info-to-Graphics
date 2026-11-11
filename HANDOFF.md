@@ -15,6 +15,7 @@ Set up a shared Claude and Codex workflow: `CLAUDE.md`, `AGENTS.md` and this fil
 
 - Added `CLAUDE.md` and `AGENTS.md`. Both tell the assistant to read `README.md` and `HANDOFF.md` at the start, check which branch has the latest work, and update and push `HANDOFF.md` with the changes before handing back.
 - Added this `HANDOFF.md`.
+- Added a session-start recap step to both files (owner's request). After reading `HANDOFF.md` and checking the latest branch or PR changes, the assistant gives the user a short recap before editing anything: what we worked on last time, what we decided, what actually changed and the next step. It also flags anything pending or unverified.
 - No changes to `index.html` or `README.md` in this branch.
 
 Already on `main` before this branch:

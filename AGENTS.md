@@ -12,6 +12,14 @@ This repo is shared between Codex and Claude. Both follow the same workflow.
    git branch -r --sort=-committerdate
    ```
    If `HANDOFF.md` names a branch or pull request, continue there. Don't start a new branch from `main` while that work is open.
+4. Look at the latest changes on that branch or pull request (`git log`, the diff, and any PR comments). `HANDOFF.md` may be behind what was pushed.
+5. Before editing anything, give the user a short recap in the chat:
+   - what we worked on last time
+   - what we decided or concluded
+   - what actually changed (commits, files)
+   - what the next step is
+
+   Say clearly if a change is still pending (unmerged, unpushed) or hasn't been verified. If `HANDOFF.md` and the branch disagree, say so instead of guessing.
 
 ## Before handing work back
 
