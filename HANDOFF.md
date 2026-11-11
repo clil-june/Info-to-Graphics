@@ -9,7 +9,7 @@ Set up a shared Claude and Codex workflow: `CLAUDE.md`, `AGENTS.md` and this fil
 ## Branch / PR
 
 - Branch: `workflow/claude-codex-handoff`
-- Pull request: PR_LINK
+- Pull request: https://github.com/clil-june/Info-to-Graphics/pull/1
 
 ## What changed
 
