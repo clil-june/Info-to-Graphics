@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Period products: what people use</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#F3F2EF}
+a{color:#A3203A}a:hover{color:#7E1830}
+</style>
+</helmet>
+<main style="background: #F3F2EF; color: #1C1B20; font-family: Inter, 'Helvetica Neue', Arial, sans-serif; padding: 56px 20px 64px">
+<div style="max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; flex-direction: column; gap: 18px; padding: 8px 4px 12px">
+  <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #66646D">Apple Women’s Health Study · Harvard T.H. Chan School of Public Health</div>
+  <div style="align-self: flex-start; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; background: #FFFFFF; border: 1.5px solid #E2DED8; border-radius: 999px; padding: 7px 16px">
+    <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #A3203A">The question</span>
+    <span style="font-size: 15px; font-weight: 600">Which period products do people use, and does that change with age?</span>
+  </div>
+  <h1 style="margin: 0; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-weight: 800; font-size: 64px; line-height: 1.02; letter-spacing: -0.03em; max-width: 900px">Pads and tampons still lead. But choices shift with age, and most people use more than one.</h1>
+  <p style="margin: 0; font-size: 19px; line-height: 1.5; color: #3F3D45; max-width: 760px">The products people can use shape their health, their ability to go to school and work, and how they feel. Researchers asked <strong style="color: #1C1B20">7,394</strong> study participants which period products they typically use. Everything below is what participants reported.</p>
+  <div style="background: #FFFFFF; border-radius: 18px; padding: 18px 22px; display: flex; flex-direction: column; gap: 12px; margin-top: 4px">
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #66646D">The products, as they appear below</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px 18px">
+      <sc-for list="{{key}}" as="k" hint-placeholder-count="7">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <dc-import name="Glyph" kind="{{k.kind}}" color="{{k.color}}" size="{{k.size}}" hint-size="40px,40px"></dc-import>
+          <span style="font-size: 13.5px; font-weight: 600; line-height: 1.25">{{k.name}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</header>
+
+<!-- Fig 1: ranked bars, products as glyphs -->
+<section style="background: #FFFFFF; border-radius: 22px; padding: 36px 36px 32px; display: flex; flex-direction: column; gap: 22px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #A3203A">1 · Which products do people use most?</div>
+    <h2 style="margin: 0; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 36px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1">Four products are each reported by a third or more</h2>
+    <p style="margin: 0; font-size: 15px; color: #55535C">Share of 7,394 participants who said they typically use each product. They could pick every product they use, so the bars add up to more than 100%.</p>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{products}}" as="row" hint-placeholder-count="7">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; opacity: {{row.op}}">
+        <div style="flex: 0 0 48px; display: flex; justify-content: center">
+          <dc-import name="Glyph" kind="{{row.kind}}" color="{{row.color}}" size="{{row.size}}" hint-size="44px,44px"></dc-import>
+        </div>
+        <div style="flex: 1 1 320px; display: flex; align-items: center; gap: 12px; min-width: 0">
+          <div style="flex: 1 1 auto; height: 30px; background: #F0EEEA; border-radius: 8px; position: relative">
+            <div style="height: 100%; width: {{row.w}}; background: {{row.color}}; border-radius: 8px"></div>
+          </div>
+          <div style="flex: 0 0 52px; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 22px; font-weight: 800; text-align: right">{{row.pct}}</div>
+        </div>
+        <sc-if value="{{row.call}}" hint-placeholder-val="{{false}}">
+          <div style="flex: 1 1 100%; padding-left: 64px; box-sizing: border-box">
+            <span style="display: inline-block; background: #A3203A; color: #FFFFFF; font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 999px">Nearly half report using regular tampons</span>
+          </div>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <p style="margin: 0; font-size: 13px; color: #66646D">Also: none 4% · other 1% · don’t know or prefer not to answer 2%.</p>
+</section>
+
+<!-- Fig 2 + Fig 3 side by side -->
+<div style="display: flex; flex-wrap: wrap; gap: 28px">
+
+  <!-- Fig 2: reusables as repeated product glyphs -->
+  <section style="flex: 1 1 480px; min-width: 0; background: #FFFFFF; border-radius: 22px; padding: 36px; display: flex; flex-direction: column; gap: 22px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #157A73">2 · How common are the newer, reusable options?</div>
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1">About 1 in 5 report a cup, and 1 in 5 period underwear</h2>
+      <p style="margin: 0; font-size: 15px; color: #55535C">Each symbol is 10% of participants. Regular tampons are shown for scale.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 20px">
+      <sc-for list="{{picto}}" as="pr" hint-placeholder-count="3">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap">
+            <span style="flex: 0 0 64px; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 28px; font-weight: 800; color: {{pr.color}}">{{pr.pct}}</span>
+            <div style="display: flex; gap: 4px; flex-wrap: wrap">
+              <sc-for list="{{pr.cells}}" as="d" hint-placeholder-count="10">
+                <span style="position: relative; width: 32px; height: 32px; display: block">
+                  <span style="position: absolute; left: 0; top: 0; display: block">
+                    <dc-import name="Glyph" kind="{{pr.kind}}" color="#E9E6E1" size="{{pr.size}}" hint-size="32px,32px"></dc-import>
+                  </span>
+                  <span style="position: absolute; left: 0; top: 0; height: 32px; width: {{d.w}}; overflow: hidden; display: block">
+                    <span style="display: block; width: 32px">
+                      <dc-import name="Glyph" kind="{{pr.kind}}" color="{{pr.color}}" size="{{pr.size}}" hint-size="32px,32px"></dc-import>
+                    </span>
+                  </span>
+                </span>
+              </sc-for>
+            </div>
+            <sc-if value="{{pr.note}}" hint-placeholder-val="{{false}}">
+              <span style="font-size: 13px; color: #66646D">{{pr.note}}</span>
+            </sc-if>
+          </div>
+          <sc-if value="{{pr.peak}}" hint-placeholder-val="{{true}}">
+            <span style="align-self: flex-start; margin-left: 78px; background: #E3F1EF; color: #0F5D58; font-size: 13px; font-weight: 700; padding: 4px 11px; border-radius: 999px">{{pr.peak}}</span>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- Fig 3: overnight, ten tampons -->
+  <section style="flex: 1 1 420px; min-width: 0; background: #1F1A2E; color: #F4F2F8; border-radius: 22px; padding: 36px; display: flex; flex-direction: column; gap: 22px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #F2A7B6">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2A7B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+        3 · Do tampon users wear one overnight?
+      </div>
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1">6 in 10 tampon users say they sleep with one in</h2>
+      <p style="margin: 0; font-size: 15px; color: #C9C4D6">Each tampon stands for 10% of the 4,486 participants who use tampons.</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 56px)); gap: 10px 8px">
+      <sc-for list="{{night}}" as="c" hint-placeholder-count="10">
+        <dc-import name="Glyph" kind="tampon" color="{{c.color}}" size="{{c.size}}" hint-size="56px,56px"></dc-import>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: 14px">
+      <div style="display: flex; align-items: center; gap: 6px"><dc-import name="Glyph" kind="tampon" color="#E0566F" size="{{small}}" hint-size="22px,22px"></dc-import><strong>60%</strong> say they wear one overnight</div>
+      <div style="display: flex; align-items: center; gap: 6px"><dc-import name="Glyph" kind="tampon" color="#4A4262" size="{{small}}" hint-size="22px,22px"></dc-import><strong>40%</strong> say they don’t, or aren’t sure</div>
+    </div>
+  </section>
+</div>
+
+<!-- Fig 4: age, pad and tampon glyphs as markers -->
+<section style="background: #FFFFFF; border-radius: 22px; padding: 36px; display: flex; flex-direction: column; gap: 24px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #B26F14">4 · Does it change with age?</div>
+    <h2 style="margin: 0; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 36px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1">Tampons lead in the 20s and 30s. From the 40s, pads take over.</h2>
+    <p style="margin: 0; font-size: 15px; color: #55535C">Share of each age group reporting pads or regular tampons. The longer the line, the bigger the gap.</p>
+  </div>
+  <div style="display: flex; gap: 22px; flex-wrap: wrap; font-size: 14px; font-weight: 600">
+    <div style="display: flex; align-items: center; gap: 6px"><dc-import name="Glyph" kind="pad" color="#D98E2B" size="{{legend}}" hint-size="28px,28px"></dc-import>Pads</div>
+    <div style="display: flex; align-items: center; gap: 6px"><dc-import name="Glyph" kind="tampon" color="#A3203A" size="{{legend}}" hint-size="28px,28px"></dc-import>Regular tampons</div>
+  </div>
+  <div style="display: flex; gap: 0; overflow-x: auto">
+    <div style="flex: 0 0 44px; position: relative; height: 300px">
+      <sc-for list="{{ticks}}" as="t" hint-placeholder-count="4">
+        <div style="position: absolute; right: 8px; bottom: {{t.b}}; transform: translateY(50%); font-size: 12px; color: #75737C">{{t.label}}</div>
+      </sc-for>
+    </div>
+    <div style="flex: 1 1 auto; min-width: 560px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+      <sc-for list="{{ages}}" as="a" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; border-radius: 14px; padding: 0 4px 12px; background: {{a.bg}}">
+          <div style="position: relative; width: 100%; height: 300px">
+            <sc-for list="{{ticks}}" as="t" hint-placeholder-count="4">
+              <div style="position: absolute; left: 0; right: 0; bottom: {{t.b}}; border-top: 1px dashed #E6E3DE"></div>
+            </sc-for>
+            <div style="position: absolute; left: calc(50% - 2px); width: 4px; bottom: {{a.lineB}}; height: {{a.lineH}}; background: #D9D5CF; border-radius: 2px"></div>
+            <div style="position: absolute; left: calc(50% - 18px); bottom: calc({{a.padB}} - 18px); width: 36px; height: 36px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px #F3E2C7">
+              <dc-import name="Glyph" kind="pad" color="#D98E2B" size="{{marker}}" hint-size="30px,30px"></dc-import>
+            </div>
+            <div style="position: absolute; left: calc(50% + 22px); bottom: calc({{a.padB}} - 10px); font-size: 14px; font-weight: 700; color: #8A5A12">{{a.padL}}</div>
+            <div style="position: absolute; left: calc(50% - 18px); bottom: calc({{a.tamB}} - 18px); width: 36px; height: 36px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px #F2D3DA">
+              <dc-import name="Glyph" kind="tampon" color="#A3203A" size="{{marker}}" hint-size="30px,30px"></dc-import>
+            </div>
+            <div style="position: absolute; right: calc(50% + 22px); bottom: calc({{a.tamB}} - 10px); font-size: 14px; font-weight: 700; color: #A3203A">{{a.tamL}}</div>
+          </div>
+          <div style="font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 20px; font-weight: 700">{{a.age}}</div>
+          <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 2px 10px 2px 4px; border-radius: 999px; background: {{a.leadBg}}; color: {{a.leadFg}}">
+            <dc-import name="Glyph" kind="{{a.leadKind}}" color="{{a.leadFg}}" size="{{tiny}}" hint-size="20px,20px"></dc-import>leads
+          </span>
+          <sc-if value="{{a.call}}" hint-placeholder-val="{{false}}">
+            <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: #A3203A; color: #FFFFFF; text-align: center">Tampon use falls to 30%</span>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <p style="margin: 0; font-size: 13px; color: #66646D">Group sizes: 18–19: 316 · 20–29: 2,357 · 30–39: 2,719 · 40–49: 1,708 · 50+: 294. The researchers note that the menopausal transition usually starts between 45 and 55, so fewer people in the oldest group still need period products.</p>
+</section>
+
+<!-- Fig 5: a lifetime -->
+<section style="background: #FFFFFF; border-radius: 22px; padding: 36px; display: flex; flex-wrap: wrap; gap: 28px; align-items: center">
+  <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #A3203A">5 · How much of a life does this add up to?</div>
+    <h2 style="margin: 0; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1">About 7 years of a life are spent on a period</h2>
+    <p style="margin: 0; font-size: 15px; color: #55535C">The researchers’ rough estimate: periods of 3–7 days, about every 28 days, from age 12 to 51.</p>
+  </div>
+  <div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; gap: 28px; flex-wrap: wrap">
+      <div><div style="font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 56px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: #A3203A">≈508</div><div style="font-size: 14px; font-weight: 600; margin-top: 4px">periods</div></div>
+      <div><div style="font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 56px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: #A3203A">≈2,540</div><div style="font-size: 14px; font-weight: 600; margin-top: 4px">days, or 6.96 years</div></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; height: 26px; border-radius: 8px; overflow: hidden; background: #F0EEEA">
+        <div style="width: 17.8%; background: #A3203A"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: #66646D"><span>Age 12</span><span>39 years of periods, ages 12–51</span><span>Age 51</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Takeaway -->
+<section style="background: #A3203A; color: #FFFFFF; border-radius: 22px; padding: 40px 36px; display: flex; flex-direction: column; gap: 14px">
+  <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #F8D3DA">The takeaway</div>
+  <p style="margin: 0; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; max-width: 880px">There is no one-size-fits-all period product.</p>
+  <div style="display: flex; flex-wrap: wrap; gap: 14px">
+    <sc-for list="{{range}}" as="g" hint-placeholder-count="6">
+      <dc-import name="Glyph" kind="{{g.kind}}" color="#F8D3DA" size="{{g.size}}" hint-size="44px,44px"></dc-import>
+    </sc-for>
+  </div>
+  <p style="margin: 0; font-size: 17px; line-height: 1.5; max-width: 760px; color: #FBE7EB">The researchers found that most participants use more than one product. They say this makes sense because periods vary from day to day, from cycle to cycle and across a lifetime, and that people benefit from having a range of options to choose from.</p>
+</section>
+
+<!-- Text equivalent: the numbers as tables -->
+<section style="background: #FFFFFF; border-radius: 22px; padding: 36px; display: flex; flex-direction: column; gap: 26px">
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <div style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #66646D">The numbers behind the pictures</div>
+    <h2 style="margin: 0; font-family: 'Bricolage Grotesque', Inter, sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Every figure above, as a table</h2>
+    <p style="margin: 0; font-size: 15px; color: #55535C">Exact shares and the number of people behind each one, from the study’s data tables.</p>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 28px">
+    <div style="flex: 1 1 440px; min-width: 0; overflow-x: auto">
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px">
+        <caption style="text-align: left; font-weight: 700; font-size: 15px; padding-bottom: 8px">Products participants reported using (7,394 people)</caption>
+        <thead>
+          <tr>
+            <th scope="col" style="text-align: left; padding: 8px 8px 8px 0; border-bottom: 2px solid #1C1B20">Product</th>
+            <th scope="col" style="text-align: right; padding: 8px; border-bottom: 2px solid #1C1B20">Share</th>
+            <th scope="col" style="text-align: right; padding: 8px 0 8px 8px; border-bottom: 2px solid #1C1B20">People</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{t1}}" as="r" hint-placeholder-count="10">
+            <tr>
+              <th scope="row" style="text-align: left; font-weight: 500; padding: 7px 8px 7px 0; border-bottom: 1px solid #ECEAE6">
+                <span style="display: inline-flex; align-items: center; gap: 8px">
+                  <sc-if value="{{r.kind}}" hint-placeholder-val="{{true}}">
+                    <dc-import name="Glyph" kind="{{r.kind}}" color="{{r.color}}" size="{{tiny}}" hint-size="20px,20px"></dc-import>
+                  </sc-if>
+                  {{r.name}}
+                </span>
+              </th>
+              <td style="text-align: right; padding: 7px 8px; border-bottom: 1px solid #ECEAE6; font-variant-numeric: tabular-nums">{{r.pct}}</td>
+              <td style="text-align: right; padding: 7px 0 7px 8px; border-bottom: 1px solid #ECEAE6; font-variant-numeric: tabular-nums; color: #55535C">{{r.n}}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+    <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 28px">
+      <div style="overflow-x: auto">
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px">
+          <caption style="text-align: left; font-weight: 700; font-size: 15px; padding-bottom: 8px">Sleep with a tampon in at night? (4,486 tampon users)</caption>
+          <thead>
+            <tr>
+              <th scope="col" style="text-align: left; padding: 8px 8px 8px 0; border-bottom: 2px solid #1C1B20">Answer</th>
+              <th scope="col" style="text-align: right; padding: 8px; border-bottom: 2px solid #1C1B20">Share</th>
+              <th scope="col" style="text-align: right; padding: 8px 0 8px 8px; border-bottom: 2px solid #1C1B20">People</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{t2}}" as="r" hint-placeholder-count="4">
+              <tr>
+                <th scope="row" style="text-align: left; font-weight: 500; padding: 7px 8px 7px 0; border-bottom: 1px solid #ECEAE6">{{r.name}}</th>
+                <td style="text-align: right; padding: 7px 8px; border-bottom: 1px solid #ECEAE6; font-variant-numeric: tabular-nums">{{r.pct}}</td>
+                <td style="text-align: right; padding: 7px 0 7px 8px; border-bottom: 1px solid #ECEAE6; font-variant-numeric: tabular-nums; color: #55535C">{{r.n}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="overflow-x: auto">
+        <table style="width: 100%; border-collapse: collapse; font-size: 14px">
+          <caption style="text-align: left; font-weight: 700; font-size: 15px; padding-bottom: 8px">Pads and regular tampons by age group</caption>
+          <thead>
+            <tr>
+              <th scope="col" style="text-align: left; padding: 8px 8px 8px 0; border-bottom: 2px solid #1C1B20">Age</th>
+              <th scope="col" style="text-align: right; padding: 8px; border-bottom: 2px solid #1C1B20">People</th>
+              <th scope="col" style="text-align: right; padding: 8px; border-bottom: 2px solid #1C1B20">Pads</th>
+              <th scope="col" style="text-align: right; padding: 8px 0 8px 8px; border-bottom: 2px solid #1C1B20">Regular tampons</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{t3}}" as="r" hint-placeholder-count="5">
+              <tr>
+                <th scope="row" style="text-align: left; font-weight: 500; padding: 7px 8px 7px 0; border-bottom: 1px solid #ECEAE6">{{r.age}}</th>
+                <td style="text-align: right; padding: 7px 8px; border-bottom: 1px solid #ECEAE6; font-variant-numeric: tabular-nums; color: #55535C">{{r.n}}</td>
+                <td style="text-align: right; padding: 7px 8px; border-bottom: 1px solid #ECEAE6; font-variant-numeric: tabular-nums">{{r.pads}}</td>
+                <td style="text-align: right; padding: 7px 0 7px 8px; border-bottom: 1px solid #ECEAE6; font-variant-numeric: tabular-nums">{{r.tam}}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; line-height: 1.5; color: #55535C; padding: 4px">
+  <div><strong style="color: #1C1B20">Source:</strong> Harvard T.H. Chan School of Public Health, Apple Women’s Health Study, “Menstrual hygiene products: pads and tampons are the go-to choice” (May 2023) and its data tables. Survey responses from 9 Nov 2022 to 10 Mar 2023.</div>
+  <div>These are early descriptive figures. The researchers say they will be formally analysed in future work. Percentages are rounded.</div>
+</footer>
+
+</div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":4800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var T = '#A3203A', P = '#D98E2B', R = '#157A73', C = '#8C8A93';
+    var rows = [
+      ['tampon', 47, T, true],
+      ['pad', 46, P, true],
+      ['liner', 43, P, true],
+      ['super', 33, T, true],
+      ['cup', 19, R, false],
+      ['underwear', 19, R, false],
+      ['combo', 16, C, false]
+    ];
+    var products = rows.map(function (r, i) {
+      return { kind: r[0], size: 44, pct: r[1] + '%', w: (r[1] / 50 * 100) + '%', color: r[2], op: r[3] ? 1 : 0.6, call: i === 0 };
+    });
+    var key = [
+      { kind: 'tampon', name: 'Regular tampon', color: T, size: 40 },
+      { kind: 'super', name: 'Super-absorbent tampon', color: T, size: 40 },
+      { kind: 'pad', name: 'Sanitary napkin or pad', color: P, size: 40 },
+      { kind: 'liner', name: 'Panty liner', color: P, size: 40 },
+      { kind: 'cup', name: 'Menstrual cup', color: R, size: 40 },
+      { kind: 'underwear', name: 'Period underwear', color: R, size: 40 },
+      { kind: 'combo', name: 'Pads or tampons, not together', color: C, size: 40 }
+    ];
+    function cells(pct) {
+      var out = [];
+      for (var k = 0; k < 10; k++) {
+        var f = Math.max(0, Math.min(1, pct / 10 - k));
+        out.push({ w: (f * 100) + '%' });
+      }
+      return out;
+    }
+    var picto = [
+      { kind: 'cup', size: 32, pct: '19%', color: R, cells: cells(19), note: '', peak: 'Reported by more than 1 in 5 people in their 20s and 30s' },
+      { kind: 'underwear', size: 32, pct: '19%', color: R, cells: cells(19), note: '', peak: 'Reported by more than 1 in 5 people in their 30s and 40s' },
+      { kind: 'tampon', size: 32, pct: '47%', color: '#C98C99', cells: cells(47), note: 'for scale', peak: '' }
+    ];
+    var night = [];
+    for (var i = 0; i < 10; i++) night.push({ color: i < 6 ? '#E0566F' : '#4A4262', size: 56 });
+    var lo = 25, hi = 60;
+    function b(v) { return ((v - lo) / (hi - lo) * 100) + '%'; }
+    var ticks = [30, 40, 50, 60].map(function (v) { return { b: b(v), label: v + '%' }; });
+    var ageRows = [
+      ['18–19', 56.0, 47.2], ['20–29', 45.8, 50.7], ['30–39', 44.2, 47.6], ['40–49', 46.4, 42.6], ['50+', 43.9, 29.9]
+    ];
+    var ages = ageRows.map(function (a, i) {
+      var pads = a[1], tam = a[2], last = i === ageRows.length - 1;
+      var padsLead = pads > tam;
+      return {
+        age: a[0], padB: b(pads), tamB: b(tam), padL: Math.round(pads) + '%', tamL: Math.round(tam) + '%',
+        lineB: b(Math.min(pads, tam)), lineH: (Math.abs(pads - tam) / (hi - lo) * 100) + '%',
+        leadKind: padsLead ? 'pad' : 'tampon',
+        leadBg: padsLead ? '#FBEFDC' : '#F8E1E6', leadFg: padsLead ? '#7A4E0E' : '#8A1B31',
+        bg: last ? '#FBF3F5' : 'transparent', call: last
+      };
+    });
+    var range = ['tampon', 'super', 'pad', 'liner', 'cup', 'underwear'].map(function (k) { return { kind: k, size: 44 }; });
+    var t1 = [
+      ['tampon', T, 'Regular tampons', '47%', '3,454'],
+      ['pad', P, 'Sanitary napkins or pads', '46%', '3,382'],
+      ['liner', P, 'Panty liners', '43%', '3,203'],
+      ['super', T, 'Super-absorbent tampons', '33%', '2,459'],
+      ['cup', R, 'Internal menstrual cup', '19%', '1,430'],
+      ['underwear', R, 'Period underwear', '19%', '1,420'],
+      ['combo', C, 'Pads or tampons, not used together', '16%', '1,162'],
+      ['', '', 'None', '4%', '259'],
+      ['', '', 'Other', '1%', '106'],
+      ['', '', 'Don’t know or prefer not to answer', '2%', '116']
+    ].map(function (r) { return { kind: r[0], color: r[1], name: r[2], pct: r[3], n: r[4] }; });
+    var t2 = [
+      ['Yes', '60%', '2,707'], ['No', '39.2%', '1,759'], ['Don’t know', '0.3%', '14'], ['Prefer not to answer', '0.1%', '6']
+    ].map(function (r) { return { name: r[0], pct: r[1], n: r[2] }; });
+    var t3 = [
+      ['18–19', '316', '56.0%', '47.2%'], ['20–29', '2,357', '45.8%', '50.7%'], ['30–39', '2,719', '44.2%', '47.6%'],
+      ['40–49', '1,708', '46.4%', '42.6%'], ['50+', '294', '43.9%', '29.9%']
+    ].map(function (r) { return { age: r[0], n: r[1], pads: r[2], tam: r[3] }; });
+    return {
+      products: products, key: key, picto: picto, night: night, ticks: ticks, ages: ages, range: range, t1: t1, t2: t2, t3: t3,
+      small: 22, legend: 28, marker: 30, tiny: 20
+    };
+  }
+}
+</script>
+</body>
+</html>
