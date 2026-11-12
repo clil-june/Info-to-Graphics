@@ -4,6 +4,8 @@ Last updated: 2026-11-12 by Claude
 
 ## Current task
 
+**Latest (2026-11-12, later):** the owner said the app's output still looked like "a generic schematic bunch of boxes". It must look and work by the rules of the hand-made period-products infographic (`references/harvard-period-products-visual/`). The board now renders as one designed page; see "Board as a designed page" below.
+
 Put everything worked out by hand on the Harvard period-products infographic into the app itself (owner's request, 2026-11-12: "All we've been discussing now should be happening within the Info to Graphics app"). This resumes the app work that PR #3's handoff marked as paused.
 
 The owner's standing default, now in `CLAUDE.md` and `AGENTS.md`: **prefer visual representation over text.** Recurring things become drawn symbols, a key introduces them once, and charts use the symbols instead of names. Follow `docs/visual-communication-research.md` when designing or reviewing generation.
@@ -17,6 +19,39 @@ Built on top of the earlier four-element work: McCandless's information, story, 
 - The live Claude artifact "Info to Graphics" was republished from this branch on 2026-11-12, labelled "Symbols for recurring things (PR #2)". It runs code that isn't merged yet.
 
 ## What changed
+
+### Board as a designed page (latest)
+
+- **Page structure.** The board (`#sheet.poster`) is one page, in this order:
+  1. a question pill
+  2. a large headline that states the story (`brief.story`)
+  3. a deck paragraph (`brief.deck`)
+  4. the key
+  5. figures as open panels
+  6. a takeaway band (`brief.takeaway`, `brief.takeawayText`, plus a row of the board's symbols)
+  7. a sources footer with method notes (`brief.footnote`)
+  8. the tables
+
+  The page uses Bricolage Grotesque headlines and Inter body text, as the hand-made version does.
+- **Editing aids moved off the page.** The audience, the health count and the example notice sit in a tools row above the page (`#boardTools`), so they're left out of exports. Figure numbers, element marks, source tags and header icons only show on the selected figure.
+- **Figures.**
+  - Each figure's question is its heading (an uppercase kicker), with a 34px headline title.
+  - `width: "half"` puts two figures side by side. `tone: "dark"` gives one dark panel. Both are set in the inspector under "On the page".
+  - Default-coloured figures take the board's colour (the first entity's), or the colour of the entity their highlight is about.
+- **Charts restyled** after the hand-made version:
+  - **Bars:** symbol labels, 30px bars, bold values.
+  - **Numbers:** large numbers, no boxes.
+  - **Pictograms:** larger symbols, plus a `show` field ("19%") printed instead of "1.9 of 10".
+  - Units like "%" no longer get a space.
+- **New dot chart** (`type: "dots"`): two or three series across groups on one scale. Each series' own symbols are the markers, joined by a gap line, with rounded value labels, a per-group "leads" chip and a highlighted group with a callout. Claude is told to use it instead of "compare" when the cells would be numbers.
+- **Prompts** ask for `deck`, `takeaway`, `takeawayText`, `footnote`, `width`, `tone`, `show` and the dot chart.
+- **Example board (v3):** follows the hand-made layout, with half-width reusables and a dark night panel side by side, and the dot chart by age.
+- **Export:** the HTML export is now just the page.
+- **Fixed during the render check:**
+  - Every figure's colour was being forced to blue.
+  - Half-width pictogram rows split into two columns (the highlight note was forcing a second grid column).
+  - Symbol rows wrapped.
+  - A stray comma appeared in the source line.
 
 ### This session: visual-first in the app (all in `index.html`, plus `README.md`)
 
@@ -66,6 +101,9 @@ Built on top of the earlier four-element work: McCandless's information, story, 
 
 | Check | How / where | Result |
 |---|---|---|
+| Board renders as one page (latest) | Headless Chrome, standalone `index.html`, 1440px, one look, nothing selected | Question, headline, deck, key, panels, half-width pair with dark panel, dot chart, hero number, takeaway band and footer all render with no errors. Web fonts were blocked offline, so fallback fonts showed. |
+| Fixes after that look | Same page, measured, not looked at again | Half-width pictogram rows are one column and don't wrap (27px). Question colours follow the board and entities (crimson, teal). Source line has no stray comma. |
+| Phone width (latest) | Headless Chrome, 390px | 390px |
 | Inline script parses | `node --check` on the script in `index.html` | Passed |
 | New example board renders, no page errors | Headless Chrome, standalone `index.html`, 1440px wide, light mode, one look | Passed. Key with 7 drawn symbols, symbols in bars, pictograms and compare rows. 12 repeated names hidden. Question kickers shown. 5 tables. |
 | Symbol editor opens from the key | Same render, clicked the cup in the key | Passed. Inspector shows "Symbol" with preview, name, colours, redraw and icon options. |
@@ -75,6 +113,11 @@ Built on top of the earlier four-element work: McCandless's information, story, 
 
 ### Unverified
 
+- **Latest page layout:**
+  - not looked at after the last fixes
+  - dark mode, the phone layout, the mid-width layout and the real web fonts not looked at
+  - whether Claude fills `deck`, `takeaway`, `footnote`, `width`, `tone`, `show` and dot charts
+  - the exported HTML's look
 - **All Claude features** (need a test in the Claude artifact):
   - whether Claude returns `entities` with usable SVG symbols, links items to them, writes questions, and keeps "reported" wording
   - **Redraw with Claude**

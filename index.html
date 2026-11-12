@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
 <title>Info to Graphics</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap">
 <style id="appcss">
 /* Layout: a light table. Sources rail left, the board as a sheet of icon-led figures in the middle, inspector right. Phones get three tabs. */
 :root{
@@ -151,7 +151,7 @@ header.bar{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bot
 .picto-icons{display:flex;flex-wrap:wrap;gap:4px;border-radius:6px;text-align:left}
 .pi{position:relative;color:color-mix(in srgb, var(--ink) 14%, transparent)}
 .pi .on{position:absolute;inset:0;overflow:hidden;color:var(--acc)}
-.pi .on svg{min-width:22px}
+.pi .on > *{flex:none}
 /* rings */
 .rings{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:18px;text-align:center}
 .ring{display:flex;flex-direction:column;align-items:center;gap:6px}
@@ -385,6 +385,119 @@ hr.sep{border:0;border-top:1px solid var(--rule);margin:18px 0}
 }
 @media (max-width: 420px){ .stats,.points{--cols:1!important} }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* ---------- The poster: what the board looks like as output ----------
+   Rules from the hand-made Harvard infographic: one page that opens with the reader's question and a
+   headline that states the story, a key of symbols, open panels led by their question, big type,
+   symbols instead of names, a takeaway band, then sources and the numbers as tables. */
+:root{--poster:#F3F2EF;--panel:#FFFFFF;--track:#ECEAE6;--p-ink:#1C1B20;--p-ink2:#55535C;--p-ink3:#75737C;--night:#1F1A2E;--night-2:#3A3350;
+  --pd:"Bricolage Grotesque","Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;--pb:Inter,"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--poster:#141619;--panel:#1D2025;--track:#2B2F36;--p-ink:#EEF0F3;--p-ink2:#B5BBC4;--p-ink3:#8E959F;--night:#0F0D18;--night-2:#2E2942}}
+:root[data-theme="dark"]{--poster:#141619;--panel:#1D2025;--track:#2B2F36;--p-ink:#EEF0F3;--p-ink2:#B5BBC4;--p-ink3:#8E959F;--night:#0F0D18;--night-2:#2E2942}
+.board-tools{max-width:1080px;margin:0 auto 14px;display:grid;gap:10px}
+.bt-row{display:flex;gap:8px 16px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--ink-2)}
+.bt-row .for{display:flex;gap:6px;align-items:baseline;min-width:0}
+.sheet.poster{max-width:1080px;background:var(--poster);color:var(--p-ink);font-family:var(--pb);border-radius:18px;padding:48px 44px 40px;box-shadow:0 1px 0 var(--rule),0 24px 60px -36px rgba(0,0,0,.28);grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;--board-acc:var(--cobalt)}
+.poster > *{grid-column:1/-1;min-width:0}
+.poster > .fig.half{grid-column:auto}
+.p-head{display:flex;flex-direction:column;gap:16px;padding:2px 2px 4px}
+.p-q{align-self:flex-start;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;background:var(--panel);border:1.5px solid color-mix(in srgb, var(--p-ink) 12%, transparent);border-radius:999px;padding:7px 16px;max-width:100%}
+.p-q .lbl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--board-acc)}
+.p-q .q{font-size:15px;font-weight:600}
+.p-h1{font-family:var(--pd);font-weight:800;font-size:56px;line-height:1.03;letter-spacing:-.03em;max-width:920px;text-wrap:balance;margin:0}
+.p-deck{font-size:18px;line-height:1.5;color:var(--p-ink2);max-width:760px}
+.poster [data-k]:hover{background:color-mix(in srgb, var(--acc, var(--board-acc)) 9%, transparent)}
+.poster .key{background:var(--panel);border:0;border-radius:18px;padding:18px 22px}
+.poster .key-name{font-size:13.5px}
+.poster .fig[data-acc="cobalt"]{--acc:var(--board-acc)}
+.poster .fig{background:var(--panel);border:0;border-radius:22px;padding:34px 34px 30px;font-family:var(--pb)}
+.poster .fig.sel{box-shadow:0 0 0 3px color-mix(in srgb, var(--acc) 40%, transparent)}
+.poster .fig-head{display:block;margin-bottom:24px}
+.poster .fig-head > .ibtn.tile,.poster .fig-srcs,.poster .fig-no{display:none}
+.poster .fig.sel .fig-no{display:flex;margin-bottom:8px}
+.poster .fig.sel .fig-srcs{display:flex;position:absolute;top:14px;right:16px}
+.poster .fig-q{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin:0 0 8px;line-height:1.35}
+.poster .fig-title{font-family:var(--pd);font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:0}
+.poster .fig.half .fig-title{font-size:28px}
+.poster .fig-sub{font-size:15px;color:var(--p-ink2);margin-top:8px}
+.poster .fig.tone-dark{background:var(--night);color:#F4F2F8;--sheet:var(--night);--panel:var(--night);--track:var(--night-2);--ink:#F4F2F8;--ink-2:#C9C4D6;--ink-3:#9C96AE;--p-ink2:#C9C4D6;--rule:#3A3350;--rule-2:#4A4262}
+.poster .fig.tone-dark .pi > .eg{--acc:#4A4262}
+.poster .it{font-size:15px}
+.poster .ib{font-size:13.5px;color:var(--p-ink2)}
+.poster .callout{font-size:13px;padding:5px 12px}
+/* bars */
+.poster .bars{gap:12px}
+.poster .bar-row{grid-template-columns:52px minmax(90px,26%) 1fr}
+.sheet.poster:not(.d-more) .bar-row:has(> .ent-name){grid-template-columns:52px 1fr}
+.poster .bar-row .tile{width:48px;height:48px;background:transparent;border-radius:10px}
+.poster .bar-l{font-size:15px}
+.poster .bar-track{height:30px;background:var(--track);border-radius:8px}
+.poster .bar-fill{border-radius:8px}
+.poster .bar-v{font-family:var(--pd);font-weight:800;font-size:18px}
+/* numbers */
+.poster .stats{gap:20px 28px}
+.poster .stat{background:transparent;padding:0;border-radius:0;gap:6px}
+.poster .stat > .ibtn.tile:not(.ent){display:none}
+.poster .stat .v{font-family:var(--pd);font-size:56px;color:var(--acc)}
+.poster .stat .l{font-size:15px}
+.poster .stats.hero .stat:first-child{padding:0;gap:22px}
+.poster .stats.hero .stat:first-child .v{font-size:104px}
+/* pictograms and icon stacks */
+.poster .picto{gap:20px}
+.poster .picto-row{grid-template-columns:minmax(96px,20%) 1fr}
+.poster .half .picto-row{grid-template-columns:minmax(0,1fr);gap:6px}
+.poster .half .picto-row .callout{grid-column:auto}
+.poster .half .picto-icons{gap:3px}
+.poster .half .pi .eg,.poster .half .pi > svg{width:22px!important;height:22px!important}
+.poster .half .pi .on > *{min-width:22px!important;width:22px!important;height:22px!important}
+.poster .picto-num{font-family:var(--pd);font-size:30px}
+.poster .picto-icons{gap:5px}
+.poster .unit-v{font-family:var(--pd);font-size:26px}
+/* compare */
+.poster .cmp thead .colh{font-family:var(--pd);font-size:16px}
+.poster .cmp tbody tr:nth-child(odd) :is(td,th){background:color-mix(in srgb, var(--acc) 5%, transparent)}
+/* dot chart */
+.dots{display:flex;flex-direction:column;gap:18px}
+.dots-legend{display:flex;gap:10px 22px;flex-wrap:wrap;font-size:14px;font-weight:600}
+.dots-legend .dl{display:flex;align-items:center;gap:8px}
+.dots-plot{display:flex;overflow-x:auto}
+.dots-axis{flex:0 0 46px;position:relative;height:280px}
+.dots-axis span{position:absolute;right:8px;transform:translateY(50%);font-size:12px;color:var(--p-ink3)}
+.dots-cols{flex:1 1 auto;padding-right:34px;display:grid;grid-template-columns:repeat(var(--n),minmax(84px,1fr));gap:8px;min-width:calc(var(--n) * 92px)}
+.dcol{display:flex;flex-direction:column;align-items:center;gap:10px;border-radius:14px;padding:0 4px 12px}
+.dcol.focus{background:color-mix(in srgb, var(--acc) 8%, transparent)}
+.dplot{position:relative;width:100%;height:280px}
+.dgrid{position:absolute;left:0;right:0;border-top:1px dashed color-mix(in srgb, var(--p-ink) 14%, transparent)}
+.dline{position:absolute;left:calc(50% - 2px);width:4px;border-radius:2px;background:color-mix(in srgb, var(--p-ink) 16%, transparent)}
+.dmark{position:absolute;left:50%;transform:translate(-50%,50%);width:38px;height:38px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px color-mix(in srgb, var(--acc) 30%, transparent);z-index:1}
+.dmark.plain{width:22px;height:22px;background:var(--acc);box-shadow:0 0 0 3px var(--panel)}
+.dval{position:absolute;transform:translateY(50%);font-size:14px;font-weight:700;color:var(--acc);white-space:nowrap;font-variant-numeric:tabular-nums}
+.dval.r{left:calc(50% + 24px)} .dval.l{right:calc(50% + 24px)}
+.dcat{font-family:var(--pd);font-size:19px;font-weight:700;text-align:center}
+.dlead{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:2px 10px 2px 4px;border-radius:999px;background:color-mix(in srgb, var(--acc) 14%, var(--panel));color:var(--acc)}
+.dcol .callout{align-self:center}
+.dcol .callout::before{left:calc(50% - 4px)}
+/* takeaway, sources, tables */
+.p-take{background:var(--board-acc);color:#FFFFFF;border-radius:22px;padding:40px 36px;display:flex;flex-direction:column;gap:14px}
+.p-take .lbl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.p-take .t{font-family:var(--pd);font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.15;max-width:880px}
+.p-take .d{font-size:17px;line-height:1.5;max-width:760px;color:rgba(255,255,255,.88)}
+.p-take .row{display:flex;flex-wrap:wrap;gap:14px;--acc:rgba(255,255,255,.85)}
+.p-take [data-k]:hover,.p-take [data-k]:focus{background:rgba(255,255,255,.16);box-shadow:none}
+.p-foot{display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.5;color:var(--p-ink2);padding:2px}
+.p-foot strong{color:var(--p-ink)}
+.p-foot a{color:inherit}
+.poster .tables{background:var(--panel);border:0;border-radius:22px;padding:22px 30px}
+.poster .example-flag{display:none}
+@media (max-width: 1100px){ .poster > .fig.half{grid-column:1/-1} .sheet.poster{padding:36px 28px} .p-h1{font-size:44px} }
+@media (max-width: 760px){
+  .sheet.poster{padding:24px 16px;grid-template-columns:minmax(0,1fr);border-radius:14px;gap:18px}
+  .p-h1{font-size:32px} .p-deck{font-size:16px}
+  .poster .fig{padding:22px 18px} .poster .fig-title,.poster .fig.half .fig-title{font-size:25px}
+  .poster .stat .v{font-size:44px} .poster .stats.hero .stat:first-child .v{font-size:72px}
+  .poster .picto-row{grid-template-columns:1fr}
+  .p-take{padding:28px 20px} .p-take .t{font-size:26px}
+}
 </style>
 
 </head>
@@ -435,7 +548,8 @@ hr.sep{border:0;border-top:1px solid var(--rule);margin:18px 0}
     </aside>
 
     <section class="canvas-wrap" id="canvasWrap">
-      <div class="sheet" id="sheet"></div>
+      <div class="board-tools" id="boardTools"></div>
+      <div class="sheet poster" id="sheet"></div>
     </section>
 
     <aside class="inspector" id="inspector"></aside>
@@ -503,8 +617,8 @@ function exampleBoard(){
   const B = (question, story, goal, metaphor) => ({question, story, goal, metaphor});
   const bar = (entity, label, value) => ({entity, icon:'Circle', label, value});
   return {
-    id: uid(), title: 'Which period products people use', example: true, density: 'less',
-    brief: {question:'Which period products do people use, and does that change with age?', story:'Pads and tampons still lead, but choices shift with age and most people use more than one product.', audience:'Students and designers looking at period products'},
+    id: uid(), title: 'Which period products people use', example: true, exampleV: 3, density: 'less',
+    brief: {question:'Which period products do people use, and does that change with age?', story:'Pads and tampons still lead. But choices shift with age, and most people use more than one.', deck:'The products people can use shape their health, their ability to go to school and work, and how they feel. Researchers asked 7,394 study participants which period products they typically use. Everything below is what participants reported.', audience:'Students and designers looking at period products', takeaway:'There is no one-size-fits-all period product.', takeawayText:'The researchers found that most participants use more than one product. They say this makes sense because periods vary from day to day, from cycle to cycle and across a lifetime, and that people benefit from a range of options.', footnote:'Survey responses from 9 Nov 2022 to 10 Mar 2023. Participants could choose every product they use, so shares add up to more than 100%. Percentages are rounded. These are early descriptive figures; the researchers say they will be formally analysed in future work.'},
     entities: clone(EXAMPLE_ENTITIES),
     sources: [{id:s1, kind:'text', name:'Example notes: Harvard period-products study', text:EXAMPLE_TEXT, status:'ready'}],
     visuals: [
@@ -512,20 +626,20 @@ function exampleBoard(){
         brief:B('Which products do people use most?', 'Regular tampons, pads, liners and super-absorbent tampons are each reported by a third or more.', 'The viewer can rank the products by how many people report them.', 'Each bar is labelled with the product’s own symbol, coloured by family.'), items:[
         bar('tampon', 'Regular tampon', 47), bar('pad', 'Sanitary napkin or pad', 46), bar('liner', 'Panty liner', 43), bar('super', 'Super-absorbent tampon', 33),
         bar('cup', 'Menstrual cup', 19), bar('underwear', 'Period underwear', 19), bar('combo', 'Pads or tampons, not together', 16)]},
-      {id:uid(), type:'pictogram', acc:'moss', icon:'Grid3x3', title:'About 1 in 5 report a cup or period underwear', subtitle:'Each symbol is 10% of participants; regular tampons for scale', layout:'', src:[s1], focus:0, callout:'Over 1 in 5 in their 20s and 30s',
+      {id:uid(), type:'pictogram', width:'half', acc:'cobalt', icon:'Grid3x3', title:'About 1 in 5 report a cup or period underwear', subtitle:'Each symbol is 10% of participants; regular tampons for scale', layout:'', src:[s1], focus:0, callout:'Over 1 in 5 in their 20s and 30s',
         brief:B('How common are the newer, reusable options?', 'Menstrual cups and period underwear are each reported by about 1 in 5 participants.', 'The viewer can compare the reusables with regular tampons at a glance.', 'Rows of the product itself, one symbol per 10% of people.'), items:[
-        {entity:'cup', icon:'Circle', title:'Menstrual cup', value:1.9, total:10},
-        {entity:'underwear', icon:'Circle', title:'Period underwear', value:1.9, total:10},
-        {entity:'tampon', icon:'Circle', title:'Regular tampon', value:4.7, total:10}]},
-      {id:uid(), type:'pictogram', acc:'plum', icon:'Moon', title:'6 in 10 tampon users say they sleep with one in', subtitle:'Each symbol is 10% of the 4,486 participants who use tampons', layout:'', src:[s1], focus:0, callout:'2,707 people',
+        {entity:'cup', icon:'Circle', title:'Menstrual cup', value:1.9, total:10, show:'19%'},
+        {entity:'underwear', icon:'Circle', title:'Period underwear', value:1.9, total:10, show:'19%'},
+        {entity:'tampon', icon:'Circle', title:'Regular tampon', value:4.7, total:10, show:'47%'}]},
+      {id:uid(), type:'pictogram', width:'half', tone:'dark', acc:'cobalt', icon:'Moon', title:'6 in 10 tampon users say they sleep with one in', subtitle:'Each symbol is 10% of the 4,486 participants who use tampons', layout:'', src:[s1], focus:0, callout:'2,707 people',
         brief:B('Do tampon users wear one overnight?', 'Most tampon users say they sleep with a tampon in.', 'The viewer sees how common overnight use is among tampon users.', 'Ten tampons, six of them filled.'), items:[
-        {entity:'tampon', icon:'Circle', title:'Say they sleep with one in', value:6, total:10}]},
-      {id:uid(), type:'compare', acc:'orange', icon:'Users', title:'Tampons lead in the 20s and 30s; pads from the 40s', subtitle:'Share of each age group reporting each product', layout:'', src:[s1], focus:4, callout:'Tampons fall to 30%',
-        brief:B('Does it change with age?', 'Regular tampons lead in the 20s and 30s; from the 40s pads lead again.', 'The viewer can see where the lead switches between age groups.', 'One column per age group, the two products as rows.'),
-        columns:['18–19','20–29','30–39','40–49','50+'], colIcons:['Users','Users','Users','Users','Users'], rows:[
-        {entity:'pad', icon:'Circle', label:'Sanitary napkin or pad', cells:['56%','46%','44%','46%','44%']},
-        {entity:'tampon', icon:'Circle', label:'Regular tampon', cells:['47%','51%','48%','43%','30%']}]},
-      {id:uid(), type:'stats', style:'hero', acc:'orange', icon:'Hourglass', title:'About 7 years of a life, by the researchers’ estimate', subtitle:'Periods of 3–7 days, about every 28 days, from age 12 to 51', layout:'2', src:[s1], focus:0, callout:'Estimate',
+        {entity:'tampon', icon:'Circle', title:'Say they sleep with one in', value:6, total:10, show:'60%'}]},
+      {id:uid(), type:'dots', acc:'cobalt', icon:'CircleDot', title:'Tampons lead in the 20s and 30s. From the 40s, pads take over.', subtitle:'Share of each age group reporting each product. The longer the line, the bigger the gap.', layout:'', unit:'%', src:[s1], focus:4, callout:'Tampons fall to 30%',
+        brief:B('Does it change with age?', 'Regular tampons lead in the 20s and 30s; from the 40s pads lead again.', 'The viewer can see where the lead switches between age groups.', 'The two products themselves mark each age group, joined by a line that shows the gap.'),
+        columns:['18\u201319','20\u201329','30\u201339','40\u201349','50+'], series:[
+        {entity:'pad', icon:'Circle', label:'Sanitary napkin or pad', values:[56.0, 45.8, 44.2, 46.4, 43.9]},
+        {entity:'tampon', icon:'Circle', label:'Regular tampon', values:[47.2, 50.7, 47.6, 42.6, 29.9]}]},
+      {id:uid(), type:'stats', style:'hero', acc:'cobalt', icon:'Hourglass', title:'About 7 years of a life, by the researchers’ estimate', subtitle:'Periods of 3–7 days, about every 28 days, from age 12 to 51', layout:'2', src:[s1], focus:0, callout:'Estimate',
         brief:B('How much of a life does this add up to?', 'By the researchers’ estimate, a person spends about 7 years of their life menstruating.', 'The viewer grasps the scale of time involved.', 'One oversized number, with the count of periods beside it.'), items:[
         {icon:'Hourglass', value:'≈7', label:'years menstruating', note:'About 2,540 days'},
         {icon:'Calendar', value:'≈508', label:'periods in a lifetime', note:''}]}
@@ -540,7 +654,7 @@ let selected = null, iconTarget = null, entityTarget = null, tablesOpen = false;
 let past = [], future = [];
 
 function load(){
-  try{ const raw = localStorage.getItem(LS) || localStorage.getItem(LS_OLD); if (raw){ const s = JSON.parse(raw); if (s && s.boards && s.boards.length){ s.boards = s.boards.map(b => (b.example && !b.entities) ? Object.assign(exampleBoard(), {id:b.id}) : b); return s; } } }catch(e){}
+  try{ const raw = localStorage.getItem(LS) || localStorage.getItem(LS_OLD); if (raw){ const s = JSON.parse(raw); if (s && s.boards && s.boards.length){ s.boards = s.boards.map(b => (b.example && b.exampleV !== 3) ? Object.assign(exampleBoard(), {id:b.id}) : b); return s; } } }catch(e){}
   const b = exampleBoard(); return { boards:[b], current:b.id };
 }
 let saveT;
@@ -683,10 +797,11 @@ function figTable(v){
   const T = (cols, rows) => ({cols, rows});
   switch (v.type){
     case 'compare': return T(['', ...(v.columns || [])], (v.rows || []).map(r => [entOf(r)?.name || r.label, ...(r.cells || [])]));
+    case 'dots': return T(['', ...(v.columns || [])], (v.series || []).map(x => [entOf(x)?.name || x.label, ...(v.columns || []).map((_, k) => { const n = Number((x.values || [])[k]); return isNaN(n) ? '' : fmt(n) + unitStr(v.unit); })]));
     case 'stats': return T(['Item', 'Value', 'Note'], items.map(it => [nm(it), it.value, it.note]));
     case 'pictogram': return T(['Item', 'Count', 'Out of'], items.map(it => [nm(it), fmt(Number(it.value) || 0), fmt(Number(it.total) || 0)]));
     case 'rings': return T(['Item', 'Share'], items.map(it => [nm(it), fmt(Number(it.value) || 0) + '%']));
-    case 'bars': return T(['Item', 'Value'], items.map(it => [nm(it), fmt(Number(it.value) || 0) + (v.unit ? ' ' + v.unit : '')]));
+    case 'bars': return T(['Item', 'Value'], items.map(it => [nm(it), fmt(Number(it.value) || 0) + unitStr(v.unit)]));
     case 'timeline': return T(['When', 'Event', 'Detail'], items.map(it => [it.when, nm(it), it.body]));
     default: return T(['Item', 'Detail'], items.map(it => [nm(it), it.body || '']));
   }
@@ -711,7 +826,7 @@ const TYPES = [
   ['stats','Numbers','Hash'],['pictogram','Pictogram','Grid3x3'],['rings','Rings','ChartPie'],
   ['timeline','Timeline','History'],['process','Process','Workflow'],['cycle','Cycle','RefreshCw'],
   ['hub','Hub','Network'],['compare','Compare','Columns3'],['bars','Bars','ChartBar'],
-  ['points','Icon cards','LayoutGrid'],['illustration','Illustration','Image']
+  ['points','Icon cards','LayoutGrid'],['illustration','Illustration','Image'],['dots','Dot chart','CircleDot']
 ];
 const ACCS = ['cobalt','orange','moss','plum','graphite'];
 const STYLES = {stats:[['tiles','Tiles'],['hero','One big number']], timeline:[['line','Line'],['path','Road']], bars:[['bars','Bars'],['units','Icon stacks']]};
@@ -749,6 +864,12 @@ function applyFocus(fig, v, p){
   const f = Number.isInteger(v.focus) ? v.focus : -1;
   if (f < 0) return;
   const showCall = String(v.callout || '').trim() || selected === v.id;
+  if (v.type === 'dots'){
+    const col = fig.querySelector(`.dcol[data-col="${f}"]`); if (!col) return;
+    fig.classList.add('has-focus'); col.classList.add('focus');
+    if (showCall) col.append(callout(v, p));
+    return;
+  }
   if (v.type === 'compare'){
     const th = fig.querySelectorAll('.cmp thead th')[f + 1]; if (!th) return;
     fig.classList.add('has-focus');
@@ -761,6 +882,7 @@ function applyFocus(fig, v, p){
   fig.classList.add('has-focus');
   items.forEach(it => { it.classList.add('focus'); if (showCall) it.append(callout(v, p)); });
 }
+function unitStr(u){ return !u ? '' : (u === '%' ? '%' : ' ' + u); }
 function fmt(n){ return Number(n).toLocaleString(undefined, {maximumFractionDigits:2}); }
 function niceUnit(max){
   if (max <= 0) return 1;
@@ -782,7 +904,7 @@ function renderFigure(v, vi){
   const p = `visuals.${vi}`;
   v.brief ||= {story:'', goal:'', metaphor:''};
   const srcTags = (v.src || []).map(id => { const n = board.sources.findIndex(x => x.id === id); return n < 0 ? null : h('span', {title: board.sources[n].name}, 'S' + (n + 1)); });
-  const fig = h('article', {class:'fig' + (selected === v.id ? ' sel' : ''), 'data-acc':v.acc || 'cobalt', 'data-id':v.id},
+  const fig = h('article', {class:'fig' + (selected === v.id ? ' sel' : '') + (v.width === 'half' ? ' half' : '') + (v.tone === 'dark' ? ' tone-dark' : ''), 'data-acc':v.acc || 'cobalt', 'data-id':v.id},
     h('div', {class:'fig-head'},
       ic(`${p}.icon`, v.icon || TYPES.find(t => t[0] === v.type)?.[2], 22, 'tile solid'),
       h('div', {class:'fig-titles'},
@@ -793,6 +915,8 @@ function renderFigure(v, vi){
       h('div', {class:'fig-srcs'}, srcTags)),
     renderBody(v, vi, p));
   applyEntities(fig);
+  const fe = Number.isInteger(v.focus) && v.focus >= 0 ? entOf((v.items || v.rows || [])[v.focus]) : null;
+  if (fe && (!v.acc || v.acc === 'cobalt')) fig.style.setProperty('--acc', fe.color);
   applyFocus(fig, v, p);
   fig.addEventListener('click', e => { if (!e.target.closest('[data-ip]')) select(v.id); });
   fig.addEventListener('focusin', e => { if (selected !== v.id) select(v.id, true); });
@@ -817,12 +941,12 @@ function renderBody(v, vi, p){
         const row = h('button', {class:'ibtn picto-icons', 'data-ip':`${p}.items.${i}.icon`, 'data-ent': pe ? pe.id : null, title: pe ? pe.name : 'Change symbol', 'aria-label': pe ? `${pe.name}: ${fmt(val)} of ${total}` : 'Change symbol', onclick:e => { e.stopPropagation(); pe ? openEntity(pe.id) : openPicker(`${p}.items.${i}.icon`); }});
         for (let k = 0; k < total; k++){
           const frac = Math.max(0, Math.min(1, val - k));
-          const cell = h('span', {class:'pi'}, cellGlyph(it, v.icon, 22));
-          if (frac > 0){ const on = h('span', {class:'on', style:`width:${frac * 100}%`}, cellGlyph(it, v.icon, 22)); on.firstChild.style.minWidth = '22px'; cell.append(on); }
+          const cell = h('span', {class:'pi'}, cellGlyph(it, v.icon, 30));
+          if (frac > 0){ const on = h('span', {class:'on', style:`width:${frac * 100}%`}, cellGlyph(it, v.icon, 30)); on.firstChild.style.minWidth = '30px'; cell.append(on); }
           row.append(cell);
         }
         return h('div', {class:'picto-row item'},
-          h('div', {class:'picto-l'}, h('div', {class:'picto-num'}, ed('span','',`${p}.items.${i}.value`, it.value,'0', true), h('span', {class:'of'}, ' of '), ed('span','of',`${p}.items.${i}.total`, it.total,'10', true)),
+          h('div', {class:'picto-l'}, it.show ? h('div', {class:'picto-num'}, ed('span','',`${p}.items.${i}.show`, it.show,'19%')) : h('div', {class:'picto-num'}, ed('span','',`${p}.items.${i}.value`, it.value,'0', true), h('span', {class:'of'}, ' of '), ed('span','of',`${p}.items.${i}.total`, it.total,'10', true)),
             ed('div','it',`${p}.items.${i}.title`, it.title,'Label')),
           h('div', {}, row), delBtn(vi,'items',i));
       })), adds(vi, ['Row', f => f.items.push({icon: f.items[0]?.icon || 'User', title:'New row', value:5, total:10})]));
@@ -884,11 +1008,12 @@ function renderBody(v, vi, p){
       return h('div', {}, h('div', {class:'bars'}, items.map((it, i) => {
         const pct = Math.max(0, (Number(it.value) || 0) / max * 100);
         const inside = pct > 26;
-        return h('div', {class:'bar-row item'}, ic(`${p}.items.${i}.icon`, it.icon, 20, 'tile'), ed('div','bar-l',`${p}.items.${i}.label`, it.label,'Label'),
+        return h('div', {class:'bar-row item'}, ic(`${p}.items.${i}.icon`, it.icon, 26, 'tile'), ed('div','bar-l',`${p}.items.${i}.label`, it.label,'Label'),
           h('div', {class:'bar-track'}, h('div', {class:'bar-fill', style:`width:${pct}%`}),
-            h('div', {class:'bar-v', style: inside ? `right:${100 - pct}%;color:var(--sheet)` : `left:${pct}%`}, ed('span','',`${p}.items.${i}.value`, it.value,'0', true), v.unit ? ' ' + v.unit : '')), delBtn(vi,'items',i));
+            h('div', {class:'bar-v', style: inside ? `right:${100 - pct}%;color:var(--sheet)` : `left:${pct}%`}, ed('span','',`${p}.items.${i}.value`, it.value,'0', true), unitStr(v.unit))), delBtn(vi,'items',i));
       })), adds(vi, ['Bar', f => f.items.push({icon:'Circle', label:'New bar', value:0})]));
     }
+    case 'dots': return dotsChart(v, vi, p);
     case 'illustration': {
       const art = h('div', {class:'illo-art'});
       const svg = buildIllustration(v.svg);
@@ -931,16 +1056,56 @@ function barUnits(v, vi, p){
     const count = Math.max(0, (Number(it.value) || 0) / unit), ue = entOf(it);
     const row = h('button', {class:'ibtn unit-icons', 'data-ip':`${p}.items.${i}.icon`, 'data-ent': ue ? ue.id : null, title: ue ? ue.name : 'Change symbol', 'aria-label': ue ? ue.name : 'Change symbol', onclick:e => { e.stopPropagation(); ue ? openEntity(ue.id) : openPicker(`${p}.items.${i}.icon`); }});
     for (let k = 0; k < Math.ceil(count) && k < 60; k++){
-      const cell = h('span', {class:'pi'}, cellGlyph(it, 'Circle', 22));
-      cell.append(h('span', {class:'on', style:`width:${Math.min(1, count - k) * 100}%`}, cellGlyph(it, 'Circle', 22)));
+      const cell = h('span', {class:'pi'}, cellGlyph(it, 'Circle', 28));
+      cell.append(h('span', {class:'on', style:`width:${Math.min(1, count - k) * 100}%`}, cellGlyph(it, 'Circle', 28)));
       row.append(cell);
     }
     if (!row.childNodes.length) row.append(h('span', {class:'label'}, '0'));
     return h('div', {class:'unit-row item'},
-      h('div', {}, ed('div','bar-l',`${p}.items.${i}.label`, it.label,'Label'), h('div', {class:'unit-v'}, ed('span','',`${p}.items.${i}.value`, it.value,'0', true), v.unit ? ' ' + v.unit : '')),
+      h('div', {}, ed('div','bar-l',`${p}.items.${i}.label`, it.label,'Label'), h('div', {class:'unit-v'}, ed('span','',`${p}.items.${i}.value`, it.value,'0', true), unitStr(v.unit))),
       row, delBtn(vi,'items',i));
-  })), h('div', {class:'unit-key'}, `Each symbol = ${fmt(unit)}${v.unit ? ' ' + v.unit : ''}`),
+  })), h('div', {class:'unit-key'}, `Each symbol = ${fmt(unit)}${unitStr(v.unit)}`),
     adds(vi, ['Row', f => f.items.push({icon: f.items[0]?.icon || 'Circle', label:'New row', value:0})]));
+}
+
+/* Dot chart: two or three series compared across groups on one scale, the series' own symbols as markers. */
+function dotMarker(s, size){
+  const ent = entOf(s);
+  if (ent) return h('span', {class:'dmark', style:`--acc:${ent.color}`, title:ent.name, role:'img', 'aria-label':ent.name}, entGlyph(ent, size));
+  return h('span', {class:'dmark plain', style:`--acc:${s.color || 'var(--board-acc)'}`, title:s.label || ''});
+}
+function dotsChart(v, vi, p){
+  const cols = v.columns || [], ser = (v.series || []).slice(0, 3);
+  const vals = ser.flatMap(x => (x.values || []).map(Number).filter(n => !isNaN(n)));
+  const u = unitStr(v.unit);
+  if (!vals.length || !cols.length) return h('div', {class:'illo-empty'}, 'No values yet. Ask Claude to fill this chart from your sources.');
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  const span = Math.max(hi - lo, 1), padv = span * 0.18;
+  const step = [1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000].find(x => (hi - lo + 2 * padv) / x <= 5) || 1000;
+  lo = Math.max(0, Math.floor((lo - padv) / step) * step); hi = Math.ceil((hi + padv) / step) * step; if (hi <= lo) hi = lo + step;
+  const pos = n => ((n - lo) / (hi - lo) * 100) + '%';
+  const ticks = []; for (let t = lo; t <= hi + 1e-9; t += step) ticks.push(t);
+  const colorOf = x => entOf(x)?.color || x.color || 'var(--board-acc)';
+  const legend = h('div', {class:'dots-legend'}, ser.map((x, si) => h('div', {class:'dl'}, h('span', {style:'position:relative;width:38px;height:38px;display:inline-block'}, (() => { const m = dotMarker(x, 26); m.style.position = 'static'; m.style.transform = 'none'; return m; })()), ed('span', '', `${p}.series.${si}.label`, x.label, 'Series'))));
+  const columns = cols.map((c, ci) => {
+    const pts = ser.map((x, si) => ({si, x, n: Number((x.values || [])[ci])})).filter(o => !isNaN(o.n));
+    const plot = h('div', {class:'dplot'}, ticks.map(t => h('div', {class:'dgrid', style:`bottom:${pos(t)}`})));
+    if (pts.length > 1){ const mn = Math.min(...pts.map(o => o.n)), mx = Math.max(...pts.map(o => o.n)); plot.append(h('div', {class:'dline', style:`bottom:${pos(mn)};height:${(mx - mn) / (hi - lo) * 100}%`})); }
+    pts.forEach(o => {
+      const m = dotMarker(o.x, 26); m.style.bottom = pos(o.n); plot.append(m);
+      const lab = h('div', {class:'dval ' + (o.si % 2 ? 'l' : 'r'), style:`bottom:${pos(o.n)};--acc:${colorOf(o.x)}`}, ed('span', '', `${p}.series.${o.si}.values.${ci}`, String(Math.round(o.n)), '0', true), u);
+      plot.append(lab);
+    });
+    const top = pts.length > 1 ? pts.reduce((a, b) => b.n > a.n ? b : a) : null;
+    const lead = top && pts.filter(o => o.n === top.n).length === 1
+      ? h('span', {class:'dlead', style:`--acc:${colorOf(top.x)}`}, entOf(top.x) ? entGlyph(entOf(top.x), 18) : null, entOf(top.x) ? 'leads' : (top.x.label || '') + ' leads') : null;
+    return h('div', {class:'dcol', 'data-col':String(ci)}, plot, ed('div', 'dcat', `${p}.columns.${ci}`, c, 'Group'), lead);
+  });
+  return h('div', {}, h('div', {class:'dots'}, legend,
+    h('div', {class:'dots-plot'}, h('div', {class:'dots-axis'}, ticks.map(t => h('span', {style:`bottom:${pos(t)}`}, fmt(t) + (v.unit === '%' ? '%' : '')))),
+      h('div', {class:'dots-cols', style:`--n:${cols.length}`}, columns))),
+    adds(vi, ['Group', f => { f.columns.push('New group'); f.series.forEach(x => x.values.push(0)); }],
+      cols.length > 1 ? ['Remove last group', f => { f.columns.pop(); f.series.forEach(x => x.values.pop()); }] : null));
 }
 
 /* Hub and cycle share one radial layout. Coordinates: 100 x 86 box. */
@@ -1004,6 +1169,7 @@ function buildIllustration(src, defaultViewBox){
 
 /* Convert between types without losing content */
 function toGeneric(v){
+  if (v.type === 'dots') return (v.series||[]).map(x => ({entity: x.entity, icon:'Circle', title:x.label, body:(v.columns||[]).map((c,k) => `${c}: ${fmt(Number((x.values||[])[k]) || 0)}${unitStr(v.unit)}`).join(' · '), value:(x.values||[])[0] ?? '', when:''}));
   if (v.type === 'compare') return (v.rows||[]).map(r => ({entity: r.entity, icon:r.icon, title:r.label, body:(r.cells||[]).map((c,i) => `${v.columns[i]}: ${c}`).join(' · '), value:'', when:''}));
   return (v.items||[]).map(it => ({entity: it.entity, icon: it.icon, title: it.title || it.label || '', body: it.body || it.note || '', value: it.value ?? '', when: it.when || '', total: it.total}));
 }
@@ -1011,15 +1177,16 @@ function num(x){ const n = parseFloat(String(x ?? '').replace(/[^\d.-]/g,'')); r
 function convert(v, type){
   const g = toGeneric(v); const out = {...v, type};
   if (type !== v.type){ delete out.style; if (type === 'compare' || v.type === 'compare') out.focus = -1; }
-  ['items','columns','colIcons','rows','unit'].forEach(k => delete out[k]);
+  ['items','columns','colIcons','rows','unit','series'].forEach(k => delete out[k]);
   if (type === 'stats') { out.items = g.map(x => ({icon:x.icon, value: x.value !== '' ? String(x.value) : (x.when || '–'), label:x.title, note:x.body})); out.layout = String(Math.min(g.length || 3, 4)); }
   else if (type === 'pictogram') { out.items = g.map(x => ({icon:x.icon, title:x.title, value: num(x.value) || 1, total: x.total || 10})); }
   else if (type === 'rings') { out.items = g.map(x => ({icon:x.icon, title:x.title, body:x.body, value: Math.min(100, num(x.value))})); }
   else if (type === 'timeline') { out.items = g.map(x => ({icon:x.icon, when:x.when || String(x.value || ''), title:x.title, body:x.body})); out.layout = 'h'; }
   else if (type === 'bars') { out.items = g.map(x => ({icon:x.icon, label:x.title, value: num(x.value)})); out.unit = ''; }
+  else if (type === 'dots') { out.columns = ['Value']; out.unit = ''; out.series = g.slice(0, 3).map(x => ({entity:x.entity, label:x.title, values:[num(x.value)]})); }
   else if (type === 'compare') { out.columns = ['Detail']; out.colIcons = ['Info']; out.rows = g.map(x => ({icon:x.icon, label:x.title, cells:[x.body || x.when || String(x.value || '')]})); }
   else { out.items = g.map(x => ({icon:x.icon, title:x.title, body:x.body || x.when})); out.layout = type === 'process' ? 'h' : ''; if (type === 'hub' && !out.center) out.center = v.title; }
-  (out.items || out.rows || []).forEach((x, k) => { if (g[k]?.entity) x.entity = g[k].entity; });
+  (out.items || out.rows || out.series || []).forEach((x, k) => { if (g[k]?.entity) x.entity = g[k].entity; });
   return out;
 }
 
@@ -1032,29 +1199,53 @@ function render(){
   const dens = board.density || 'less';
   $('#density').replaceChildren(...DENS.map(([k, n, ico]) => h('button', {'aria-pressed': String(dens === k), title:n, onclick:() => { board.density = k; commit(); }}, icon(ico, 14), h('span', {}, n))));
   renderSources();
-  const sheet = $('#sheet'); sheet.replaceChildren(); sheet.className = 'sheet d-' + dens;
-  if (board.example) sheet.append(h('div', {class:'example-flag'},
-    h('span', {}, h('strong', {}, 'Example board. '), 'Built from sample notes. Click any text to edit it, or any icon to swap it.'),
+  const sheet = $('#sheet'); sheet.replaceChildren(); sheet.className = 'sheet poster d-' + dens;
+  sheet.style.setProperty('--board-acc', (board.entities || [])[0]?.color || 'var(--cobalt)');
+  const tools = $('#boardTools'); tools.replaceChildren();
+  if (board.example) tools.append(h('div', {class:'example-flag'},
+    h('span', {}, h('strong', {}, 'Example board. '), 'Built from sample notes. Click any text to edit it, or any symbol to change it.'),
     h('button', {class:'btn', onclick:() => newBoard()}, 'Start my own')));
-  sheet.append(briefStrip());
+  tools.append(briefStrip());
+  sheet.append(posterHead());
   const ks = keyStrip(); if (ks) sheet.append(ks);
   if (!board.visuals.length) sheet.append(h('div', {class:'empty'}, h('h3', {}, 'Nothing on the board yet'),
     h('p', {}, board.sources.length ? 'Press “Build board from sources” to lay out the first figures.' : 'Add files, links or text on the left, then build the board.')));
   board.visuals.forEach((v, i) => sheet.append(renderFigure(v, i)));
+  const tk = takeawayBand(); if (tk) sheet.append(tk);
+  sheet.append(posterFoot());
   const tb = tablesSection(); if (tb) sheet.append(tb);
   renderInspector();
 }
 
 function briefStrip(){
   const n = board.visuals.length, done = board.visuals.filter(v => !diagnose(v)).length;
-  return h('section', {class:'brief'},
-    h('div', {class:'label'}, 'The question'),
-    ed('div', 'q', 'brief.question', board.brief.question, 'What should a reader be able to answer after seeing this board?'),
-    h('div', {class:'label', style:'margin-top:6px'}, 'The story'),
-    ed('div', 'story', 'brief.story', board.brief.story, 'One sentence: what should people take away from this board?'),
-    h('div', {class:'for'}, h('span', {class:'label'}, 'For'), ed('span', '', 'brief.audience', board.brief.audience, 'Who is it for, and what will they do with it?')),
-    n ? h('div', {class:'health'}, h('span', {class:'els', style:'--acc:var(--ok)'}, ELEMENTS.map(([k, nm, ico]) => h('button', {class:'on', tabindex:'-1', title:nm}, icon(ico, 12, 2.4)))),
-      `${done} of ${n} figures have all four: information, story, goal and a visual idea`) : null);
+  return h('div', {class:'bt-row'},
+    h('span', {class:'for'}, h('span', {class:'label'}, 'For'), ed('span', '', 'brief.audience', board.brief.audience, 'Who is it for?')),
+    n ? h('span', {style:'display:inline-flex;align-items:center;gap:6px'}, h('span', {class:'els', style:'--acc:var(--ok)'}, ELEMENTS.map(([k, nm, ico]) => h('button', {class:'on', tabindex:'-1', title:nm}, icon(ico, 12, 2.4)))),
+      `${done} of ${n} figures have a question, story, goal and visual idea`) : null);
+}
+function posterHead(){
+  const b = board.brief;
+  return h('header', {class:'p-head'},
+    h('div', {class:'p-q'}, h('span', {class:'lbl'}, 'The question'), ed('span', 'q', 'brief.question', b.question, 'What should a reader be able to answer?')),
+    ed('h1', 'p-h1', 'brief.story', b.story, 'The headline: the one thing this board shows'),
+    ed('p', 'p-deck', 'brief.deck', b.deck, 'Why it matters, and who or what the numbers are about'));
+}
+function takeawayBand(){
+  const b = board.brief;
+  if (!board.visuals.length && !b.takeaway) return null;
+  const ents = board.entities || [];
+  return h('section', {class:'p-take'},
+    h('div', {class:'lbl'}, 'The takeaway'),
+    ed('div', 't', 'brief.takeaway', b.takeaway, 'The one thing to remember'),
+    ents.length ? h('div', {class:'row', 'aria-hidden':'true'}, ents.slice(0, 10).map(e => entGlyph(e, 40))) : null,
+    ed('div', 'd', 'brief.takeawayText', b.takeawayText, 'One or two sentences of explanation'));
+}
+function posterFoot(){
+  const srcs = board.sources.filter(x => x.status === 'ready');
+  return h('footer', {class:'p-foot'},
+    srcs.length ? h('div', {}, h('strong', {}, srcs.length > 1 ? 'Sources: ' : 'Source: '), srcs.flatMap((x, i) => [i ? ' · ' : '', x.url ? h('a', {href:x.url, target:'_blank', rel:'noopener'}, x.name) : x.name])) : null,
+    ed('div', '', 'brief.footnote', board.brief.footnote, 'Notes on method: sample, dates, rounding, what was self-reported'));
 }
 
 function renderSources(){
@@ -1146,6 +1337,9 @@ function renderInspector(){
       h('div', {class:'seg'}, STYLES[v.type].map(([k, n]) => h('button', {'aria-pressed': String((v.style || STYLES[v.type][0][0]) === k), onclick:() => set(() => { v.style = k === STYLES[v.type][0][0] ? '' : k; })}, n)))) : null,
     v.type === 'bars' ? h('div', {class:'field'}, h('label', {class:'label', for:'unitIn'}, 'Unit'),
       (() => { const i = h('input', {id:'unitIn', class:'btn', style:'width:100%;text-align:left', value:v.unit || '', placeholder:'e.g. %, kg, users'}); i.addEventListener('change', () => set(() => { v.unit = i.value; })); return i; })()) : null,
+    h('div', {class:'field'}, h('span', {class:'label'}, 'On the page'),
+      h('div', {class:'seg', style:'margin-bottom:6px'}, [['', 'Full width'], ['half', 'Half width']].map(([k, n]) => h('button', {'aria-pressed': String((v.width || '') === k), onclick:() => set(() => { v.width = k; })}, n))),
+      h('div', {class:'seg'}, [['', 'Light panel'], ['dark', 'Dark panel']].map(([k, n]) => h('button', {'aria-pressed': String((v.tone || '') === k), onclick:() => set(() => { v.tone = k; })}, n)))),
     h('div', {class:'field'}, h('span', {class:'label'}, 'Colour'),
       h('div', {class:'swatches'}, ACCS.map(a => h('button', {'aria-label':a, title:a, 'aria-pressed': String((v.acc||'cobalt') === a), style:`background:var(--${a === 'cobalt' ? 'cobalt' : 'f-' + a})`, onclick:() => set(() => { v.acc = a; })})))),
     h('div', {class:'field'}, h('span', {class:'label'}, 'Arrange'),
@@ -1225,6 +1419,7 @@ function addFigure(type){
   if (type === 'compare') { v.columns = ['Option A','Option B']; v.colIcons = ['Box','Package']; v.rows = [{icon:'Check', label:'Criterion', cells:['yes','no']}]; }
   if (type === 'illustration') { v.type = 'illustration'; v.svg = ''; v.items = []; }
   if (type === 'rings') v.items.forEach((it, i) => it.value = [30, 60, 80][i]);
+  if (type === 'dots') { v.columns = ['Group A','Group B','Group C']; v.unit = '%'; v.series = [{label:'First', values:[30, 45, 60]}, {label:'Second', values:[50, 40, 35]}]; }
   board.visuals.push(v); selected = v.id; commit();
   requestAnimationFrame(() => document.querySelector(`.fig[data-id="${v.id}"]`)?.scrollIntoView({behavior:'smooth', block:'center'}));
 }
@@ -1377,6 +1572,7 @@ const VISUAL_FIRST = `VISUAL FIRST (the default): pictures carry the information
 - Find the things that recur across the sources (products, places, people, organisms, objects, tools) and list each once in "entities": {"id":"e1","name":"Regular tampon","color":"crimson","svg":"..."}. Colours: crimson, amber, teal, blue, plum, green, rust, slate. Give related things the same colour family (for example all tampons crimson, all pads amber).
 - ${GLYPH_RULES}
 - In figures, mark every item or compare row that is one of these things with "entity":"<id>". Its symbol replaces the name, so set its label or title to the entity's exact name.
+- The board is laid out as one designed page, not a set of boxes. Per figure: "width":"half" for compact figures (a pictogram with up to 3 rows, rings, up to 3 numbers) so two sit side by side; otherwise omit it. "tone":"dark" for at most one figure where the subject suits it (night, risk, absence). Each figure's "brief.question" is printed above its title as its heading.
 - Prefer forms that show amounts with repeated symbols: "pictogram" (value of total, e.g. 1.9 of 10 for 19%) and "bars" with "style":"units".
 - Choose the form by the relationship: rank or magnitude -> bars; part of a whole with a known denominator -> pictogram; order or milestones -> timeline; steps -> process; exact values across options -> compare; a physical object or mechanism -> illustration. Use icon cards only when no chart makes a fair comparison easier.
 - Keep the source's qualifiers. If the source says people reported or said something, or calls a number an estimate, the title and callout say so too ("6 in 10 say they..."). Never turn a reported or estimated figure into a plain fact, never invent a causal link, and keep denominators and units.`;
@@ -1398,7 +1594,7 @@ Icons are Lucide names in PascalCase. Prefer these: ${VOCAB.join(', ')}. Choose 
 
 Figure types (choose the form whose shape matches the meaning):
 - "stats": 2-4 key numbers. items:[{"icon","value":"42%","label":"2-3 words","note":"optional, 8 words"}], "style":"tiles"|"hero" (hero = one dominant number; put it first)
-- "pictogram": a count or share as repeated icons, e.g. 3 of 10 people. items:[{"icon","title":"2-3 words","value":3,"total":10}] (total 5-20, value a number)
+- "pictogram": a count or share as repeated icons, e.g. 3 of 10 people. items:[{"icon","title":"2-3 words","value":3,"total":10,"show":"30%"}] (total 5-20, value a number; "show" is the number as the source states it, printed large beside the symbols)
 - "rings": percentages as donut charts. items:[{"icon","title":"2-3 words","body":"optional","value":64}] (value 0-100)
 - "timeline": dated events. "layout":"h"|"v", "style":"line"|"path" (path = a winding road, for journeys, moves and struggles), items:[{"icon","when":"1998","title":"2-4 words","body":"optional, 10 words"}]
 - "process": ordered steps. "layout":"h"|"v", items:[{"icon","title":"2-3 words","body":"optional"}] (3-6)
@@ -1407,6 +1603,7 @@ Figure types (choose the form whose shape matches the meaning):
 - "compare": options vs criteria. "columns":["A","B"], "colIcons":["icon","icon"], rows:[{"icon","label":"2-4 words","cells":["",""]}]. Cells are symbols where possible: "yes", "no", "partial", or a rating like "4/5"; otherwise 1-4 words.
 - "bars": quantities. "unit":"%", "style":"bars"|"units" (units = rows of the item's own icon, best for countable things), items:[{"icon","label":"2-3 words","value":12.5}] (number)
 - "points": icon cards. items:[{"icon","title":"2-4 words","body":"optional, 12 words"}]
+- "dots": two or three series compared across groups on one scale (for example pads vs tampons by age group). "columns":["18-29","30-49"], "series":[{"entity","label","values":[56,47]}] (one number per column), "unit":"%". Use this instead of "compare" whenever the cells would be numbers.
 - "illustration": a simple flat drawing of the subject (an object, place, product, scene or mechanism). "svg": a string with <svg viewBox="0 0 400 240"> using only g, rect, circle, ellipse, line, polyline, polygon, path. Colour every shape with fill and stroke values chosen ONLY from these words: acc, soft, ink, mute, paper, none (no hex colours, no text, no gradients, no images). Clean geometric style, 15-60 shapes. Optional items:[{"icon","title","body"}] as a legend.
 Rules: Use only facts stated in the sources. Never invent numbers; use stats, pictogram, rings or bars only for numbers the sources give (pictogram/rings may restate a stated share). Keep units. Keep text minimal. Each figure makes a different point; don't repeat a fact across figures.
 
@@ -1434,7 +1631,7 @@ ${SCHEMA}
 
 First decide the board's brief: who it is for, the question a reader should be able to answer, and the single story the whole board tells. Then find the recurring things and draw their symbols. Then plan 4 to 7 figures that each support that story from a different angle, in reading order, opening with the strongest point. Use at least 4 different forms and vary the colours. When the subject is a physical thing or a place, include one illustration.
 Before answering, check every figure against the four elements. Rework or drop any figure without a clear story, without a goal, or that is only decoration.
-Reply with only JSON: {"title":"board name, max 6 words","brief":{"question":"the reader's question","story":"one sentence","audience":"who it is for and what they will do with it"},"entities":[ ...entity objects... ],"figures":[ ...figure objects... ]}`;
+Reply with only JSON: {"title":"board name, max 6 words","brief":{"question":"the reader's question","story":"the headline: one sentence stating what the board shows","deck":"1-2 sentences: why it matters and who or what the numbers describe, with the main denominator","audience":"who it is for and what they will do with it","takeaway":"one sentence to remember","takeawayText":"1-2 sentences explaining it, attributed to the source where it is the source's conclusion","footnote":"method notes: sample, dates, rounding, what was self-reported"},"entities":[ ...entity objects... ],"figures":[ ...figure objects... ]}`;
 }
 function figurePrompt(v, instr){
   const fig = clone(v); delete fig.id;
@@ -1472,17 +1669,24 @@ function sanitizeFigure(f, prev){
     out.colIcons = out.columns.map((_, i) => ico(f.colIcons?.[i] || 'Box'));
     out.rows = (Array.isArray(f.rows) ? f.rows : []).slice(0, 12).map(r => ({icon: ico(r?.icon || 'Dot'), label:str(r?.label, 80), cells: out.columns.map((_, i) => str(r?.cells?.[i], 120))}));
   } else if (type === 'stats'){ out.items = items.map(i => ({icon: ico(i?.icon), value:str(i?.value, 20), label:str(i?.label, 60), note:str(i?.note, 120)})); out.layout = String(Math.min(Math.max(out.items.length, 2), 4)); }
-  else if (type === 'pictogram'){ out.items = items.map(i => ({icon: ico(i?.icon || f.icon), title:str(i?.title, 60), value: num(i?.value), total: Math.min(Math.max(Math.round(num(i?.total)) || 10, 1), 40)})); }
+  else if (type === 'pictogram'){ out.items = items.map(i => ({icon: ico(i?.icon || f.icon), title:str(i?.title, 60), show:str(i?.show, 14), value: num(i?.value), total: Math.min(Math.max(Math.round(num(i?.total)) || 10, 1), 40)})); }
   else if (type === 'rings'){ out.items = items.map(i => ({...basic(i), value: Math.max(0, Math.min(100, num(i?.value)))})); }
   else if (type === 'timeline'){ out.items = items.map(i => ({...basic(i), when:str(i?.when, 30)})); out.layout = f.layout === 'v' ? 'v' : 'h'; }
   else if (type === 'bars'){ out.unit = str(f.unit, 12); out.items = items.map(i => ({icon: ico(i?.icon), label:str(i?.label, 60), value: num(i?.value)})); }
   else if (type === 'hub'){ out.center = str(f.center, 40) || out.title; out.items = items.map(basic); }
   else if (type === 'illustration'){ out.svg = typeof f.svg === 'string' && buildIllustration(f.svg) ? f.svg.slice(0, 40000) : (prev?.svg || ''); out.items = items.map(basic); }
   else { out.items = items.map(basic); if (type === 'process') out.layout = f.layout === 'v' ? 'v' : 'h'; else if (type === 'points') out.layout = ['2','3','4'].includes(f.layout) ? f.layout : ''; }
+  out.width = f.width === 'half' ? 'half' : '';
+  out.tone = f.tone === 'dark' ? 'dark' : '';
+  if (type === 'dots'){
+    out.columns = (Array.isArray(f.columns) ? f.columns : []).slice(0, 8).map(x => str(x, 30));
+    out.unit = str(f.unit, 12);
+    out.series = (Array.isArray(f.series) ? f.series : []).slice(0, 3).map(x => ({label: str(x?.label, 60), icon: ico(x?.icon || 'Circle'), values: out.columns.map((_, k) => num(x?.values?.[k]))}));
+  }
   const entIds = new Set((board.entities || []).map(e => e.id));
   const link = (dst, srcList, prevList) => (dst || []).forEach((x, k) => { const e = srcList?.[k]?.entity ?? prevList?.[k]?.entity; if (e != null && entIds.has(String(e))) x.entity = String(e); });
-  link(out.items, f.items, prev?.items); link(out.rows, f.rows, prev?.rows);
-  const nItems = type === 'compare' ? out.columns.length : (out.items || []).length;
+  link(out.items, f.items, prev?.items); link(out.rows, f.rows, prev?.rows); link(out.series, f.series, prev?.series);
+  const nItems = (type === 'compare' || type === 'dots') ? (out.columns || []).length : (out.items || []).length;
   if (!(out.focus >= 0 && out.focus < nItems)) out.focus = -1;
   out.style = (STYLES[type] || []).some(([k]) => k === f.style) && f.style !== STYLES[type][0][0] ? f.style : '';
   return out;
@@ -1508,7 +1712,7 @@ $('#genBtn').addEventListener('click', async () => {
     if (!figs.length) throw {code:'invalid_json'};
     board.example = false;
     if (res.title && (!board.title || board.title === 'Untitled board')) board.title = String(res.title).slice(0, 80);
-    if (res.brief && typeof res.brief === 'object'){ board.brief ||= {story:'', audience:''}; if (!board.brief.question) board.brief.question = String(res.brief.question || '').slice(0, 200); if (!board.brief.story) board.brief.story = String(res.brief.story || '').slice(0, 300); if (!board.brief.audience) board.brief.audience = String(res.brief.audience || '').slice(0, 200); }
+    if (res.brief && typeof res.brief === 'object'){ board.brief ||= {story:'', audience:''}; if (!board.brief.question) board.brief.question = String(res.brief.question || '').slice(0, 200); for (const k of ['deck', 'takeaway', 'takeawayText', 'footnote']) if (!board.brief[k] && res.brief[k]) board.brief[k] = String(res.brief[k]).slice(0, 400); if (!board.brief.story) board.brief.story = String(res.brief.story || '').slice(0, 300); if (!board.brief.audience) board.brief.audience = String(res.brief.audience || '').slice(0, 200); }
     board.visuals = board.visuals.concat(figs);
     selected = figs[0].id; commit(); setTab('board');
     st.textContent = `Added ${figs.length} figures. Click any text or icon to change it.`;
@@ -1559,7 +1763,7 @@ function boardNode(){
 function exportHTML(){
   const css = $('#appcss').textContent;
   const srcs = board.sources.map((x, i) => `<li><b>S${i+1}</b> ${esc(x.name)}${x.url ? ` — <a href="${esc(x.url)}">${esc(x.url)}</a>` : ''}</li>`).join('');
-  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(board.title)}</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"><style>${css} body{padding:32px 16px;height:auto} h1{font-family:var(--display);max-width:980px;margin:0 auto 22px;font-size:30px;letter-spacing:-.02em} .srcs{max-width:980px;margin:28px auto;font-size:12.5px;color:var(--ink-2)} .srcs ul{padding-left:18px}</style></head><body><h1>${esc(board.title)}</h1>${boardNode().outerHTML}<div class="srcs"><div class="label">Sources</div><ul>${srcs}</ul></div></body></html>`;
+  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(board.title)}</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap"><style>${css} html,body{height:auto} body{padding:32px 16px;background:var(--paper)} .sheet.poster{margin:0 auto}</style></head><body>${boardNode().outerHTML}</body></html>`;
   saveFile(slug() + '.html', html);
 }
 function exportSVG(){

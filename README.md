@@ -30,6 +30,8 @@ Pictures carry the information by default, and words are kept for the point, uni
 - **A question for every board and figure.** The board states the question a reader should be able to answer. Each figure carries its own question above its title.
 - **Faithful wording.** If a source says people *reported* something, or calls a number an *estimate*, the title and callout say so too.
 - **A text version.** "The numbers behind the pictures," at the end of the board, lists every figure's data as a table. It's always included in exports.
+- **One designed page.** The board reads like a finished infographic. It opens with the question, a headline that states the story, a short intro and the key. Figures sit in open panels led by their question, two compact ones can share a row, and one can be dark for contrast. The page closes with a takeaway, the sources with method notes, and the tables. Editing marks only appear on the figure you select.
+- **Dot chart.** Two or three groups of things compared across categories (for example pads vs tampons by age), with each thing's own symbol as the marker.
 - **Less text by default.** New boards start on "Less text". Switch to "More" to show the names beside the symbols.
 
 ## Where it runs
