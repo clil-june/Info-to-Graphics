@@ -16,8 +16,9 @@ Credit McCandless for the framework, and don't copy his graphic into the app or 
 
 ## Branch / PR
 
+- This update: branch `docs/visual-communication-guide`, pull request https://github.com/clil-june/Info-to-Graphics/pull/3 (documentation only).
+- Also open: `feature/four-elements`, https://github.com/clil-june/Info-to-Graphics/pull/2. This is the four-element brief work (direction 1 above), built and pushed before the pause, plus the Harvard study benchmark checkpoint. It's not merged. Its own `HANDOFF.md` has the details and what's unverified. It also rewrites this file, so whichever pull request merges second will need its `HANDOFF.md` reconciled.
 - Merged: `workflow/claude-codex-handoff` → `main`, https://github.com/clil-june/Info-to-Graphics/pull/1
-- No work in progress on any branch.
 
 ## What changed
 
