@@ -9,6 +9,19 @@ Info to Graphics turns sources (files, links and pasted text) into a board of ed
 - **Edit** by clicking any text or icon on the board. Select a figure to change its form, layout or colour, or ask Claude to change it.
 - **Export** the board as a web page, an SVG image, or an editable `.board.json` file you can open again later.
 
+## Design approach
+
+Every figure is built around the four elements from David McCandless's ["What Makes a Good Visualization?"](https://informationisbeautiful.net/visualizations/what-makes-a-good-data-visualization/):
+
+- **Information:** facts from your sources. Each figure is tagged with the sources it uses.
+- **Story:** the one point the figure makes. Titles state that point ("Dessau was its longest home") rather than naming a topic ("Years per city").
+- **Goal:** what the viewer can understand or decide after seeing it.
+- **Visual idea:** a form that echoes the subject, such as a winding road for a journey, rows of the subject's own icon for counts, or one oversized number when one number is the story.
+
+Each figure keeps these in an editable **brief**. It also highlights the item that carries the story, with a short callout on it. Four small marks in the figure header show which elements are present. A missing one is named: no story is *boring*, no goal is *useless*, and neither is *eye candy*. **Fill what's missing with Claude** completes the brief. The board as a whole has a one-sentence story and an audience at the top.
+
+The app uses McCandless's framework but doesn't include his graphic.
+
 ## Where it runs
 
 Info to Graphics is a single `index.html` with no build step. Open it in a browser or host it on any static host (GitHub Pages, Netlify).
