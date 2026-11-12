@@ -11,7 +11,7 @@ Direction chosen: direction 1 from the last handoff, the four elements as the br
 ## Branch / PR
 
 - Branch: `feature/four-elements` (from `main` at `9a82f5b`)
-- Pull request: PR_LINK
+- Pull request: https://github.com/clil-june/Info-to-Graphics/pull/2
 - The live Claude artifact ("Info to Graphics") was republished from this branch so the Claude features can be tested. It runs code that isn't merged yet.
 
 ## What changed
