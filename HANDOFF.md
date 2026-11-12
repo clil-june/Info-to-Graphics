@@ -24,6 +24,7 @@ Credit McCandless for the framework, and don't copy his graphic into the app or 
 
 - Added `docs/visual-communication-research.md` as a reference for turning source text into effective infographics.
 - Linked the guide from `README.md` and added the same standing design and review instruction to `AGENTS.md` and `CLAUDE.md`.
+- Added the owner's standing default to both `CLAUDE.md` and `AGENTS.md` (2026-11-12, Claude): **prefer visual representation over text** for every source. Give recurring things (products, places, people, steps) a drawn symbol in a consistent colour, introduce the symbols once in a key, then use them instead of names in charts, counts and markers. Keep words for headlines, the takeaway and qualifiers. Every symbol gets an accessible name. The reference example is the Harvard period-products infographic, a Claude Design canvas private to the owner, made with product drawings (tampon, pad, liner, cup, period underwear) on 2026-11-12.
 
 Previously merged in PR #1:
 
@@ -70,6 +71,8 @@ The guide and all three relative references were checked. This update is documen
 ## Still open (new)
 
 - Owner to choose direction 1, direction 2, or both for the McCandless work.
+- The app's generator doesn't yet follow the visual-first default. It uses Lucide icons per item, but doesn't create subject-specific symbols for recurring things or replace names with them. This is app work, so it waits until the owner resumes app changes. PR #2's prompts are the natural place to add it.
+- The Harvard infographic hasn't been reviewed against the guide's acceptance checks. Known gaps: no explicit reader question; no structured text equivalent such as a table; some self-reported findings are phrased as facts ("sleep with one in" rather than "say they sleep with one in").
 
 ## Next step
 
