@@ -21,6 +21,18 @@ This repo is shared between Codex and Claude. Both follow the same workflow.
 
    Say clearly if a change is still pending (unmerged, unpushed) or hasn't been verified. If `HANDOFF.md` and the branch disagree, say so instead of guessing.
 
+## Infographic design and review
+
+When designing, changing, or reviewing infographic generation, consult [the visual communication research guide](docs/visual-communication-research.md). Use it to identify the reader's question, choose a visual form that fits the source, and check that the result communicates the intended takeaway.
+
+**Default (owner's standing preference): prefer visual representation over text.** Apply this to every source you turn into an infographic:
+
+- Find what recurs in the source: products, places, people, objects, steps. Give each one a simple drawn symbol that looks like the real thing, in a colour that stays the same across the whole piece.
+- Introduce the symbols once, in a key with their names. After that, use the symbols instead of the names in charts, counts, markers and legends. Repeat a symbol to show a count, Isotype-style (for example, about 2 of 10 cups for 19%).
+- Keep words where they carry meaning: headlines and the takeaway, units and denominators, and qualifiers such as "reported", "estimated" or "about".
+- Give every symbol an accessible name, so the piece still reads without the pictures.
+- Reference example: the Harvard period-products infographic, where a tampon, pad, liner, cup and period underwear replace the product names.
+
 ## Before handing work back
 
 1. Update `HANDOFF.md`: Current task, Branch / PR, What changed, What was verified, Still open, Next step.
