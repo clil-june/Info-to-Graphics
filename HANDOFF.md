@@ -4,110 +4,119 @@ Last updated: 2026-11-12 by Claude
 
 ## Current task
 
-Make the boards more unique and context-aware using the *meaning* of David McCandless's "What Makes a Good Visualization?" diagram (informationisbeautiful.net). The owner asked explicitly for the app to understand the idea, **not** to build the diagram itself. The diagram's four elements are information, story, goal and visual form. A figure without a story is boring, one without a goal is useless, and one with only data and visuals is eye candy.
+Put everything worked out by hand on the Harvard period-products infographic into the app itself (owner's request, 2026-11-12: "All we've been discussing now should be happening within the Info to Graphics app"). This resumes the app work that PR #3's handoff marked as paused.
 
-Direction chosen: direction 1 from the last handoff, the four elements as the brief for every figure. Direction 2 (a Venn figure type) was dropped, because the owner doesn't want the diagram rebuilt.
+The owner's standing default, now in `CLAUDE.md` and `AGENTS.md`: **prefer visual representation over text.** Recurring things become drawn symbols, a key introduces them once, and charts use the symbols instead of names. Follow `docs/visual-communication-research.md` when designing or reviewing generation.
+
+Built on top of the earlier four-element work: McCandless's information, story, goal and visual form. The app follows the framework's meaning, not his graphic.
 
 ## Branch / PR
 
-- Branch: `feature/four-elements` (from `main` at `9a82f5b`)
-- Pull request: https://github.com/clil-june/Info-to-Graphics/pull/2
-- The live Claude artifact ("Info to Graphics") was republished from this branch so the Claude features can be tested. It runs code that isn't merged yet.
+- Branch: `feature/four-elements`. Pull request: https://github.com/clil-june/Info-to-Graphics/pull/2 (app changes).
+- PR #3 (`docs/visual-communication-guide`, https://github.com/clil-june/Info-to-Graphics/pull/3) is **merged into this branch** (commit `b2298ef`). It adds the research guide, the visual-first default and the Harvard visual reference. Merging #2 brings in #3 too; #3 can also be merged on its own first.
+- The live Claude artifact "Info to Graphics" was republished from this branch on 2026-11-12, labelled "Symbols for recurring things (PR #2)". It runs code that isn't merged yet.
 
 ## What changed
 
-All in `index.html`, plus a "Design approach" section in `README.md`:
+### This session: visual-first in the app (all in `index.html`, plus `README.md`)
 
-- **Board brief:** a strip at the top of the board with a one-sentence story and who the board is for. Both are editable. It also counts how many figures have all four elements.
-- **Figure brief:** each figure stores `brief: {story, goal, metaphor}`, `focus` (an item index, or a column for compare) and `callout`.
-  - The inspector has a Brief section with story, goal, visual idea, source tags, a highlight picker and the callout.
-  - When something is missing, a **Fill what's missing with Claude** button appears.
-- **Four-element marks:** four marks in each figure header (information, story, goal, visual idea), plus a label for what's missing ("Boring: no story", "Useless: no goal", "Eye candy: no story or goal", "Unsourced", "No visual idea"). Clicking a mark opens that field. These are hidden in exports.
-- **Focus and callout:**
-  - The item that carries the story is highlighted and the other items are muted.
-  - A callout pill sits on the highlighted item.
-  - Works for every figure type. For compare it highlights a column.
-- **New visual styles:**
-  - Timeline **Road**: nodes alternate above and below a winding path.
-  - Bars **Icon stacks**: rows of the item's own icon, with an "icon = N" key.
-  - Numbers **One big number**: a hero first number.
-  - A "Visual style" control in the inspector switches between them.
-- **Prompts:**
-  - Claude is taught the four-element model.
-  - It writes the board brief first, then figures whose titles state the point.
-  - It picks forms and icons that echo the subject.
-  - It reworks or drops figures that are boring, useless or just decoration.
-  - Every figure edit also receives the board's story and audience.
-- **Example board:** rewritten with briefs, story titles, focus and callouts, the road timeline and the hero number. Boards saved under the old example are swapped for the new one. User boards are untouched.
-- **Fixes:**
-  - "null" text showed in the inspector when a figure was selected (an older bug).
-  - The phone layout scrolled sideways (page 726px wide on a 390px screen), caused by the road timeline's width and the header buttons.
+- **Entities (symbols for recurring things):**
+  - Boards have `entities: [{id, name, color, svg, icon}]`.
+  - Items and compare rows can carry `entity: <id>`. Their symbol then replaces the icon everywhere: tiles, nodes, bars, pictogram and icon-stack cells, compare rows.
+  - The item is coloured with the entity's colour.
+  - A label that only repeats the entity's name is hidden on "Less" and "Some" text, and shown on "More".
+- **Key and symbol editor:**
+  - A **Key** strip under the board brief lists every symbol with its editable name.
+  - Clicking a symbol anywhere opens a **Symbol** editor: rename, recolour (8 colours), **Redraw with Claude** (optionally describing how it should look), or **Use an icon instead**. Changes apply everywhere it appears.
+- **Symbol drawings** are small SVGs (viewBox 32×32) drawn by Claude. They're coloured only with the words `acc`, `paper` and `none`, and pass through the existing illustration sanitizer, which now also allows `fill-opacity`, `stroke-opacity`, `stroke-dasharray` and `fill-rule`.
+- **Reader question:** the board brief has a question (shown above the story). Each figure has `brief.question`, shown as a kicker above its title and editable in the inspector.
+- **Text equivalent:** "The numbers behind the pictures" sits at the end of the board, collapsed in the app and open in exports. It builds one table per figure from the figure's data, and doesn't need Claude.
+- **Exports:** symbol spans keep `role="img"` and the entity name as `aria-label`.
+- **Prompts:** a VISUAL FIRST block:
+  - list the recurring things as entities with drawn symbols and colour families
+  - link items to them
+  - prefer pictograms and icon stacks
+  - choose the form by relationship (from the guide)
+  - keep "reported / said / estimated", denominators and units
+  - never add a causal link
+
+  Board generation returns `brief.question` and `entities`. New entities are merged by id, and existing ones are kept. Figure edits and new boards get the existing entity list so the ids are reused.
+- **Defaults:** new boards start on **Less text**.
+- **Example board:** replaced Bauhaus with the Harvard period-products study (summarised notes with the numbers from the study). It has seven entity symbols (regular tampon, super-absorbent tampon, pad, panty liner, cup, period underwear, pads-or-tampons) and five figures, all with questions. Stored example boards without entities are swapped for it.
+- **Fixes found in the render:**
+  - Bars got squeezed when their label was hidden.
+  - Symbols on non-highlighted items were faded.
+  - Symbols were enlarged by 35% inside tiles and rows.
+
+### Earlier on this branch (four-element briefs, before PR #3)
+
+- **Board brief and figure brief:** story, goal and visual idea; four-element marks with boring, useless and eye-candy labels; **Fill what's missing with Claude**.
+- **Focus item and callout** on every figure type.
+- **Styles:** road timeline, icon-stack bars, one big number.
+- **Fixes:** "null" text in the inspector, and sideways scrolling on phones.
+- **Harvard checkpoint:** the text-labelled v1 is in `references/harvard-period-products/`.
+
+### From PR #3 (merged in)
+
+- `docs/visual-communication-research.md`, linked from `README.md`, `CLAUDE.md` and `AGENTS.md`.
+- The visual-first default in `CLAUDE.md` and `AGENTS.md`.
+- `references/harvard-period-products-visual/`: the hand-made reference with product drawings, a reader question, tables and attribution.
 
 ## What was verified
 
 | Check | How / where | Result |
 |---|---|---|
 | Inline script parses | `node --check` on the script in `index.html` | Passed |
-| Example board renders, no page errors | Headless Chrome, standalone `index.html`, 1440px wide, light mode | Passed. Story strip, element marks, highlights and callouts, road timeline, hero number all render. |
-| Adding a Bars figure and switching it to Icon stacks | Same desktop render, clicked through the UI | Passed. The new empty figure shows "Eye candy: no story or goal". |
-| Inspector Brief section for a selected figure | Same desktop render | Passed. After the fix, no "null" text (checked by reading the inspector text). |
-| Phone width (390px), dark mode | Headless Chrome, standalone page | Dark mode renders. Page width is 390px after the fixes (measured). The phone layout wasn't looked at again after the fixes. |
-| Icon names used in the new code exist | Checked against Lucide 0.460.0 | Passed |
+| New example board renders, no page errors | Headless Chrome, standalone `index.html`, 1440px wide, light mode, one look | Passed. Key with 7 drawn symbols, symbols in bars, pictograms and compare rows. 12 repeated names hidden. Question kickers shown. 5 tables. |
+| Symbol editor opens from the key | Same render, clicked the cup in the key | Passed. Inspector shows "Symbol" with preview, name, colours, redraw and icon options. |
+| Bars after the label fix | Same page, measured | Bar track 688px wide (it was squeezed before the fix) |
+| Phone width | Headless Chrome, 390px | 390px, no sideways scroll |
+| Icon names used | Checked against Lucide 0.460.0 | Passed |
 
 ### Unverified
 
-- **All Claude features, including the new prompts** (need a Claude artifact test):
-  - whether Claude actually returns briefs, story titles, focus, callouts and styles
-  - building a board, "Ask Claude", **Fill what's missing with Claude**, illustrations, reading images
-- **Reading links** through `host:claude_browser` (desktop app).
-- **Export:** HTML, SVG and `.board.json` output weren't opened. The `downloads` capability and the browser-download fallback weren't tested.
-- **Reading files:** PDF, Word and HTML with real files.
-- **Mid-width layout** (761–1100px).
-- **Phone layout:** a visual look after the overflow fix.
-- **Old saved boards:** loading boards saved under the old storage key, and swapping the old example board for the new one.
-- **Board brief from Claude:** whether Claude's board-level brief fills the story strip on generation.
+- **All Claude features** (need a test in the Claude artifact):
+  - whether Claude returns `entities` with usable SVG symbols, links items to them, writes questions, and keeps "reported" wording
+  - **Redraw with Claude**
+  - **Fill what's missing**
+  - building a board, Ask Claude, reading images
+- **Visual checks:**
+  - the render wasn't looked at again after the last three fixes; only the bar width was measured
+  - dark mode and the phone layout weren't looked at for the new key and tables
+  - the mid-width layout (761–1100px)
+- **Editing edge cases:**
+  - "Use an icon instead" for a symbol, and the icon picker clearing the drawing
+  - converting a figure to another form keeping its entity links
+  - undo across symbol edits
+- **Export:** files (HTML, SVG, `.board.json`) weren't opened; the downloads capability and the fallback weren't tested.
+- **Loading data:**
+  - real PDF, Word and HTML files
+  - reading links through `host:claude_browser`
+  - old saved boards: the swap from the Bauhaus example to the Harvard example
 
 ## Checkpoints
 
-### Harvard study v1 (2026-11-12): the benchmark board
-
-At the owner's request, a hand-made reference infographic, kept so we can come back to it. It shows what the app should be able to produce when it follows the references below.
-
-- **Source:** Harvard T.H. Chan School of Public Health, Apple Women's Health Study, "Menstrual hygiene products: pads and tampons are the go-to choice" (May 2023) and its data page. This is the article the owner linked in the Info to Graphics app.
-- **Where it lives:**
-  - A Claude Design canvas titled "Period Products Infographic". It's private to the owner. The checkpoint is the version labelled "Checkpoint: Harvard study v1".
-  - A copy of the artboard source in `references/harvard-period-products/Main.dc.html`. It's in Claude Design's `.dc.html` format, not part of the app.
-- **What it does, in order:**
-  1. Ranked bars of every product.
-  2. Drop pictograms for cups and period underwear, with tampons for scale.
-  3. A 100-square grid for sleeping with a tampon.
-  4. Pads against tampons by age group.
-  5. A lifetime estimate.
-  6. A takeaway band, then sources.
-- **Principles it follows:** the four McCandless elements plus the Venngage references the owner sent (Venngage blog "What makes a good infographic" and its video):
-  - titles state the point
-  - one highlight and note per chart
-  - every number copied from the study
-  - bars rather than donuts
-  - one colour per product family across the whole board
-  - small categories moved to a footnote
-  - a closing takeaway
-- **Verified:** every number was checked against the article text, read in the desktop browser on 2026-11-12.
-- **Unverified:** the canvas wasn't viewed after publishing. The Design type's instructions say not to render-check unless the owner asks.
-- **How to use it:** feed the same article into the app (artifact) and compare the board with this checkpoint.
+- **Harvard study v1:** the hand-made, text-labelled benchmark. It's on a Claude Design canvas titled "Period Products Infographic" (private to the owner), in the version labelled "Checkpoint: Harvard study v1". A copy is in `references/harvard-period-products/`.
+- **Harvard study, visual:** the same canvas, with product drawings and the guide fixes. These are the versions labelled "Product glyphs replace product names" and "Guide review: question, tables, attribution". A copy is in `references/harvard-period-products-visual/`. It's the target for what the app's generator should now produce.
 
 ## Still open
 
-- Test the four-element generation in the artifact on a real source, and judge whether the boards feel more engaging.
+- Test generation in the artifact with the Harvard article (the owner's link) and compare it with `references/harvard-period-products-visual/`.
+- Ideas the hand-made reference has that the app doesn't yet:
+  - a pads-versus-tampons dot chart by age (the app uses a compare table)
+  - a takeaway band
+  - a source footer on the board
 - Test reading a link in the Claude desktop app.
 - Decide whether to host the standalone page on Netlify (Claude features stay off there).
-- Possible next visual styles: process as a path, a hub drawn as the subject's own object, a scale or balance for comparing two options.
 
 ## Next step
 
-Open the Info to Graphics artifact on claude.ai, press **Start my own**, add one real PDF or pasted article, and press **Build board from sources**. Check:
-- Do the titles state points?
-- Is one item highlighted per figure?
-- Are any figures flagged? Is a road timeline or icon stack chosen where it fits?
+Open the Info to Graphics artifact on claude.ai and press **Start my own**. Add the Harvard article (link or pasted text) and press **Build board from sources**. Check:
 
-Record the result here, then review and merge the pull request.
+- Does a key with drawn symbols appear?
+- Do the charts use the symbols instead of names?
+- Does each figure have a question?
+- Is "say/reported" kept?
+- Is the table section correct?
+
+Record the result here, then review and merge PR #3 and PR #2.

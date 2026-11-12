@@ -22,6 +22,16 @@ Each figure keeps these in an editable **brief**. It also highlights the item th
 
 The app uses McCandless's framework but doesn't include his graphic.
 
+### Visual first
+
+Pictures carry the information by default, and words are kept for the point, units and qualifiers.
+
+- **Symbols for recurring things.** Claude finds what recurs across your sources (products, places, people, objects) and draws one symbol for each, in a colour shared by related things. A **Key** at the top of the board introduces each symbol once, with its name. After that, figures show the symbol instead of the name, and repeat it to show amounts ("about 2 of 10 cups"). Click any symbol to rename it, recolour it, redraw it with Claude, or swap it for an icon. Changes apply everywhere it appears.
+- **A question for every board and figure.** The board states the question a reader should be able to answer. Each figure carries its own question above its title.
+- **Faithful wording.** If a source says people *reported* something, or calls a number an *estimate*, the title and callout say so too.
+- **A text version.** "The numbers behind the pictures," at the end of the board, lists every figure's data as a table. It's always included in exports.
+- **Less text by default.** New boards start on "Less text". Switch to "More" to show the names beside the symbols.
+
 ## Where it runs
 
 Info to Graphics is a single `index.html` with no build step. Open it in a browser or host it on any static host (GitHub Pages, Netlify).
