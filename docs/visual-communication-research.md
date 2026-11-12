@@ -103,6 +103,28 @@ In the Ghoniem, Fekete and Castagliola experiment, matrices performed better for
 
 [Segel and Heer](https://idl.uw.edu/papers/narrative) · [Hullman and Diakopoulos](https://www.hullmanlab.northwestern.edu/paper/2011/02/01/vis-rhetoric.html) · [Ajani et al.](https://visualthinking.psych.northwestern.edu/publications/Ajani_Declutter_2021.pdf) · [Borkin et al.](https://vcg.seas.harvard.edu/publications/20130101-what-makes-a-visualization-memorable) · [Mayer](https://doi.org/10.1111/jcal.12197) · [W3C complex images](https://www.w3.org/WAI/tutorials/images/complex/)
 
+### Lead with a visual answer
+
+Use this sequence when composing an infographic from source text.
+
+1. **Choose the main relationship.** Write the one question the piece should answer and the shortest accurate answer. Decide what the reader should see: magnitude, share, change, a gap, order, or a physical relationship.
+2. **Put the strongest visual in the opening view.** Pair it with a short takeaway and direct labels. Make the data-bearing graphic the largest or most prominent element in that view. Keep the legend close to the marks it explains. Put introductory prose and method details after the answer when they can wait.
+3. **Assign a job to each visual element.** An icon identifies the subject. Length can compare magnitudes, position on a shared scale can show a gap, and repeated marks with a fixed denominator can show a share. If an image only identifies the topic, check whether a chart or a direct annotation is also needed to answer the question.
+4. **Give every following panel a new job.** Combine an absolute number and its share when they explain the same finding. Add a panel when it answers a distinct question, shows a meaningful exception, or supplies necessary context. Let the material determine how many panels and chart types are needed.
+5. **Cut repeated text before cutting context.** Give the headline, labels and annotations distinct roles. Remove a sentence that restates a marked value unless it adds interpretation. Keep the unit, population, denominator, date range and qualifiers such as “reported,” “estimated,” “about,” or “at least” wherever removing them changes the claim. Move detailed tables and methodology to a clearly labeled secondary layer. A standalone HTML export can keep that layer collapsed with an accessible disclosure. In a static export, keep essential context next to the chart.
+6. **Highlight the evidence for the claim.** Use emphasis to identify the relevant mark or gap. Give symbols a stable meaning, use recognizable silhouettes, and add a direct label when similar symbols are hard to distinguish. A separate closing takeaway earns its space when it adds a synthesis or implication supported by the piece.
+
+| Benchmark | What the visual does | What to keep beside it |
+| --- | --- | --- |
+| Harvard period-products ranking | Aligned bar lengths show the ranking. Recurring product silhouettes identify the categories. | Exact percentages, a clear scale, and the multiple-response note. |
+| Harvard age comparison | Two marks per age group on one scale show which product leads. The distance between them shows the gap. | Age groups, series labels, and exact percentages. Highlight the group only if it answers the headline's question. |
+| Harvard overnight use | Six highlighted symbols out of ten communicate a share at a glance. | Who is counted and what they reported. Keep rounding and any separate response categories clear. |
+| Bird-loss redesign | Put the ten-bird pictogram and the 2.9 billion estimate together at the top. Identify the three highlighted birds as the share lost. Follow with habitat comparisons on a common baseline and a before/after view for the named species. | Region, starting year, estimate wording, dates or period labels, and greater-than signs on lower bounds. Keep the species label specific. |
+
+**Five-second check.** Show the opening view at the intended screen size, then hide it. Ask “What happened?” and “How much or to whom?” For the bird example, the expected takeaway is that roughly three out of ten birds were lost since 1970 in the study region. This is a quick design check. Use a longer evaluation when the reading task requires it.
+
+**Cover-the-paragraph check.** Hide the explanatory paragraph while keeping the headline, data marks and direct labels. Ask the same question. If the answer disappears, improve the encoding or restore the one piece of text that carries essential context. A short but misleading version fails.
+
 ### Examples to study
 
 | Example | What to inspect and adapt |
@@ -149,6 +171,7 @@ For a first review, compare the original, a structured visual with precise annot
 
 - Every factual claim, number, arrow and event can be traced to a passage, table row, or explicitly documented derivation.
 - The main visual answers the selected question without an unsupported assumption. Changes to the brief lead to meaningful changes in selection or structure.
+- The opening view passes the five-second and cover-the-paragraph checks at the intended screen size, with essential context still present.
 - A conditional step remains conditional, and adjacent dates remain separate events.
 - Prominent color, size and position carry explainable meaning. The asset reinforces the reading order.
 - Text is editable, key context survives export, and the result has an accessible text equivalent.

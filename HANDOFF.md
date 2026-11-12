@@ -22,6 +22,7 @@ Credit McCandless for the framework, and don't copy his graphic into the app or 
 
 ## What changed
 
+- Expanded the visual communication guide after reviewing the bird-loss HTML and the Harvard visual examples. Added opening-view composition, meaningful encoding, text reduction, and two quick reader checks. This is a documentation update.
 - Added `docs/visual-communication-research.md` as a reference for turning source text into effective infographics.
 - Linked the guide from `README.md` and added the same standing design and review instruction to `AGENTS.md` and `CLAUDE.md`.
 - Added the owner's standing default to both `CLAUDE.md` and `AGENTS.md` (2026-11-12, Claude): **prefer visual representation over text** for every source. Give recurring things (products, places, people, steps) a drawn symbol in a consistent colour, introduce the symbols once in a key, then use them instead of names in charts, counts and markers. Keep words for headlines, the takeaway and qualifiers. Every symbol gets an accessible name. The reference example is the Harvard period-products infographic, a Claude Design canvas private to the owner, made with product drawings (tampon, pad, liner, cup, period underwear) on 2026-11-12.
@@ -44,7 +45,7 @@ Already on `main` before this branch:
 
 ## What was verified
 
-The guide and all three relative references were checked. This update is documentation only.
+The guide and all three relative references were checked. The new rules were reviewed against the supplied examples. The five-second and cover-the-paragraph checks are proposed acceptance checks. No new reader study was run.
 
 Harvard infographic: every number in the new tables was checked against the study's data page, which was read in the desktop browser on 2026-11-12. **Unverified:** the canvas wasn't viewed after these changes, because the Design type's instructions say not to render-check unless the owner asks.
 
