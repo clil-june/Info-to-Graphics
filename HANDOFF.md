@@ -1,15 +1,21 @@
 # Handoff
 
-Last updated: 2026-11-11 by Claude
+Last updated: 2026-11-12 by Claude
 
 ## Current task
 
-Set up a shared Claude and Codex workflow: `CLAUDE.md`, `AGENTS.md` and this file. `README.md` stays the project guide.
+Done: the shared Claude and Codex workflow (`CLAUDE.md`, `AGENTS.md` and this file), merged into `main` through PR #1. `README.md` stays the project guide.
+
+Up next, not started: making the boards more unique and context-aware, using David McCandless's "What Makes a Good Visualization?" diagram (informationisbeautiful.net) as the framework. Its four elements are information (data), story (concept), goal (function) and visual form (metaphor). A figure missing its story is "boring", one missing its goal is "useless", and one with only data and visuals is "eye candy". Two directions were proposed, and the owner hasn't chosen yet:
+1. Make the four elements Claude's brief for every figure. Each figure gets a story-based title, a stated goal and a visual metaphor taken from the subject. Claude rejects its own "boring" or "useless" figures, and each figure shows a small four-element indicator.
+2. Add a new editable overlap (Venn) figure type with 2–4 sets.
+
+Credit McCandless for the framework, and don't copy his graphic into the app or repo.
 
 ## Branch / PR
 
-- Branch: `workflow/claude-codex-handoff`
-- Pull request: https://github.com/clil-june/Info-to-Graphics/pull/1
+- Merged: `workflow/claude-codex-handoff` → `main`, https://github.com/clil-june/Info-to-Graphics/pull/1
+- No work in progress on any branch.
 
 ## What changed
 
@@ -51,6 +57,10 @@ Already on `main` before this branch:
 - Take one look at the phone layout and dark mode.
 - Decide whether to host the standalone page on Netlify (Claude features stay off there).
 
+## Still open (new)
+
+- Owner to choose direction 1, direction 2, or both for the McCandless work.
+
 ## Next step
 
-Review and merge this pull request. Then open the Info to Graphics artifact on claude.ai, add one real PDF and one link, press **Build board from sources**, and record the result here.
+Branch from `main` for the McCandless work once the direction is chosen. Separately, open the Info to Graphics artifact on claude.ai, add one real PDF and one link, press **Build board from sources**, and record the result here.
