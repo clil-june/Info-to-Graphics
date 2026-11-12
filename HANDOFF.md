@@ -25,6 +25,11 @@ Credit McCandless for the framework, and don't copy his graphic into the app or 
 - Added `docs/visual-communication-research.md` as a reference for turning source text into effective infographics.
 - Linked the guide from `README.md` and added the same standing design and review instruction to `AGENTS.md` and `CLAUDE.md`.
 - Added the owner's standing default to both `CLAUDE.md` and `AGENTS.md` (2026-11-12, Claude): **prefer visual representation over text** for every source. Give recurring things (products, places, people, steps) a drawn symbol in a consistent colour, introduce the symbols once in a key, then use them instead of names in charts, counts and markers. Keep words for headlines, the takeaway and qualifiers. Every symbol gets an accessible name. The reference example is the Harvard period-products infographic, a Claude Design canvas private to the owner, made with product drawings (tampon, pad, liner, cup, period underwear) on 2026-11-12.
+- Reviewed the Harvard infographic against the guide and fixed three gaps (2026-11-12, Claude). The canvas version is labelled "Guide review: question, tables, attribution".
+  - **Reader question:** added "Which period products do people use, and does that change with age?" at the top, and each section's label is now its own question.
+  - **Text equivalent:** added a "numbers behind the pictures" section with three tables (products, overnight answers, pads and tampons by age), with shares and the number of people.
+  - **Attribution:** self-reported findings now say "reported" or "say" (for example, "6 in 10 tampon users say they sleep with one in"). The takeaway credits the researchers for the claim that most people use more than one product.
+  - The artboard source is copied to `references/harvard-period-products-visual/` (`Main.dc.html` and `Glyph.dc.html`, Claude Design format). This is the reference example the visual-first default points to. PR #2 has the earlier, text-labelled checkpoint in `references/harvard-period-products/`.
 
 Previously merged in PR #1:
 
@@ -40,6 +45,8 @@ Already on `main` before this branch:
 ## What was verified
 
 The guide and all three relative references were checked. This update is documentation only.
+
+Harvard infographic: every number in the new tables was checked against the study's data page, which was read in the desktop browser on 2026-11-12. **Unverified:** the canvas wasn't viewed after these changes, because the Design type's instructions say not to render-check unless the owner asks.
 
 | Check | How / where | Result |
 |---|---|---|
@@ -72,7 +79,6 @@ The guide and all three relative references were checked. This update is documen
 
 - Owner to choose direction 1, direction 2, or both for the McCandless work.
 - The app's generator doesn't yet follow the visual-first default. It uses Lucide icons per item, but doesn't create subject-specific symbols for recurring things or replace names with them. This is app work, so it waits until the owner resumes app changes. PR #2's prompts are the natural place to add it.
-- The Harvard infographic hasn't been reviewed against the guide's acceptance checks. Known gaps: no explicit reader question; no structured text equivalent such as a table; some self-reported findings are phrased as facts ("sleep with one in" rather than "say they sleep with one in").
 
 ## Next step
 
