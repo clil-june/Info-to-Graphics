@@ -67,6 +67,35 @@ All in `index.html`, plus a "Design approach" section in `README.md`:
 - **Old saved boards:** loading boards saved under the old storage key, and swapping the old example board for the new one.
 - **Board brief from Claude:** whether Claude's board-level brief fills the story strip on generation.
 
+## Checkpoints
+
+### Harvard study v1 (2026-11-12): the benchmark board
+
+At the owner's request, a hand-made reference infographic, kept so we can come back to it. It shows what the app should be able to produce when it follows the references below.
+
+- **Source:** Harvard T.H. Chan School of Public Health, Apple Women's Health Study, "Menstrual hygiene products: pads and tampons are the go-to choice" (May 2023) and its data page. This is the article the owner linked in the Info to Graphics app.
+- **Where it lives:**
+  - A Claude Design canvas titled "Period Products Infographic". It's private to the owner. The checkpoint is the version labelled "Checkpoint: Harvard study v1".
+  - A copy of the artboard source in `references/harvard-period-products/Main.dc.html`. It's in Claude Design's `.dc.html` format, not part of the app.
+- **What it does, in order:**
+  1. Ranked bars of every product.
+  2. Drop pictograms for cups and period underwear, with tampons for scale.
+  3. A 100-square grid for sleeping with a tampon.
+  4. Pads against tampons by age group.
+  5. A lifetime estimate.
+  6. A takeaway band, then sources.
+- **Principles it follows:** the four McCandless elements plus the Venngage references the owner sent (Venngage blog "What makes a good infographic" and its video):
+  - titles state the point
+  - one highlight and note per chart
+  - every number copied from the study
+  - bars rather than donuts
+  - one colour per product family across the whole board
+  - small categories moved to a footnote
+  - a closing takeaway
+- **Verified:** every number was checked against the article text, read in the desktop browser on 2026-11-12.
+- **Unverified:** the canvas wasn't viewed after publishing. The Design type's instructions say not to render-check unless the owner asks.
+- **How to use it:** feed the same article into the app (artifact) and compare the board with this checkpoint.
+
 ## Still open
 
 - Test the four-element generation in the artifact on a real source, and judge whether the boards feel more engaging.
