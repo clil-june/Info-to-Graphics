@@ -21,6 +21,10 @@ This repo is shared between Claude and Codex. Both follow the same workflow.
 
    Say clearly if a change is still pending (unmerged, unpushed) or hasn't been verified. If `HANDOFF.md` and the branch disagree, say so instead of guessing.
 
+## Infographic design and review
+
+When designing, changing, or reviewing infographic generation, consult [the visual communication research guide](docs/visual-communication-research.md). Use it to identify the reader's question, choose a visual form that fits the source, and check that the result communicates the intended takeaway.
+
 ## Before handing work back
 
 1. Update `HANDOFF.md` (format below).
