@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-17 (Claude: the output is now one question, one picture, made in one call).
+Last updated 2026-11-17 (Claude: posters get subject-themed art direction and richer drawing).
 
 ## Current task
 
@@ -15,6 +15,23 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Subject-themed art direction and illustration craft (Claude, 2026-11-17, fourth change)
+
+- **Owner feedback.** Posters "look like a two year old's drawing". If the article is about space, the background, fonts and look should feel like space, and the same for any subject.
+- **Theme in the reply.** The model sets the theme on `div.ig-symdefs`: `data-bg`, `data-bg2` (vertical gradient), `data-ink`, `data-muted`, `data-accent`, `data-font`, `data-body`, `data-texture` and `data-dir="rtl"`.
+  - `readTheme()` and `applyTheme()` read it from the raw markup on every render, so each version keeps its own look. Only hex colours, the `FONTS` allow-list and the `TEXTURES` list are accepted.
+  - If the ink doesn't contrast with the background, a light or dark ink is chosen automatically.
+  - Dark backgrounds recolour the panel, track and ghost colours.
+- **Fonts.** `FONTS` holds 22 Google families, including the Hebrew-capable Rubik, Heebo, Frank Ruhl Libre and Secular One. `ensureFont()` loads each one only when it's first used, and export links the theme's fonts.
+- **Textures.** `TEXTURES` are CSS-only: stars, grid, dots, paper, lines, waves, glow and none.
+- **Gradients are allowed in drawings.** The sanitizer now accepts `defs`, `linearGradient`, `radialGradient`, `stop`, `id` (on gradients only) and `fill`/`stroke="url(#id)"`. Gradient ids are prefixed per render so two renders never share them, and any other `url()` is still dropped.
+- **Prompt changes.**
+  - `POSTER_RULES` rule 6 maps subjects to art directions (space, ocean, food, history, sport, health, tech, nature), plus Hebrew handling.
+  - Rule 7 sets the illustration craft: layered shapes with shadow and highlight, curved paths, one light direction, cast shadows, gradients, true proportions, depth, a restrained palette and leader-line labels.
+  - The drawing element budget went from about 250 to about 400.
+- **Two hand-made examples in the prompt.** `EXAMPLE_POSTER` (the periods poster, refined with gradients and shadows on a paper texture) and new `EXAMPLE_SPACE` ("Thirty Earths would fit in the gap": a dark star field, Orbitron with Space Mono, the Earth and Moon drawn with gradients and a to-scale strip; NASA figures 384,400 km, 12,742 km and 3,475 km).
+- **Tier.** The poster, change and different-picture calls are back on `complex` first (better drawing), with a `default` fallback.
 
 ### One question, one picture (Claude, 2026-11-17, third change)
 
@@ -64,6 +81,15 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+- Fourth change (Claude, 2026-11-17):
+  - `node --check` on the inline script.
+  - Headless Chromium on the standalone `index.html` (external requests blocked, so the fonts fell back):
+    - the periods example renders on its paper texture
+    - a stand-in reply of the space example renders with a dark gradient and stars, `--dsp` set to Orbitron, 5 gradients with prefixed ids, and no page errors or sideways scroll at 1440 and 390 px; screenshots were inspected
+    - the make, different-picture and change flow still passes (`complex` calls)
+  - Published to the Artifact as version `1794934447-98f7` with capabilities unchanged.
+  - **Unverified:** Google fonts actually loading inside the Artifact, real Claude output quality and theme choices, and speed on the `complex` tier.
 
 - Third change (Claude, 2026-11-17):
   - `node --check` on the inline script.
