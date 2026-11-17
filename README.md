@@ -15,6 +15,10 @@ Info to Graphics is a single `index.html` with no build step. Open it in a brows
 
 The Claude features (building a board, "Ask Claude", reading images and reading links) only work when the page runs as an artifact on claude.ai, because they use the viewer's own Claude account. Everywhere else, the editor, file reading for PDF/Word/text, saving boards in the browser, and export still work.
 
+## Infographic design
+
+See the [visual communication research guide](docs/visual-communication-research.md) for choosing visual forms, turning source text into graphics, and reviewing whether a figure communicates its intended takeaway.
+
 ## Libraries
 
 Loaded from CDNs: [Lucide](https://lucide.dev) icons, [pdf.js](https://mozilla.github.io/pdf.js/) and [mammoth.js](https://github.com/mwilliamson/mammoth.js). Fonts: Schibsted Grotesk and IBM Plex Mono from Google Fonts.
