@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-17 (Claude: generation no longer discards usable pages).
+Last updated 2026-11-17 (Claude: faster, sturdier generation; phone review taken out of the run).
 
 ## Current task
 
@@ -13,6 +13,18 @@ Apply the full-page visual approach developed in the Apollo 11 and US car color 
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Faster, sturdier generation (Claude, 2026-11-17, second fix)
+
+- **Why.** The owner reported that after the first fix "the model just isn't working" and asked for it to work and be quicker. A good run made up to five sequential Claude calls (plan, compose, inspect, repair, inspect), all on `modelTier: 'complex'`, with up to 170k characters of sources, and nothing visible happened until the very end.
+- **The run is now two calls:** plan, then compose.
+  - The plan uses `modelTier: 'default'` and up to 60k characters of sources (it was `complex` and 170k). Refine sends up to 50k (it was 120k).
+  - Compose stays `complex`.
+- **Fallback.** A new `ask()` helper makes each call. If a call fails (but not by stopping, refusal, consent or prompt size) or returns something unusable, it tries once on the other tier: plan goes default → complex, compose goes complex → default. A rejected call whose partial `e.text` is already usable is kept.
+- **The plan is read as text** and parsed with `parseJSON()` instead of `sample.json`, so a stray sentence around the JSON no longer fails the run. The stage shows how many characters of the plan have arrived.
+- **Live build.** Compose, refine and new layout stream with `onText`. `livePreview()` re-renders the partial page about every 0.7 s, so the infographic builds on screen as it is written. On error the stage is restored.
+- **Phone screenshot review removed from the run.** `checkLayout`, `inspectLayout` and `repairLayout` are still in the file but are no longer called. Stored versions that carry review states still display them.
+- **Errors** now include the code for unknown failures ("Something interrupted the request (code)"), and there is new copy for `timeout`.
 
 ### Fix: generation stopped discarding usable pages (Claude, 2026-11-17)
 
@@ -34,6 +46,18 @@ Apply the full-page visual approach developed in the Apollo 11 and US car color 
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+- Second fix (Claude, 2026-11-17):
+  - `node --check` on the inline script.
+  - Headless Chromium on the standalone `index.html` with a stand-in streaming sampler:
+    - normal → calls `plan:default`, `page:complex`; done, with the half-written headline visible mid-stream
+    - compose rate-limited on complex → retried on default, done
+    - plan not JSON twice → calls `plan:default`, `plan:complex`, then "Claude’s plan came back incomplete"
+    - compose rejected with a usable partial text → kept
+    - unknown error → "Something interrupted the request (weird_thing)" and the previous page restored
+  - Published to the Artifact as version `1794932535-04a8` with capabilities unchanged.
+  - Tried to run the live Artifact in the owner's desktop browser pane. It loaded, but the pane isn't signed in to claude.ai, so Claude was unavailable there.
+  - **Unverified:** a live Claude run in the Artifact (speed, quality, whether `onText` streams there as documented).
 
 - Fix (Claude, 2026-11-17):
   - `node --check` and `git diff --check` passed.
@@ -58,4 +82,4 @@ Apply the full-page visual approach developed in the Apollo 11 and US car color 
 
 ## Next step
 
-Update the Claude Artifact from this branch and run the two benchmarks without manual corrections. Inspect the opening, middle and final sections on a phone. Confirm the review status, source coverage and timing before merging.
+The owner tries a run in the live Artifact while signed in, and reports the time or the exact error text (it now includes the error code). If layout problems on phones come back, consider bringing the screenshot review back as an optional button rather than an automatic step. Then run the two benchmarks without manual corrections. Inspect the opening, middle and final sections on a phone. Confirm the review status, source coverage and timing before merging.
