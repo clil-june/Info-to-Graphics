@@ -70,6 +70,16 @@ Text can identify, define, quantify, contextualize, qualify, and guide attention
 
 Cleveland and McGill's graphical perception research and later experiments by Heer and Bostock motivate using common position or aligned length for precise quantitative judgments. The task still governs: a map may be indispensable for route tracing, an image for a physical feature, and a table for exact lookup. Vega-Lite formalizes the link between a typed data field and a visual channel. This distinction is useful even if the app uses its own renderer. [Cleveland and McGill](https://doi.org/10.1080/01621459.1984.10478080) · [Heer and Bostock](https://idl.uw.edu/papers/crowdsourcing-graphical-perception) · [ONS chart choice](https://service-manual.ons.gov.uk/data-visualisation/chart-types/choosing-a-chart-type) · [Financial Times Visual Vocabulary](https://github.com/Financial-Times/chart-doctor/blob/main/visual-vocabulary/Visual-vocabulary.pdf) · [Vega-Lite encodings](https://vega.github.io/vega-lite/docs/encoding.html) · [UNHCR on flows](https://dataviz.unhcr.org/chart-types/flow/)
 
+### Let the subject carry the data
+
+When a subject has a recognizable form that can carry the intended comparison, use that form as a data mark. Decide what the reader should see first, then choose which property of the mark will communicate it. The shape can identify the subject, its area can represent magnitude, repeated marks can show a count or share with a stated unit, and position on a common scale can support precise comparisons.
+
+**Worked example — fish population, 1970 and 2015.** Use the same fish silhouette at both dates. Put the year above each fish, the population value inside or beside it, and the percentage change between the two. If the 2015 population is half the 1970 population, the second silhouette should have half the area. Apply the square root of the value ratio to both width and height, so in this case each dimension is about 71% of the original. Keep the population definition and units consistent. If the source supplies only an index, label the index and its baseline. Show estimates and rounding where they change the reading.
+
+Choose this treatment when a recognizable subject helps readers grasp the direction and rough magnitude of a change. Use direct labels for exact values. For small differences or many categories, use a shared scale that makes those differences easy to see. A recognizable symbol can still identify each category on that scale.
+
+**Readability check.** Hide the explanatory paragraph. The reader should still recognize the subject, see which value is larger and locate the exact values and dates. If the silhouettes suggest a larger change than the labels support, correct the scale before publishing.
+
 ## 4. Construct graphs before arranging them
 
 ### Define what a node and edge mean
