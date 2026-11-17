@@ -830,12 +830,16 @@ function renderStage(){
     ? h('div', {class: 'check warn', role: 'status'}, h('span', {}, h('b', {}, `${chk.missing.length} number${chk.missing.length === 1 ? '' : 's'} to double-check. `), `Not found in your sources: ${chk.missing.slice(0, 12).join(', ')}${chk.missing.length > 12 ? ' …' : ''}. They may be rounded or worked out; ask for a change if any is wrong.`))
     : h('div', {class: 'check ok', role: 'status'}, h('span', {}, h('b', {}, 'Numbers checked. '), `All ${chk.checked} numbers on the page appear in your sources.`)));
   const review = vs[cur].review;
-  if (review) {
+  if (review && review.state) {
     const copy = review.state === 'passed' ? 'Mobile visual review passed.'
-      : review.state === 'needs-review' ? 'Visual review flagged: ' + review.issues.map(i => i.title || 'Opening').join(', ') + '.'
+      : review.state === 'needs-review' ? 'Visual review flagged: ' + (review.issues || []).map(i => i.title || 'Opening').join(', ') + '.'
+      : review.state === 'repaired' ? `Mobile review fixed ${review.repaired || 'some'} section${review.repaired === 1 ? '' : 's'}; there was no time left to check the fixes.`
+      : review.state === 'skipped' ? 'Mobile visual review was skipped to keep the wait short.'
       : 'Mobile visual review was unavailable.';
     top.append(h('div', {class:'check ' + (review.state === 'passed' ? 'ok' : 'warn'), role:'status'}, copy));
   }
+  if (review?.coverage?.missing?.length) top.append(h('div', {class:'check warn', role:'status'},
+    h('span', {}, h('b', {}, 'Not on the page: '), review.coverage.missing.join(' · ') + '. Ask for a change to add ' + (review.coverage.missing.length === 1 ? 'it' : 'them') + '.')));
   if (vs.length > 1) top.append(h('div', {class: 'versions'}, h('span', {class: 'label'}, 'Versions'),
     vs.map((v, i) => h('button', {type: 'button', 'aria-pressed': String(i === cur), title: v.label || '', onclick: () => { proj.cur = i; save(); renderStage(); }}, `${i + 1}. ${v.label || 'Version'}`))));
 }
@@ -945,6 +949,7 @@ function errCopy(e){
   }
 }
 let ctl = null, t0 = 0, tick = null;
+const REVIEW_BUDGET_MS = 4 * 60 * 1000; // after this much time in a run, skip or cut short the phone review
 function stage(name){
   const order = ['read', 'plan', 'compose', 'check'], at = order.indexOf(name);
   document.querySelectorAll('.ps').forEach(el => { const i = order.indexOf(el.dataset.s); el.className = 'ps' + (i < at ? ' done' : i === at ? ' on' : ''); });
@@ -1036,10 +1041,15 @@ function sourceMarkup(html, project) {
 }
 
 function planCovered(html, project) {
-  const expected = project.plan.sections.map(s => s.id);
-  const actual = reviewTargets(sourceMarkup(html, project))
-    .filter(el => el.matches('.ig-panel')).map(el => el.dataset.section);
-  return expected.length === actual.length && expected.every((id, i) => id === actual[i]);
+  return !coverageOf(html, project).missing.length;
+}
+/* Which planned sections the page left out. A warning shown with the page, never a reason to discard it. */
+function coverageOf(html, project) {
+  const sections = (project.plan?.sections || []).filter(s => s && s.id);
+  if (!sections.length) return {missing: []};
+  const ids = new Set(reviewTargets(sourceMarkup(html, project)).filter(el => el.matches('.ig-panel')).map(el => el.dataset.section).filter(Boolean));
+  if (!ids.size) return {missing: [], unknown: true};
+  return {missing: sections.filter(s => !ids.has(s.id)).map(s => String(s.title || s.question || s.id).slice(0, 80))};
 }
 
 function jsonReply(r) {
@@ -1096,6 +1106,8 @@ Reply only with JSON {"sections":[{"index":0,"html":"one replacement root elemen
 
 async function checkLayout(sample, html, project, signal) {
   let issues;
+  const overBudget = () => Date.now() - t0 > REVIEW_BUDGET_MS;
+  if (overBudget()) return {html, review:{state:'skipped'}};
   try {
     const limits = await sample.limits().catch(() => null);
     signal.throwIfAborted();
@@ -1106,8 +1118,10 @@ async function checkLayout(sample, html, project, signal) {
     return {html, review:{state:'unavailable'}};
   }
   if (!issues.length) return {html, review:{state:'passed'}};
+  if (overBudget()) return {html, review:{state:'needs-review', issues}};
   try {
     const fixed = await repairLayout(sample, html, project, issues, signal);
+    if (overBudget()) return {html:fixed, review:{state:'repaired', repaired:issues.length}};
     const remaining = await inspectLayout(sample, fixed, project, signal);
     return {html:fixed, review:{state:remaining.length ? 'needs-review' : 'passed', issues:remaining, repaired:issues.length}};
   } catch {
@@ -1140,14 +1154,13 @@ $('#goBtn').addEventListener('click', async () => {
     stage('compose');
     const options = {cache:false, signal:ctl.signal, modelTier:'complex'};
     let html = stripFences((await sample(composePrompt(draft), options)).text);
-    if (!planCovered(html, draft)) {
-      html = stripFences((await sample(composePrompt(draft, 'Include exactly one visible findings panel per plan ID, in order. Give every panel its exact data-section ID.'), options)).text);
-    }
-    if (!validPage(html) || !planCovered(html, draft)) throw {code:'incomplete_page'};
+    if (!validPage(html)) html = stripFences((await sample(composePrompt(draft, 'The last attempt was not a usable page. Start with <header class="ig-head"> and give every findings panel its data-section ID.'), options)).text);
+    if (!validPage(html)) throw {code:'empty_page'};
     stage('check');
     const checked = await checkLayout(sample, html, draft, ctl.signal);
     ctl.signal.throwIfAborted();
     if (proj !== target) return;
+    checked.review = {...(checked.review || {}), coverage: coverageOf(checked.html, draft)};
     Object.assign(target, {plan, entities:plan.entities, accent:plan.accent});
     if (!target.title || target.title === 'Untitled infographic') target.title = plan.title || target.title;
     addVersion(checked.html, 'First version', checked.review);
@@ -1175,11 +1188,11 @@ async function revise(kind){
     const r = await sample(prompt, {cache: false, signal: ctl.signal, modelTier: 'complex'});
     const html = stripFences(r.text);
     if (!validPage(html)) throw {code: 'empty_page'};
-    if (kind === 'again' && target.plan?.sections?.every(s => s.id) && !planCovered(html, target)) throw {code:'incomplete_page'};
     st.textContent = 'Reviewing the mobile layout…';
     const checked = await checkLayout(sample, html, target, ctl.signal);
     ctl.signal.throwIfAborted();
     if (proj !== target) return;
+    if (kind === 'again') checked.review = {...(checked.review || {}), coverage: coverageOf(checked.html, target)};
     addVersion(checked.html, kind === 'change' ? instr.slice(0, 60) : 'New layout', checked.review);
     if (kind === 'change') $('#refineIn').value = '';
     renderAll(); setTab('out');
