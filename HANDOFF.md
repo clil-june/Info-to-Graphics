@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-17 (Claude: blue start page from the owner's mockup, cleaner sidebar).
+Last updated 2026-11-17 (Claude: start page scaled to the mockup's proportions).
 
 ## Current task
 
@@ -15,6 +15,16 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Start page proportions (Claude, 2026-11-17, seventh change)
+
+- **Owner's request.** "Make everything a bit smaller in ratios more similar to the reference image."
+- **How.** Every start-page size is now written in mockup pixels times `--s = clamp(0.6px, min(0.05208vw, 0.0926vh), 1.15px)`, that is, one 1920×1080 mockup pixel scaled to the window. Phones (under 700 px wide) get fixed readable sizes.
+- **Verified in headless Chromium:**
+  - at 1920×1080: pill 930×70, box 930×162, button 168×77, matching the mockup
+  - at 1440×900 the measurements are 697×52, 121 and 126×58; at 1280×720 the screen is about two-thirds of the mockup size; a screenshot at 1440 was inspected
+  - phone at 390 px: 342-wide fields
+- Published to the Artifact as version `1794938424-3b19`.
 
 ### Start page and cleaner workspace (Claude, 2026-11-17, sixth change)
 
