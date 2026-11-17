@@ -70,6 +70,16 @@ Text can identify, define, quantify, contextualize, qualify, and guide attention
 
 Cleveland and McGill's graphical perception research and later experiments by Heer and Bostock motivate using common position or aligned length for precise quantitative judgments. The task still governs: a map may be indispensable for route tracing, an image for a physical feature, and a table for exact lookup. Vega-Lite formalizes the link between a typed data field and a visual channel. This distinction is useful even if the app uses its own renderer. [Cleveland and McGill](https://doi.org/10.1080/01621459.1984.10478080) · [Heer and Bostock](https://idl.uw.edu/papers/crowdsourcing-graphical-perception) · [ONS chart choice](https://service-manual.ons.gov.uk/data-visualisation/chart-types/choosing-a-chart-type) · [Financial Times Visual Vocabulary](https://github.com/Financial-Times/chart-doctor/blob/main/visual-vocabulary/Visual-vocabulary.pdf) · [Vega-Lite encodings](https://vega.github.io/vega-lite/docs/encoding.html) · [UNHCR on flows](https://dataviz.unhcr.org/chart-types/flow/)
 
+### Let the subject carry the data
+
+When a subject has a recognizable form that can carry the intended comparison, use that form as a data mark. Decide what the reader should see first, then choose which property of the mark will communicate it. The shape can identify the subject, its area can represent magnitude, repeated marks can show a count or share with a stated unit, and position on a common scale can support precise comparisons.
+
+**Worked example — fish population, 1970 and 2015.** Use the same fish silhouette at both dates. Put the year above each fish, the population value inside or beside it, and the percentage change between the two. If the 2015 population is half the 1970 population, the second silhouette should have half the area. Apply the square root of the value ratio to both width and height, so in this case each dimension is about 71% of the original. Keep the population definition and units consistent. If the source supplies only an index, label the index and its baseline. Show estimates and rounding where they change the reading.
+
+Choose this treatment when a recognizable subject helps readers grasp the direction and rough magnitude of a change. Use direct labels for exact values. For small differences or many categories, use a shared scale that makes those differences easy to see. A recognizable symbol can still identify each category on that scale.
+
+**Readability check.** Hide the explanatory paragraph. The reader should still recognize the subject, see which value is larger and locate the exact values and dates. If the silhouettes suggest a larger change than the labels support, correct the scale before publishing.
+
 ## 4. Construct graphs before arranging them
 
 ### Define what a node and edge mean
@@ -102,6 +112,46 @@ In the Ghoniem, Fekete and Castagliola experiment, matrices performed better for
 - **Provide an accessible reading route.** Use descriptive text, labels and keyboard interaction. A complex graphic may need a short summary plus a structured equivalent such as a table or a longer description. If key context only appears on hover, static export and many assistive workflows will lose it.
 
 [Segel and Heer](https://idl.uw.edu/papers/narrative) · [Hullman and Diakopoulos](https://www.hullmanlab.northwestern.edu/paper/2011/02/01/vis-rhetoric.html) · [Ajani et al.](https://visualthinking.psych.northwestern.edu/publications/Ajani_Declutter_2021.pdf) · [Borkin et al.](https://vcg.seas.harvard.edu/publications/20130101-what-makes-a-visualization-memorable) · [Mayer](https://doi.org/10.1111/jcal.12197) · [W3C complex images](https://www.w3.org/WAI/tutorials/images/complex/)
+
+### Lead with a visual answer
+
+Use this sequence when composing an infographic from source text.
+
+1. **Choose the main relationship.** Write the one question the piece should answer and the shortest accurate answer. Decide what the reader should see: magnitude, share, change, a gap, order, or a physical relationship.
+2. **Put the strongest visual in the opening view.** Pair it with a short takeaway and direct labels. Make the data-bearing graphic the largest or most prominent element in that view. Keep the legend close to the marks it explains. Put introductory prose and method details after the answer when they can wait.
+3. **Assign a job to each visual element.** An icon identifies the subject. Length can compare magnitudes, position on a shared scale can show a gap, and repeated marks with a fixed denominator can show a share. If an image only identifies the topic, check whether a chart or a direct annotation is also needed to answer the question.
+4. **Give every following panel a new job.** Combine an absolute number and its share when they explain the same finding. Add a panel when it answers a distinct question, shows a meaningful exception, or supplies necessary context. Let the material determine how many panels and chart types are needed.
+5. **Cut repeated text before cutting context.** Give the headline, labels and annotations distinct roles. Remove a sentence that restates a marked value unless it adds interpretation. Keep the unit, population, denominator, date range and qualifiers such as “reported,” “estimated,” “about,” or “at least” wherever removing them changes the claim. Move detailed tables and methodology to a clearly labeled secondary layer. A standalone HTML export can keep that layer collapsed with an accessible disclosure. In a static export, keep essential context next to the chart.
+6. **Highlight the evidence for the claim.** Use emphasis to identify the relevant mark or gap. Give symbols a stable meaning, use recognizable silhouettes, and add a direct label when similar symbols are hard to distinguish. A separate closing takeaway earns its space when it adds a synthesis or implication supported by the piece.
+
+| Benchmark | What the visual does | What to keep beside it |
+| --- | --- | --- |
+| Harvard period-products ranking | Aligned bar lengths show the ranking. Recurring product silhouettes identify the categories. | Exact percentages, a clear scale, and the multiple-response note. |
+| Harvard age comparison | Two marks per age group on one scale show which product leads. The distance between them shows the gap. | Age groups, series labels, and exact percentages. Highlight the group only if it answers the headline's question. |
+| Harvard overnight use | Six highlighted symbols out of ten communicate a share at a glance. | Who is counted and what they reported. Keep rounding and any separate response categories clear. |
+| Bird-loss redesign | Put the ten-bird pictogram and the 2.9 billion estimate together at the top. Identify the three highlighted birds as the share lost. Follow with habitat comparisons on a common baseline and a before/after view for the named species. | Region, starting year, estimate wording, dates or period labels, and greater-than signs on lower bounds. Keep the species label specific. |
+
+**Five-second check.** Show the opening view at the intended screen size, then hide it. Ask “What happened?” and “How much or to whom?” For the bird example, the expected takeaway is that roughly three out of ten birds were lost since 1970 in the study region. This is a quick design check. Use a longer evaluation when the reading task requires it.
+
+### Carry the visual explanation through the entire infographic
+
+Before laying out the page, give each major finding one line in the plan. Record the reader question, the relationship the source supports, the visual mark that will show it, and the values and qualifiers the reader will need. Combine findings that answer the same question. Keep meaningful exceptions visible in the section where they change the story.
+
+Apply the **cover-the-paragraph check** to every section that presents a finding. Hide the explanatory prose while keeping the takeaway, graphic, direct labels, units and essential notes. At the intended screen size, a reader should still be able to identify what is being compared, see the direction or pattern of the result, and locate the values or labels that support it. If a key comparison disappears, put it into the graphic or a direct annotation, then check the section again before export. The opening also gets the five-second check.
+
+Plan the visual treatment for the middle and end alongside the opening. In every findings section, give the primary graphic enough room to be read at the target size. Carry forward the meaning of colors, objects and line styles so readers can follow them across sections. Choose the graphic by what it needs to explain. In the Apollo 11 example, a route map introduces the mission, a closer orbital diagram follows the two spacecraft after they separate, and an illustrated sequence shows the transition from capsule separation to parachutes to splashdown.
+
+After the cover-the-paragraph check, review the default reading view from top to bottom. Remove prose that repeats what the graphic already communicates. Put supplementary explanation, detailed logs and tables in a clearly labeled secondary layer, with essential qualifications visible by the marks they affect. Inspect the first, middle and final findings sections at the intended screen size. Give a later section a clearer graphic if its main relationship still depends on a caption or a decorative icon.
+
+Use the subject itself as the data mark when its shape or surface makes the relationship easier to read. A recognizable icon can identify a group. The graphic still needs a visible encoding such as length, count, position or area. For precise comparisons, use a shared scale across comparable marks. Keep qualifications beside the affected values and use short prose for interpretation, methodology and claims that have no sound visual encoding. Keep detailed tables available for lookup.
+
+**Worked example — car colors.** A fleet pictogram shows how much grayscale grew overall, and an annual chart shows when it leveled off. Later sections need evidence of their own. Automotive paint chips can carry paired bars on the same scale to show which colors gained or lost share. For vehicle types, fill matched silhouettes by length so the reader can compare the same body shape across both model years. Put the years and exact shares beside the vehicles. A small comparison chart can then show why sports cars are an exception by plotting non-grayscale shares on a common scale and labeling each population.
+
+### Generation instruction for the app
+
+Include this instruction in the app's existing generation prompt and supply the current guide with each run.
+
+> Apply the visual communication guide to the full infographic. Before layout, map every major finding and meaningful exception to a section and identify the graphic that will carry it. Plan the opening, middle and ending together. Make each section's main relationship readable from its headline, graphic, direct labels and essential notes. Before export, hide explanatory prose and check every findings section at the target size. Revise any section whose main point disappears. In the default view, remove prose that repeats the graphic and place supplementary details in a labeled secondary layer. Compare the opening, middle and final findings sections for graphic legibility and consistent visual conventions.
 
 ### Examples to study
 
@@ -149,6 +199,8 @@ For a first review, compare the original, a structured visual with precise annot
 
 - Every factual claim, number, arrow and event can be traced to a passage, table row, or explicitly documented derivation.
 - The main visual answers the selected question without an unsupported assumption. Changes to the brief lead to meaningful changes in selection or structure.
+- The opening view passes the five-second and cover-the-paragraph checks at the intended screen size, with essential context still present.
+- Each later findings section passes the cover-the-paragraph check at the intended screen size. The main comparison and meaningful exceptions remain legible from the graphic and its labels.
 - A conditional step remains conditional, and adjacent dates remain separate events.
 - Prominent color, size and position carry explainable meaning. The asset reinforces the reading order.
 - Text is editable, key context survives export, and the result has an accessible text equivalent.

@@ -14,27 +14,12 @@ The app opens on an example made from the Harvard period-products study.
 
 ## How it makes an infographic
 
-Two Claude calls, then a check:
+1. **Plan the whole page.** The plan identifies the main evidence for the opening and the relationship, drawing or chart, direct labels, and qualifications for each findings section.
+2. **Compose the HTML.** Claude uses the page format and reusable visual components in `index.html`. The renderer turns declared numbers into bars, pictogram fills and dot positions. It also supports annotated SVG diagrams for routes, mechanisms and sequences.
+3. **Review the rendered page.** When Claude can receive images, the app captures each visible section at 390 px, once as shown and once with explanatory prose hidden. Claude identifies specific problems. The app makes one targeted repair pass and captures the page again. The result shows whether review passed, still flagged an issue, or was unavailable.
+4. **Check the numbers.** The page reports numeric strings it cannot match in the sources. This is a numeric lookup and does not validate every value's context or attribution.
 
-1. **Plan the story.** Claude reads the sources and the brief, then writes a plan with:
-   - the reader's question and a headline that answers it
-   - an intro with the denominator
-   - the things that recur, each with a drawn symbol and a colour
-   - 3–6 sections, each with its own question, a title that states its point, the form that fits the relationship, the exact numbers, a highlight and a callout
-   - a takeaway, the source line and method notes
-2. **Compose the page.** Claude lays out the plan in the app's page format (the `ig-*` classes in `index.html`). It's shown the Harvard page as its model of quality.
-   - The app draws the data-driven parts itself, from the values: bar lengths, pictograms (repeated symbols, partly filled for fractions), dot charts (gridlines, gap lines and value labels), the key of symbols, and the takeaway's row of symbols. Positions and counts are exact, not eyeballed.
-3. **Check the numbers.** Every number on the page is looked up in the sources, allowing for rounding. The page shows "Numbers checked" or lists any number to double-check.
-
-The rules Claude follows, taken from `docs/visual-communication-research.md`, McCandless's "What Makes a Good Visualization?" and the Venngage guidance:
-- Start from the reader's question.
-- Titles state the point.
-- Copy numbers exactly, with units and denominators, and keep "reported", "said" and "estimated".
-- Visual first: symbols replace names.
-- Choose the form by the relationship.
-- One highlight per section, and less clutter.
-- Compact sections side by side, with at most one dark panel.
-- End with a takeaway, then sources and method notes, then the numbers as tables.
+The [visual communication guide](docs/visual-communication-research.md) describes the generation and review criteria. HTML export keeps supplementary details collapsed and uses local font fallbacks offline.
 
 **Safety:** Claude's HTML is treated as untrusted. Only known tags, `ig-*` classes, safe inline styles and `http(s)` links survive. Scripts, event handlers, images and `url()` styles are removed.
 
