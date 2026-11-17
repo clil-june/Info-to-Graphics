@@ -142,11 +142,6 @@ body{font-family:Inter,"Helvetica Neue",Arial,sans-serif}
 .home-go:hover{transform:translateY(-1px)}
 .home-go:disabled{opacity:.6;cursor:default;transform:none}
 .home-status{min-height:1.4em;margin:0;font-size:max(12px, calc(16 * var(--s)));color:rgba(255,255,255,.88);text-align:center}
-.home-recent{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(8 * var(--s));max-width:calc(760 * var(--s))}
-.home-recent:empty{display:none}
-.home-recent .rl{width:100%;text-align:center;font-size:max(10px, calc(12 * var(--s)));letter-spacing:.08em;text-transform:uppercase;opacity:.6}
-.home-recent button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;padding:calc(6 * var(--s)) calc(14 * var(--s));font-size:max(11px, calc(14 * var(--s)));cursor:pointer;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.home-recent button:hover{background:rgba(255,255,255,.12)}
 .home-dropzone{position:fixed;inset:14px;border:2px dashed rgba(255,255,255,.7);border-radius:28px;display:none;align-items:center;justify-content:center;font-family:var(--word);font-size:28px;pointer-events:none}
 .home.over .home-dropzone{display:flex}
 @media (max-width:700px){.home{--s:0.62px}.home-col{width:100%}.home-title{font-size:32px}.home-src input,.home-brief,.home-go{font-size:16px}.home-src input{height:52px;padding:0 52px 0 22px}.home-brief{height:120px;padding:16px 22px}.home-go{height:54px;padding:0 26px}}
@@ -344,7 +339,6 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
     <textarea id="homeBriefIn" class="home-brief" placeholder="Name the information you’re after" aria-label="The information you’re after"></textarea>
     <button class="home-go" id="homeGo" type="button">Generate</button>
     <p class="home-status" id="homeStatus" role="status"></p>
-    <div class="home-recent" id="homeRecent"></div>
   </div>
   <div class="home-dropzone" aria-hidden="true">Drop to add</div>
 </section>
@@ -1677,8 +1671,6 @@ function showHome(){
   if (!(proj && !proj.example && !(proj.versions || []).length)){ const p = freshProject(); store.projects.unshift(p); store.current = p.id; proj = p; save(); }
   $('#home').hidden = false; $('#app').hidden = true;
   $('#homeBriefIn').value = proj.brief || ''; $('#homeStatus').textContent = '';
-  const recent = store.projects.filter(x => (x.versions || []).length).slice(0, 8);
-  $('#homeRecent').replaceChildren(...(recent.length ? [h('div', {class:'rl'}, 'Recent')] : []), ...recent.map(x => h('button', {type:'button', onclick: () => openProject(x)}, x.title || 'Untitled infographic')));
   renderSources();
   requestAnimationFrame(() => $('#homeSrcIn').focus());
 }

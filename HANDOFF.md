@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-17 (Claude: start page scaled to the mockup's proportions).
+Last updated 2026-11-17 (Claude: Recent list removed from the start page).
 
 ## Current task
 
@@ -15,6 +15,12 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Recent list removed (Claude, 2026-11-17, eighth change)
+
+- The owner said the Recent list on the start page is unnecessary, so its markup, CSS and code are gone. Earlier projects stay in browser storage but can't be reopened from the UI; `openProject()` is kept, unused.
+- **Verified:** `node --check`, plus the start page → Generate → workspace flow in headless Chromium at 1920 and 390 px (status "Done in 1 second.").
+- Published to the Artifact as version `1794938489-34f5`.
 
 ### Start page proportions (Claude, 2026-11-17, seventh change)
 
