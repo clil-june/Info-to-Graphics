@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-17 (Claude: built-in world map, any Google font).
+Last updated 2026-11-17 (Claude: blue start page from the owner's mockup, cleaner sidebar).
 
 ## Current task
 
@@ -15,6 +15,25 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Start page and cleaner workspace (Claude, 2026-11-17, sixth change)
+
+- **Owner's request.** The opening page should look like their mockup (`Info-to-Graphics_first_page.png`), and the sidebar should be much cleaner.
+- **Start page `#home`.** It follows the mockup:
+  - a full-screen brand blue `#1F5796` background, with the title "Info-to-Graphics" in Varela Round
+  - a white pill "Drop file or link" with a paperclip to choose files
+  - a translucent box "Name the information you're after"
+  - a black "Generate" pill
+- **How the start page behaves.**
+  - A file can be dropped anywhere on the page. Pasting a link and pressing Enter adds a link source; other typed text, or a paste over 200 characters, becomes a text source. Added sources show as chips.
+  - Generate waits for sources to finish reading, then opens the workspace and starts the run.
+  - Earlier infographics are listed under "Recent".
+  - Boot always opens the start page, and empty abandoned drafts are dropped from storage.
+- **Workspace.**
+  - The header is a blue bar with the wordmark (it returns to the start page), New and Export. The title input and project picker are hidden.
+  - The sidebar has three unnumbered sections: Sources (compact chips, with "+ Add" revealing drop, link and paste), "The information you're after" with a black Generate pill, and "Change it" (a chat-style input with a send button, chips, and "Try a different picture").
+  - Progress is a single line showing the current step, the timer and Stop. The long explanatory note was removed.
+  - `addLink()` was split out of the link form so the start page can reuse it, and `newProject()` now opens the start page.
 
 ### Built-in world map and open-ended fonts (Claude, 2026-11-17, fifth change)
 
@@ -98,6 +117,13 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+- Sixth change (Claude, 2026-11-17):
+  - `node --check` on the inline script.
+  - Headless Chromium on the standalone `index.html` with a stand-in streaming sampler, at 1920×1080 and 390×844: start page → type a text source + Enter → question → Generate → workspace with the poster, status "Done". Screenshots were inspected against the mockup.
+  - The make/again/change regression passes when the workspace is opened through "Recent".
+  - Published to the Artifact as version `1794937804-8e38`.
+  - **Unverified:** Varela Round loading in the Artifact (fonts were blocked in the test, so it fell back to Arial), drag-and-drop of real files onto the start page, and link reading from the start page in the Artifact.
 
 - Fifth change (Claude, 2026-11-17):
   - `node --check` on the inline script.

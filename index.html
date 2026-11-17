@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
 <title>Info to Graphics</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Varela+Round&display=swap">
 <style id="appcss">
 /* Layout: sources and the brief on the left, the finished infographic on a light table. Phones get two tabs. */
 :root{
@@ -114,6 +114,78 @@ select.btn{max-width:220px}
   .mark span{display:none}
   .bar-actions .hide-sm{display:none}
 }
+/* ---------- Brand: the start page and a calmer workspace ---------- */
+:root{--brand:#1F5796;--brand-ink:#FFFFFF;--word:"Varela Round","Nunito",Arial,sans-serif;--cobalt:#1F5796;--cobalt-soft:#E4ECF6}
+body{font-family:Inter,"Helvetica Neue",Arial,sans-serif}
+.home{position:fixed;inset:0;background:var(--brand);color:var(--brand-ink);display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto;z-index:20}
+.home[hidden]{display:none}
+.home-col{width:min(930px,100%);display:flex;flex-direction:column;align-items:center;gap:14px}
+.home-title{font-family:var(--word);font-weight:400;font-size:clamp(34px,4.6vw,50px);letter-spacing:-.005em;margin:0 0 6px;line-height:1.2}
+.home-src{position:relative;width:100%;margin:0}
+.home-src input{width:100%;height:70px;border:0;border-radius:35px;background:#FFFFFF;color:#1C1C1C;padding:0 64px 0 32px;font-size:22px;outline:none;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.home-src input::placeholder{color:#A8A8A8}
+.home-src input:focus-visible{box-shadow:0 0 0 3px rgba(255,255,255,.45)}
+.home-clip{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;border-radius:50%;background:transparent;color:#9A9A9A;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.home-clip:hover{background:#F0F0F0;color:#1C1C1C}
+.home-chips{list-style:none;margin:-4px 0 0;padding:0 18px;display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.home-chips:empty{display:none}
+.home-chips li{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);border-radius:999px;padding:5px 6px 5px 12px;font-size:13.5px;max-width:100%}
+.home-chips li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:320px}
+.home-chips li em{font-style:normal;opacity:.7;font-size:12px}
+.home-chips li button{border:0;background:rgba(255,255,255,.18);color:#fff;width:20px;height:20px;border-radius:50%;cursor:pointer;line-height:1;font-size:14px}
+.home-brief{width:100%;height:162px;border:0;border-radius:32px;background:rgba(255,255,255,.6);color:#1C1C1C;padding:24px 32px;font-size:22px;line-height:1.4;resize:none;outline:none}
+.home-brief::placeholder{color:#5F6A78}
+.home-brief:focus-visible{background:rgba(255,255,255,.75)}
+.home-go{margin-top:10px;height:77px;padding:0 32px;border:0;border-radius:39px;background:#1C1C1C;color:#E6E6E6;font-size:22px;cursor:pointer;box-shadow:4px 6px 14px rgba(0,0,0,.28);transition:transform .15s}
+.home-go:hover{transform:translateY(-1px)}
+.home-go:disabled{opacity:.6;cursor:default;transform:none}
+.home-status{min-height:1.4em;margin:2px 0 0;font-size:15px;color:rgba(255,255,255,.88);text-align:center}
+.home-recent{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:760px}
+.home-recent:empty{display:none}
+.home-recent .rl{width:100%;text-align:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
+.home-recent button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;padding:6px 14px;font-size:13.5px;cursor:pointer;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.home-recent button:hover{background:rgba(255,255,255,.12)}
+.home-dropzone{position:fixed;inset:14px;border:2px dashed rgba(255,255,255,.7);border-radius:28px;display:none;align-items:center;justify-content:center;font-family:var(--word);font-size:28px;pointer-events:none}
+.home.over .home-dropzone{display:flex}
+@media (max-width:600px){.home-src input,.home-brief,.home-go{font-size:18px}.home-src input{height:60px}.home-brief{height:140px;padding:20px 24px}.home-go{height:64px}}
+
+header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
+.wordmark{font-family:var(--word);font-size:21px;border:0;background:transparent;color:#fff;cursor:pointer;padding:4px 2px}
+.bar-btn{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:999px;padding:7px 16px}
+.bar-btn:hover{border-color:#fff}
+.bar-btn.solid{background:#fff;color:var(--brand);border-color:#fff}
+.main{grid-template-columns:300px minmax(0,1fr)}
+.rail{background:var(--sheet);gap:26px;padding:22px 20px 32px}
+.rsec{display:flex;flex-direction:column;gap:10px}
+.rlabel{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.link{border:0;background:transparent;color:var(--brand);font-weight:600;font-size:13px;cursor:pointer;padding:2px 0;text-align:left;letter-spacing:0;text-transform:none}
+.link:hover{text-decoration:underline}
+.add-src{display:flex;flex-direction:column;gap:8px}
+.add-src[hidden]{display:none}
+.drop{border-radius:14px;padding:14px 12px}
+.row input{border-radius:999px;padding:8px 14px}
+.row .btn{border-radius:999px}
+.src{grid-template-columns:1fr auto;border:0;background:var(--paper);border-radius:12px;padding:9px 12px}
+.src .tag{display:none}
+.src .meta{font-family:inherit;font-size:12px}
+.area{border:0;background:var(--paper);border-radius:16px;padding:12px 14px;font-size:14.5px;min-height:96px;resize:vertical}
+.area:focus-visible{outline:2px solid var(--brand);outline-offset:0}
+.pill{border:0;border-radius:999px;background:#1C1C1C;color:#EDEDED;font-size:15px;font-weight:500;padding:12px 20px;cursor:pointer;box-shadow:2px 4px 10px rgba(0,0,0,.18);align-self:flex-start}
+.pill:disabled{opacity:.5;cursor:default}
+.progress{display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:0}
+.progress[hidden]{display:none}
+.ps:not(.on){display:none}
+.ps{flex:1;font-size:13.5px}
+.progress .timer{font-family:inherit}
+.ask{display:flex;align-items:flex-end;gap:6px;background:var(--paper);border-radius:18px;padding:6px 6px 6px 14px}
+.ask textarea{flex:1;border:0;background:transparent;resize:none;font-size:14.5px;line-height:1.4;padding:6px 0;outline:none;min-height:42px}
+.send{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:#1C1C1C;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.send:disabled{opacity:.45;cursor:default}
+.chips button{background:var(--paper);border:0;padding:5px 11px;font-size:12.5px}
+.chips button:hover{color:var(--brand);background:var(--cobalt-soft)}
+.stage{background-image:none;background-color:var(--paper)}
+.check{font-size:12.5px;border-radius:12px}
+@media (max-width:760px){ header.bar{padding:8px 14px} .wordmark{font-size:18px} .main{grid-template-columns:minmax(0,1fr)} }
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
 <style id="igcss">
@@ -259,62 +331,72 @@ select.btn{max-width:220px}
 </style>
 </head>
 <body>
-<div class="app">
+<section class="home" id="home" aria-label="Start">
+  <div class="home-col">
+    <h1 class="home-title">Info-to-Graphics</h1>
+    <form class="home-src" id="homeSrcForm">
+      <input id="homeSrcIn" type="text" autocomplete="off" placeholder="Drop file or link" aria-label="Drop a file, or paste a link or text">
+      <button type="button" class="home-clip" id="homeBrowse" title="Choose files" aria-label="Choose files"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6l7.9-7.9"/></svg></button>
+    </form>
+    <ul class="home-chips" id="homeSrcList" aria-live="polite"></ul>
+    <textarea id="homeBriefIn" class="home-brief" placeholder="Name the information you’re after" aria-label="The information you’re after"></textarea>
+    <button class="home-go" id="homeGo" type="button">Generate</button>
+    <p class="home-status" id="homeStatus" role="status"></p>
+    <div class="home-recent" id="homeRecent"></div>
+  </div>
+  <div class="home-dropzone" aria-hidden="true">Drop to add</div>
+</section>
+<div class="app" id="app" hidden>
   <header class="bar">
-    <div class="mark">
-      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6"/><g fill="var(--cobalt)"><circle cx="7" cy="8" r="1.4"/><circle cx="11" cy="8" r="1.4"/><circle cx="15" cy="8" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="13" cy="12" r="1.4"/><circle cx="11" cy="16" r="1.4"/></g></svg>
-      <span>Info to Graphics</span>
-    </div>
-    <input id="projTitle" class="proj" aria-label="Infographic name" spellcheck="false">
+    <button class="wordmark" id="homeBtn" type="button" title="Start a new infographic">Info-to-Graphics</button>
+    <input id="projTitle" class="proj" aria-label="Infographic name" spellcheck="false" hidden>
+    <select id="projPick" hidden aria-hidden="true"></select>
     <div class="bar-actions">
-      <select id="projPick" class="btn hide-sm" aria-label="Open another infographic"></select>
-      <button id="newBtn" class="btn ghost" type="button">New</button>
-      <button id="exportBtn" class="btn" type="button">Export</button>
+      <button id="newBtn" class="btn bar-btn" type="button">New</button>
+      <button id="exportBtn" class="btn bar-btn solid" type="button">Export</button>
     </div>
   </header>
   <nav class="tabs" aria-label="Panels">
-    <button type="button" data-tab="make" aria-pressed="false">Sources &amp; brief</button>
+    <button type="button" data-tab="make" aria-pressed="false">Edit</button>
     <button type="button" data-tab="out" aria-pressed="true">Infographic</button>
   </nav>
   <div class="main" id="main" data-tab="out">
     <aside class="rail">
-      <section class="step">
-        <h2><span class="n">1</span>Drop your sources</h2>
-        <label class="drop" id="drop" for="fileIn">
-          <strong>Drop files here</strong>
-          <span>PDF, Word, text, CSV, JSON or images</span>
-        </label>
-        <input type="file" id="fileIn" multiple hidden accept=".pdf,.docx,.txt,.md,.csv,.tsv,.json,.html,.htm,image/png,image/jpeg,image/webp,image/gif">
-        <form class="row" id="linkForm">
-          <input id="linkIn" type="text" inputmode="url" autocomplete="off" placeholder="Paste a link" aria-label="Link">
-          <button class="btn" type="submit">Add</button>
-        </form>
-        <button class="btn ghost" id="pasteBtn" type="button" style="justify-content:flex-start;padding-left:0">+ Paste text instead</button>
+      <section class="rsec">
+        <div class="rlabel">Sources <button class="link" id="addSrcBtn" type="button" aria-expanded="false">+ Add</button></div>
         <ul class="src-list" id="srcList"></ul>
+        <div class="add-src" id="addSrc" hidden>
+          <label class="drop" id="drop" for="fileIn"><strong>Drop files</strong><span>or click to choose</span></label>
+          <input type="file" id="fileIn" multiple hidden accept=".pdf,.docx,.txt,.md,.csv,.tsv,.json,.html,.htm,image/png,image/jpeg,image/webp,image/gif">
+          <form class="row" id="linkForm">
+            <input id="linkIn" type="text" inputmode="url" autocomplete="off" placeholder="Paste a link" aria-label="Link">
+            <button class="btn" type="submit">Add</button>
+          </form>
+          <button class="link" id="pasteBtn" type="button">Paste text instead</button>
+        </div>
       </section>
-      <section class="step">
-        <h2><span class="n">2</span>Ask for one thing to show</h2>
-        <textarea id="briefIn" class="area" placeholder="One question or fact. For example: How much of a life is spent on periods?"></textarea>
-        <button class="btn primary go wide" id="goBtn" type="button">Make the infographic</button>
+      <section class="rsec">
+        <div class="rlabel">The information you’re after</div>
+        <textarea id="briefIn" class="area" placeholder="Name the information you’re after"></textarea>
+        <button class="pill go" id="goBtn" type="button">Generate</button>
         <div class="progress" id="progress" hidden>
           <div class="ps" data-s="read"><i></i>Reading your sources</div>
-          <div class="ps" data-s="compose"><i></i>Drawing it (it appears on the right as it is drawn)</div>
+          <div class="ps" data-s="compose"><i></i>Drawing it</div>
           <div class="ps" data-s="check"><i></i>Checking the numbers</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="timer" id="timer"></span><button class="btn ghost" id="stopBtn" type="button">Stop</button></div>
+          <span class="timer" id="timer"></span><button class="link" id="stopBtn" type="button">Stop</button>
         </div>
         <div class="status" id="goStatus" role="status"></div>
       </section>
-      <section class="step" id="refineStep" hidden>
-        <h2><span class="n">3</span>Ask for a change</h2>
-        <div class="chips" id="refineChips"></div>
-        <textarea id="refineIn" class="area" placeholder="For example: Make the age section the main story, and use fewer words."></textarea>
-        <div class="row">
-          <button class="btn primary" id="refineBtn" type="button" style="flex:1">Apply the change</button>
-          <button class="btn" id="againBtn" type="button" title="Draw the same fact with a different picture">Different picture</button>
+      <section class="rsec" id="refineStep" hidden>
+        <div class="rlabel">Change it</div>
+        <div class="ask">
+          <textarea id="refineIn" rows="2" placeholder="Say what to change"></textarea>
+          <button class="send" id="refineBtn" type="button" aria-label="Apply the change"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
+        <div class="chips" id="refineChips"></div>
+        <button class="link" id="againBtn" type="button" title="Draw the same fact with a different picture">↻ Try a different picture</button>
         <div class="status" id="refineStatus" role="status"></div>
       </section>
-      <p class="note">Claude reads only your sources and keeps every number as the source gives it; the page then checks that each number appears in them. Links are read through the Claude desktop app’s browser. Elsewhere, paste the page’s text.</p>
     </aside>
     <section class="stage" id="stage">
       <div class="stage-top" id="stageTop"></div>
@@ -1075,10 +1157,7 @@ function load(){
 }
 let saveT;
 function save(){ clearTimeout(saveT); saveT = setTimeout(() => { try{ localStorage.setItem(LS, JSON.stringify(store)); }catch(e){ toast('This browser could not save your work. Export it to keep a copy.'); } }, 300); }
-function newProject(){
-  const p = {id: uid(), title: 'Untitled infographic', brief: '', sources: [], entities: [], accent: '#A3203A', plan: null, versions: [], cur: -1};
-  store.projects.unshift(p); store.current = p.id; proj = p; save(); renderAll(); setTab('make');
-}
+function newProject(){ showHome(); }
 function setTab(t){
   $('#main').dataset.tab = t;
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tab === t)));
@@ -1095,7 +1174,14 @@ function renderAll(){
   $('#refineStep').hidden = !(proj.versions || []).length;
   $('#refineChips').replaceChildren(...['Use fewer words', 'Make the picture bigger and bolder', 'Show it as a real object', 'Show a different fact'].map(q => h('button', {type: 'button', onclick: () => { $('#refineIn').value = q; $('#refineIn').focus(); }}, q)));
 }
+function renderHomeSources(){
+  const ul = $('#homeSrcList'); if (!ul) return;
+  ul.replaceChildren(...(homeOpen() ? proj.sources : []).map((src, i) => h('li', {}, h('span', {}, src.name),
+    h('em', {}, src.status === 'reading' ? 'reading…' : src.status === 'ready' ? '' : src.status === 'draft' ? '' : 'needs text'),
+    h('button', {type:'button', 'aria-label':'Remove ' + src.name, onclick: () => { proj.sources.splice(i, 1); save(); renderSources(); }}, '×'))));
+}
 function renderSources(){
+  renderHomeSources();
   const list = $('#srcList'); list.replaceChildren();
   proj.sources.forEach((src, i) => {
     let meta = '', cls = 'meta';
@@ -1120,12 +1206,12 @@ function renderStage(){
   const top = $('#stageTop'), out = $('#out');
   top.replaceChildren(); out.replaceChildren();
   if (proj.example) top.append(h('div', {class: 'banner'},
-    h('span', {}, h('strong', {}, 'Example. '), 'Made from the study notes on the left. Drop your own sources, ask for one thing to show, and press Make.'),
+    h('span', {}, h('strong', {}, 'Example. '), 'Made from the study notes on the left.'),
     h('button', {class: 'btn', type: 'button', onclick: newProject}, 'Start my own')));
   const vs = proj.versions || [];
   if (!vs.length){
     out.append(h('div', {class: 'empty'}, h('h3', {}, 'Your infographic will appear here'),
-      h('p', {}, proj.sources.length ? 'Ask for one thing to show, then press “Make the infographic”. It builds here as it is drawn.' : 'Start by dropping sources on the left: files, links or pasted text.')));
+      h('p', {}, proj.sources.length ? 'Name the information you’re after, then press Generate. It builds here as it is drawn.' : 'Start by dropping sources on the left: files, links or pasted text.')));
     return;
   }
   const cur = Math.max(0, Math.min(proj.cur ?? vs.length - 1, vs.length - 1));
@@ -1193,6 +1279,7 @@ async function readFile(f, src){
   if (name.endsWith('.html') || name.endsWith('.htm')){ const d = new DOMParser().parseFromString(t, 'text/html'); d.querySelectorAll('script,style,nav,footer').forEach(n => n.remove()); return d.body.innerText || d.body.textContent; }
   return t;
 }
+$('#addSrcBtn').addEventListener('click', () => { const b = $('#addSrc'); b.hidden = !b.hidden; $('#addSrcBtn').setAttribute('aria-expanded', String(!b.hidden)); $('#addSrcBtn').textContent = b.hidden ? '+ Add' : 'Done'; });
 $('#pasteBtn').addEventListener('click', () => {
   leaveExample();
   const src = {id: uid(), kind: 'text', name: 'Pasted text ' + (proj.sources.filter(x => x.kind === 'text').length + 1), text: '', status: 'draft'};
@@ -1200,17 +1287,20 @@ $('#pasteBtn').addEventListener('click', () => {
 });
 $('#linkForm').addEventListener('submit', async e => {
   e.preventDefault();
-  let url = $('#linkIn').value.trim(); if (!url) return;
+  const url = $('#linkIn').value.trim(); if (!url) return;
+  $('#linkIn').value = '';
+  addLink(url);
+});
+async function addLink(url){
   if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
   let host; try{ host = new URL(url).hostname.replace(/^www\./, ''); }catch{ toast('That link does not look right'); return; }
   leaveExample();
-  $('#linkIn').value = '';
   const src = {id: uid(), kind: 'link', name: host, url, text: '', status: 'reading'};
   proj.sources.push(src); renderSources();
   try{ src.text = await readLink(url); const title = (src.text.match(/^\s*(?:Title:\s*)?(.{3,90})\n/) || [])[1]; if (title) src.name = `${host}: ${title.trim()}`; src.status = 'ready'; }
   catch(err){ src.status = 'needs-text'; src.error = err.message; }
   save(); renderSources();
-});
+}
 const BROWSER = 'host:claude_browser';
 async function readLink(url){
   const mcp = window.claude?.use ? await window.claude.use('mcp').catch(() => null) : null;
@@ -1510,7 +1600,7 @@ $('#goBtn').addEventListener('click', async () => {
     if (!target.title || target.title === 'Untitled infographic') target.title = (new DOMParser().parseFromString(html, 'text/html').querySelector('.ig-h1')?.textContent || target.title).trim().slice(0, 60);
     addVersion(checked.html, 'First version', checked.review);
     renderAll(); setTab('out');
-    st.textContent = `Done in ${Math.round((Date.now() - t0) / 1000)} seconds.`;
+    { const n = Math.round((Date.now() - t0) / 1000); st.textContent = `Done in ${n} second${n === 1 ? "" : "s"}.`; }
     $('#stage').scrollTop = 0;
   }catch(e){ st.className = 'status err'; st.textContent = errCopy(e); if (proj === target) renderStage(); }
   finally{ endRun(); $('#progress').hidden = true; }
@@ -1577,8 +1667,62 @@ $('#exportBtn').addEventListener('click', () => {
   saveFile(slug() + '.html', html);
 });
 
+/* ---------- Start page ---------- */
+const homeOpen = () => !$('#home').hidden;
+function freshProject(){ return {id: uid(), title: 'Untitled infographic', brief: '', sources: [], entities: [], accent: '#A3203A', plan: null, versions: [], cur: -1}; }
+function showHome(){
+  // a draft for the start page: reuse an untouched one, otherwise start fresh
+  if (!(proj && !proj.example && !(proj.versions || []).length)){ const p = freshProject(); store.projects.unshift(p); store.current = p.id; proj = p; save(); }
+  $('#home').hidden = false; $('#app').hidden = true;
+  $('#homeBriefIn').value = proj.brief || ''; $('#homeStatus').textContent = '';
+  const recent = store.projects.filter(x => (x.versions || []).length).slice(0, 8);
+  $('#homeRecent').replaceChildren(...(recent.length ? [h('div', {class:'rl'}, 'Recent')] : []), ...recent.map(x => h('button', {type:'button', onclick: () => openProject(x)}, x.title || 'Untitled infographic')));
+  renderSources();
+  requestAnimationFrame(() => $('#homeSrcIn').focus());
+}
+function showWork(){ $('#home').hidden = true; $('#app').hidden = false; renderAll(); }
+function openProject(p){ proj = p; store.current = p.id; save(); showWork(); setTab('out'); }
+$('#homeBtn').addEventListener('click', showHome);
+function addHomeInput(){
+  const v = $('#homeSrcIn').value.trim(); if (!v) return false;
+  $('#homeSrcIn').value = '';
+  if (/^(https?:\/\/)?[\w-]+(\.[\w-]+)+(\/\S*)?$/i.test(v) && !/\s/.test(v)) addLink(v);
+  else { proj.sources.push({id: uid(), kind: 'text', name: v.slice(0, 40) + (v.length > 40 ? '…' : ''), text: v, status: 'ready'}); save(); renderSources(); }
+  return true;
+}
+$('#homeSrcForm').addEventListener('submit', e => { e.preventDefault(); addHomeInput(); });
+$('#homeSrcIn').addEventListener('paste', e => {
+  const t = e.clipboardData?.getData('text') || '';
+  if (t.length > 200){ e.preventDefault(); proj.sources.push({id: uid(), kind: 'text', name: 'Pasted text ' + (proj.sources.filter(x => x.kind === 'text').length + 1), text: t, status: 'ready'}); save(); renderSources(); }
+});
+const homeFile = h('input', {type:'file', multiple:'', hidden:'', accept: $('#fileIn').getAttribute('accept')});
+document.body.append(homeFile);
+$('#homeBrowse').addEventListener('click', () => homeFile.click());
+homeFile.addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
+['dragenter', 'dragover'].forEach(ev => $('#home').addEventListener(ev, e => { e.preventDefault(); $('#home').classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => $('#home').addEventListener(ev, e => { if (ev === 'dragleave' && e.relatedTarget && $('#home').contains(e.relatedTarget)) return; e.preventDefault(); $('#home').classList.remove('over'); }));
+$('#home').addEventListener('drop', e => { if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); else { const t = e.dataTransfer.getData('text'); if (t){ $('#homeSrcIn').value = t; addHomeInput(); } } });
+$('#homeBriefIn').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) $('#homeGo').click(); });
+$('#homeGo').addEventListener('click', async () => {
+  const st = $('#homeStatus');
+  addHomeInput();
+  proj.brief = $('#homeBriefIn').value.trim();
+  if (!proj.sources.length){ st.textContent = 'Drop a file or paste a link first.'; $('#homeSrcIn').focus(); return; }
+  if (!proj.brief){ st.textContent = 'Name the information you’re after.'; $('#homeBriefIn').focus(); return; }
+  $('#homeGo').disabled = true;
+  for (let i = 0; i < 600 && proj.sources.some(x => x.status === 'reading'); i++){ st.textContent = 'Reading your sources…'; await new Promise(r => setTimeout(r, 250)); }
+  $('#homeGo').disabled = false;
+  if (!proj.sources.some(x => x.status === 'ready' && x.text?.trim())){ st.textContent = 'None of the sources could be read. Try another file, or paste the text.'; return; }
+  save(); showWork(); setTab('out');
+  $('#goBtn').click();
+});
+
 /* ---------- Boot ---------- */
+store.projects = store.projects.filter(x => x.example || (x.versions || []).length || (x.sources || []).length);
+if (!store.projects.length){ const p = exampleProject(); store.projects.push(p); }
+proj = store.projects.find(x => x.id === store.current) || store.projects[0];
 renderAll();
+showHome();
 })();
 </script>
 </body>
