@@ -1,10 +1,12 @@
 # Handoff
 
-Last updated 2026-11-17 (Claude: faster, sturdier generation; phone review taken out of the run).
+Last updated 2026-11-17 (Claude: the output is now one question, one picture, made in one call).
 
 ## Current task
 
-Apply the full-page visual approach developed in the Apollo 11 and US car color benchmarks to the infographic generator.
+**Owner's direction (2026-11-17):** "I want to ask for one piece of information and get one infographic depicting only that central piece of information with a lot less text and veering out of this monotonous formation of box after box." Runs were also "really really slow". The single-graphic poster is now the default output. The earlier long-page work below is kept in the code, but new runs no longer use it.
+
+Earlier task: Apply the full-page visual approach developed in the Apollo 11 and US car color benchmarks to the infographic generator.
 
 ## Branch / PR
 
@@ -13,6 +15,22 @@ Apply the full-page visual approach developed in the Apollo 11 and US car color 
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### One question, one picture (Claude, 2026-11-17, third change)
+
+- **One Claude call per run.** `posterPrompt()` asks for a single poster: the question, a headline of at most 12 words, ONE central graphic in `figure.ig-hero` (preferably one free-form SVG drawing of the real subject, with a 400-wide viewBox), an optional closing line, and the source.
+  - `POSTER_RULES` covers: one fact only, finding the real-world picture, no boxes, cards or panels, under 30 words outside the headline, and exact numbers.
+  - It uses `modelTier: 'default'`, falling back to `complex`.
+- **Symbols ride along in the same reply.** The model can define them in `div.ig-symdefs` (`svg[data-def][data-name][data-color]`, plus `data-accent`). `posterSymbols()` turns them into project entities, and CSS hides the block. When a poster has symbols, the key is titled "Key".
+- **New example.** `EXAMPLE_POSTER` was made by hand from the Harvard notes: "Periods add up to about seven years." It shows 39 year-pages, each with a thin red strip, gathered into 7 red pages. It's the in-prompt standard and the bundled example (`exampleV: 2`, so stored old examples are replaced).
+- **Validity and rendering.** `validPage` accepts `figure.ig-hero` in place of panels, and `renderIG` adds `.ig--poster`. SVG may use `font-style`.
+- **UI changes.**
+  - Step 2 is now "Ask for one thing to show", with a matching placeholder.
+  - The progress steps are read, draw, check, with no plan step.
+  - "New layout" is now "Different picture", which reruns with a note to use a different picture idea.
+  - The change chips are new.
+  - Refine uses the poster format when the current version is a poster.
+- **No longer called** (code kept): `planPrompt`, `composePrompt`, `sanitizePlan`, `EXAMPLE_HTML`, `EXAMPLE_ENTITIES`, `coverageOf`, and the phone review functions.
 
 ### Faster, sturdier generation (Claude, 2026-11-17, second fix)
 
@@ -46,6 +64,16 @@ Apply the full-page visual approach developed in the Apollo 11 and US car color 
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+- Third change (Claude, 2026-11-17):
+  - `node --check` on the inline script.
+  - Headless Chromium on the standalone `index.html`. The new example renders at 1440 and 390 px with no page errors and no sideways scroll; screenshots were inspected.
+  - Same setup, with a stand-in streaming sampler:
+    - make → one call (`default:poster`); headline visible mid-stream; a 10-cell pictogram with 2 filled from the defined symbol; key "Menstrual cup"; symdefs hidden; the number check passes
+    - default tier failing → `complex` fallback
+    - "Different picture" and "Use fewer words" each make one call and add a version
+  - Published to the Artifact as version `1794933475-7a83` with capabilities unchanged.
+  - **Unverified:** real Claude output quality and speed for posters in the Artifact.
 
 - Second fix (Claude, 2026-11-17):
   - `node --check` on the inline script.
@@ -82,4 +110,4 @@ Apply the full-page visual approach developed in the Apollo 11 and US car color 
 
 ## Next step
 
-The owner tries a run in the live Artifact while signed in, and reports the time or the exact error text (it now includes the error code). If layout problems on phones come back, consider bringing the screenshot review back as an optional button rather than an automatic step. Then run the two benchmarks without manual corrections. Inspect the opening, middle and final sections on a phone. Confirm the review status, source coverage and timing before merging.
+The owner tries a few one-question posters in the live Artifact and reports how long they take and whether the pictures are good. Tune `POSTER_RULES` and the example from what comes back. A second hand-made example on a different subject may help stop the model copying the calendar idea. Older note: The owner tries a run in the live Artifact while signed in, and reports the time or the exact error text (it now includes the error code). If layout problems on phones come back, consider bringing the screenshot review back as an optional button rather than an automatic step. Then run the two benchmarks without manual corrections. Inspect the opening, middle and final sections on a phone. Confirm the review status, source coverage and timing before merging.
