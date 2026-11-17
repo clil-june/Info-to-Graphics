@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-17 (Claude: posters get subject-themed art direction and richer drawing).
+Last updated 2026-11-17 (Claude: built-in world map, any Google font).
 
 ## Current task
 
@@ -15,6 +15,23 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Built-in world map and open-ended fonts (Claude, 2026-11-17, fifth change)
+
+- **Owner feedback on three live outputs.** Apollo 11 was "really good"; red cars were good but "a bit schematic". Blue whales first came back as a list, and when asked for a map, the hand-drawn coastlines were poor. The owner always wants map-like visuals, but at higher quality, and wants more variety in fonts.
+- **Built-in world map.** `WORLD_TOPO` is Natural Earth 1:110m countries from the `world-atlas@2` npm package (public domain, about 104 KB inline). `expandMaps()` replaces `<g data-map="world">` with real country shapes in the Natural Earth projection.
+  - `data-view` sets the lon/lat crop and `data-box` sets the placement. Style comes from `data-land`, `data-sea`, `data-stroke` and `data-graticule`, and `data-fill="Country:#hex;…"` colours countries by name, with `COUNTRY_ALIAS` covering USA, UK, DRC and others.
+  - Any element with `data-lon`/`data-lat` is translated to its projected position. `<path data-route="lon,lat …" data-curve>` gets a curved path.
+  - Sea and clip are cropped to the projected view. The app adds the clip after sanitizing, and the map attributes are allow-listed.
+- **Prompt changes.**
+  - Whenever the fact is about places, the model must draw a map, never a list, and never draw coastlines itself.
+  - It should crop tightly to the region that matters.
+  - The craft rules now say to draw objects from their most recognisable view (a car from the side, not as a top-down box).
+- **Fonts: any Google Fonts family.** `data-font`/`data-body` accept any family name matching `^[A-Za-z0-9 ]{2,39}$`.
+  - `ensureFont()` loads regular, 700 and 900 as separate requests, so families missing a weight still load.
+  - `FONT_GROUPS` lists about 100 families in 10 moods (including 14 Hebrew-capable fonts). It's shown to the model as ideas, with an instruction to pick a pairing for this subject and avoid habits.
+  - `FONT_KIND` picks the fallback stack.
+- **Export fixes.** The exported HTML is titled from the version's own headline; before, a stale project title such as "The source page never loaded…" leaked through. Font links are de-duplicated.
 
 ### Subject-themed art direction and illustration craft (Claude, 2026-11-17, fourth change)
 
@@ -81,6 +98,12 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+- Fifth change (Claude, 2026-11-17):
+  - `node --check` on the inline script.
+  - Headless Chromium on the standalone `index.html`. A stand-in whale poster using `data-map` (whole world, graticule), three `data-lon/lat` markers and a `data-route` rendered with correct coastlines and borders, markers in the right oceans, and a curved route, at 1440 and 390 px; screenshots were inspected. The make/again/change regression passes, and both examples render with no errors.
+  - Published to the Artifact as version `1794935983-59f8` with capabilities unchanged.
+  - **Unverified:** whether real Claude output uses the map syntax well, Google font loading in the Artifact (font requests were blocked in the test), `data-fill` country matching beyond a few names, and regional crops near the poles or the antimeridian.
 
 - Fourth change (Claude, 2026-11-17):
   - `node --check` on the inline script.
