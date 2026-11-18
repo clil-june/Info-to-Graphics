@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-17 (Claude: Recent list removed from the start page).
+Last updated 2026-11-18 (Claude: fixed adding several links as sources).
 
 ## Current task
 
@@ -15,6 +15,19 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Several links as sources (Claude, 2026-11-18, ninth change)
+
+- **Owner's report.** After adding a link on the start page, dropping a second link "didn't process as a source, it was weird".
+- **Cause, reproduced with a stand-in `mcp`.** Two links were read at the same time. The `tabId` regex didn't match the browser tool's "(tabId seed)" wording, so `get_page_text` read whichever tab was in front, and both sources got the second page's text.
+- **Fixes.**
+  - `readLinkQueued()` reads links one at a time.
+  - The `tabId` regex also accepts a space separator.
+  - A link already added is refused with a toast.
+  - On the start page, a link dropped or pasted into the pill becomes a source at once (`insertFromDrop`/`insertFromPaste`). The drop handler runs in capture, prefers `text/uri-list` and stops the input from also inserting the text.
+- **Verified** in headless Chromium with a stand-in `mcp`. Typed link + Enter, a dropped second link and a pasted third link gave calls in order (preview, get_page_text with `tabId`, then the next link), each source got its own page title, the duplicate was refused, and there were no page errors.
+- Published to the Artifact as version `1794993578-72c4`.
+- **Unverified:** a real drag of a link from another browser window in the Artifact, and real tab ids from the desktop browser tool beyond the first ("seed").
 
 ### Recent list removed (Claude, 2026-11-17, eighth change)
 

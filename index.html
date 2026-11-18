@@ -1291,19 +1291,23 @@ async function addLink(url){
   if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
   let host; try{ host = new URL(url).hostname.replace(/^www\./, ''); }catch{ toast('That link does not look right'); return; }
   leaveExample();
+  if (proj.sources.some(x => x.url === url)){ toast('That link is already a source'); return; }
   const src = {id: uid(), kind: 'link', name: host, url, text: '', status: 'reading'};
   proj.sources.push(src); renderSources();
-  try{ src.text = await readLink(url); const title = (src.text.match(/^\s*(?:Title:\s*)?(.{3,90})\n/) || [])[1]; if (title) src.name = `${host}: ${title.trim()}`; src.status = 'ready'; }
+  try{ src.text = await readLinkQueued(url); const title = (src.text.match(/^\s*(?:Title:\s*)?(.{3,90})\n/) || [])[1]; if (title) src.name = `${host}: ${title.trim()}`; src.status = 'ready'; }
   catch(err){ src.status = 'needs-text'; src.error = err.message; }
   save(); renderSources();
 }
 const BROWSER = 'host:claude_browser';
+/* Links are read one at a time: two pages opening at once would both read whichever tab is in front. */
+let linkChain = Promise.resolve();
+function readLinkQueued(url){ const run = linkChain.then(() => readLink(url), () => readLink(url)); linkChain = run.catch(() => {}); return run; }
 async function readLink(url){
   const mcp = window.claude?.use ? await window.claude.use('mcp').catch(() => null) : null;
   if (!mcp) throw new Error('Reading links needs the Claude desktop app. Paste the page text below.');
   let res; try{ res = await mcp.callTool(BROWSER, 'preview_start', {url}); }catch(e){ throw new Error(linkErr(e)); }
   const raw = JSON.stringify(res.payload ?? res.content ?? '');
-  const tabId = (raw.match(/tabId\\?"?\s*[:=]\s*\\?"?([\w-]+)/) || [])[1];
+  const tabId = (raw.match(/tabId\\?"?\s*[:= ]\s*\\?"?([\w-]+)/) || [])[1];
   await new Promise(r => setTimeout(r, 2500));
   let txt;
   try{ const r2 = await mcp.callTool(BROWSER, 'get_page_text', tabId ? {tabId, max_chars: 60000} : {max_chars: 60000});
@@ -1685,6 +1689,10 @@ function addHomeInput(){
   return true;
 }
 $('#homeSrcForm').addEventListener('submit', e => { e.preventDefault(); addHomeInput(); });
+$('#homeSrcIn').addEventListener('input', e => {
+  const v = $('#homeSrcIn').value.trim();
+  if ((e.inputType === 'insertFromDrop' || e.inputType === 'insertFromPaste') && /^(https?:\/\/)?[\w-]+(\.[\w-]+)+(\/\S*)?$/i.test(v)) addHomeInput();
+});
 $('#homeSrcIn').addEventListener('paste', e => {
   const t = e.clipboardData?.getData('text') || '';
   if (t.length > 200){ e.preventDefault(); proj.sources.push({id: uid(), kind: 'text', name: 'Pasted text ' + (proj.sources.filter(x => x.kind === 'text').length + 1), text: t, status: 'ready'}); save(); renderSources(); }
@@ -1695,7 +1703,12 @@ $('#homeBrowse').addEventListener('click', () => homeFile.click());
 homeFile.addEventListener('change', e => { addFiles(e.target.files); e.target.value = ''; });
 ['dragenter', 'dragover'].forEach(ev => $('#home').addEventListener(ev, e => { e.preventDefault(); $('#home').classList.add('over'); }));
 ['dragleave', 'drop'].forEach(ev => $('#home').addEventListener(ev, e => { if (ev === 'dragleave' && e.relatedTarget && $('#home').contains(e.relatedTarget)) return; e.preventDefault(); $('#home').classList.remove('over'); }));
-$('#home').addEventListener('drop', e => { if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); else { const t = e.dataTransfer.getData('text'); if (t){ $('#homeSrcIn').value = t; addHomeInput(); } } });
+$('#home').addEventListener('drop', e => {
+  e.preventDefault();
+  if (e.dataTransfer.files.length){ addFiles(e.dataTransfer.files); return; }
+  const t = (e.dataTransfer.getData('text/uri-list').split(/\r?\n/).find(l => l && !l.startsWith('#')) || e.dataTransfer.getData('text') || '').trim();
+  if (t){ $('#homeSrcIn').value = t; addHomeInput(); }
+}, true);
 $('#homeBriefIn').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) $('#homeGo').click(); });
 $('#homeGo').addEventListener('click', async () => {
   const st = $('#homeStatus');
