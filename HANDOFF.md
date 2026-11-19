@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-19 (Codex: text readability and contextual palette rules).
+Last updated 2026-11-19 (Claude Code: illustrated subjects back, combined with Codex's readability and palette rules).
 
 ## Current task
 
@@ -21,6 +21,26 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Illustrated subjects back (Claude Code, 2026-11-19)
+
+- **Combined with Codex's `744413c`** (readability and contextual palettes), which landed first. Kept Codex's palette, label and contrast rules, and my hero rule, maps-as-stage paragraph, 30,000-character guidance (now inside Codex's reworded SVG line) and coffee example (described without a colour, in line with Codex's example wording).
+- **Open decision for the owner:** Codex's rule asks for calm, low-to-moderate saturation palettes, while the moodboard (twelfth change) and the coffee example use a bold saturated field (coral #C23F28). The examples now say the palette rule decides colours, but an example still steers. Either adjust the coffee example to a calmer field, or bring back the bold field if that is the wish.
+
+- **Owner's report:** since the moodboard there had been more contextual graphics, but in the latest outputs they had mostly disappeared: "it's mostly maps and circles".
+- **Likely causes, all in the prompt:**
+  1. The polar-bear fix's strict "under about 15,000 characters" limit made a rich illustration the first thing to cut.
+  2. "If one physical thing repeats many times, define it once" invited the hero itself to become a 32×32, 2–8-shape symbol.
+  3. "Whenever the fact is about places, draw a map" with nothing requiring the subject to appear, so a map with dots was enough.
+  4. Both prompt examples were abstract: a grid of tiles, and a row of circles from Earth to the Moon.
+- **Changes in `index.html`:**
+  - **Hero rule:** the subject itself (animal, object, person, vehicle, food, building) is drawn as a real illustration; a picture of only dots, circles, bars or a bare map is not an illustration.
+  - **Repetition:** small repeated objects sit next to the hero, not instead of it.
+  - **New failure mode:** "no recognisable subject".
+  - **Symbols** are for SMALL repeated marks only and never for the hero.
+  - **Length guidance** is now about 30,000 characters, with the detail spent on the hero and repeated marks kept cheap. The cut-off warning still catches long answers.
+  - **Maps:** used only when WHERE is the answer, and "the map is the stage, not the picture": the subject appears as an illustrated hero on or beside the map, and markers can be small drawings of the subject. Size, amount, time or comparison facts draw the subject instead of a map.
+  - **`EXAMPLE_SPACE` (circles) is replaced by `EXAMPLE_OBJECT`**, an object illustration in the moodboard's coffee style. It answers "Which has more caffeine: an espresso or a mug of coffee?" on a coral field: a mug and an espresso cup from above, with crema, a shine sliver and long hard shadows, and caffeine counted in coffee beans (a `bean` symbol placed with `<g data-sym>`, one bean = 5 mg): 19 for the mug (about 95 mg), about 13 for the espresso (63 mg). The fonts are Archivo + Inter, an approved pair. Source: USDA FoodData Central (brewed coffee 8 fl oz, espresso 1 fl oz).
 
 ### Text readability and contextual palettes (Codex, 2026-11-19)
 
@@ -252,6 +272,16 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Illustrated subjects (2026-11-19)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, local server, stand-in `window.claude` returning the coffee example:
+  - the prompt contains the hero rule, "The map is the stage", the coffee example and no "15,000"; its length was 27,038 characters
+  - the poster rendered with 32 bean symbols drawn inside the svg, the app's Key box and "All 2 numbers on the page appear in your sources"
+  - a first render had the mug's bottom bean row touching "≈95 mg" and a duplicate in-drawing bean note cut off at the edge; both were fixed, and a measured check found 0 bean/label overlaps
+  - inspected by eye
+- **Unverified:** whether real Claude output in the live artifact now draws illustrated subjects again (for example, a re-run of the polar-bear question).
 
 - Readability and palette update: local inline JavaScript syntax and evaluated prompt checks for generation, revision and an alternate picture. Benchmarks and actual renderer contrast still need inspection in the live Artifact.
 
