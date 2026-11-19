@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: labels never overlap).
+Last updated 2026-11-19 (Claude Code: multi-line labels no longer overlap).
 
 ## Current task
 
@@ -21,6 +21,20 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Multi-line labels no longer overlap (Claude Code, 2026-11-19)
+
+- **Owner's report** (with a screenshot of a fly agaric poster): two-line labels printed on top of themselves ("white spots" over "or warts", "gills free" over "of the stem"). "Make it never happen again ever! no matter where the text is on the page or what size it is."
+- **Cause:** the sanitizer's `SVG_ATTR` allowed `x`/`y` but not `dx`/`dy`. Claude's line breaks (`<tspan x="…" dy="1.2em">`) lost their `dy`, so both lines sat on one baseline. `fitLabels()` compared whole `<text>` elements and couldn't see lines colliding inside one.
+- **Fixes in `index.html`:**
+  - `dx` and `dy` are now allowed on SVG elements.
+  - `fitLabels()` normalises every label before fitting:
+    - A `<text>` whose tspans each carry their own `y` is really several labels, so it is split into separate `<text>` elements (keeping fill, size, weight, anchor) and each is fitted independently.
+    - Inside one label, lines (tspans with their own `x`) that land on each other get stacked with `dy="1.25em"`.
+  - Line spacing for app-made and repaired breaks is 1.25em (was 1.15em, whose line boxes touched by about 2 px).
+  - The pass limit is raised to texts² × 4 + 40. A label that has used its three steps can only move, so the loop always ends clean.
+  - The live preview now runs `fitSoon()` too, so overlaps don't flash up while the poster is being written.
+
 
 ### Labels never overlap (Claude Code, 2026-11-19)
 
@@ -320,6 +334,17 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Multi-line labels (2026-11-19)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, local server, stand-in `window.claude`. The check measured every line separately (each tspan with an `x`, otherwise the whole text) against every other line and against the drawing's edges:
+  - **The owner's fly agaric case rebuilt** (two-line labels with `dy="1.2em"`): 4 lines, 0 overlaps, 0 outside, and it looked right by eye.
+  - **Lines with `x` but no `dy`, plus one `<text>` holding three separately positioned tspans and an extra label on top:** 9 lines, 0 overlaps, 0 outside. The tspans were split into separate labels.
+  - **During streaming:** sampled 4 times while the stand-in wrote the answer, with 0 overlaps each time.
+  - No console errors.
+- **Unverified:** the live artifact with real Claude output.
+
 
 ### Label fitting (2026-11-19)
 

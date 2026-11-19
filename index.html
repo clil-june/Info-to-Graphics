@@ -466,7 +466,7 @@ const SVG_TAGS = new Set('svg g path rect circle ellipse line polyline polygon t
 const GRAD_TAGS = new Set(['linearGradient', 'radialGradient']);
 const PAINT_URL = /^url\(#[A-Za-z][\w-]{0,40}\)$/;
 const HTML_ATTR = new Set('class style role aria-label aria-hidden scope colspan rowspan href title data-sym data-size data-n data-unit data-section open'.split(' '));
-const SVG_ATTR = new Set('viewBox d x y x1 y1 x2 y2 cx cy r rx ry width height points transform fill stroke stroke-width stroke-linecap stroke-linejoin stroke-dasharray opacity fill-opacity stroke-opacity fill-rule text-anchor dominant-baseline font-size font-weight font-style font-family letter-spacing preserveAspectRatio role aria-label aria-hidden id offset stop-color stop-opacity gradientUnits gradientTransform fx fy spreadMethod data-map data-view data-box data-land data-sea data-stroke data-fill data-graticule data-lon data-lat data-route data-curve data-rim data-rotate data-sym data-size'.split(' '));
+const SVG_ATTR = new Set('viewBox d x y dx dy x1 y1 x2 y2cx cy r rx ry width height points transform fill stroke stroke-width stroke-linecap stroke-linejoin stroke-dasharray opacity fill-opacity stroke-opacity fill-rule text-anchor dominant-baseline font-size font-weight font-style font-family letter-spacing preserveAspectRatio role aria-label aria-hidden id offset stop-color stop-opacity gradientUnits gradientTransform fx fy spreadMethod data-map data-view data-box data-land data-sea data-stroke data-fill data-graticule data-lon data-lat data-route data-curve data-rim data-rotate data-sym data-size'.split(' '));
 const BAD = /url\s*\(|expression\s*\(|javascript:|@import|behavio(u)?r\s*:|-moz-binding|[<>]/i;
 function cleanStyle(v){
   return v.split(';').map(part => part.trim()).filter(part =>
@@ -966,6 +966,31 @@ function fitLabels(root){
     const box0 = svg.getBoundingClientRect(); if (!box0.width || !box0.height) return; // hidden: try again when shown
     const vb = String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
     if (vb.length !== 4 || !vb.every(isFinite) || !vb[2] || !vb[3]) return;
+    /* First make every label one movable piece. A <text> whose tspans each carry their own y is really several labels:
+       split it into separate texts. A <text> whose lines (tspans with their own x) land on top of each other, for
+       example because a line break lost its dy, gets its lines stacked one line apart. */
+    svg.querySelectorAll('text').forEach(t => {
+      if (t.closest('defs, clipPath')) return;
+      const spans = [...t.children].filter(c => c.localName === 'tspan');
+      if (spans.length > 1 && spans.filter(sp => sp.hasAttribute('y')).length > 1){
+        const x0 = t.getAttribute('x') || '0', y0 = t.getAttribute('y') || '0';
+        spans.forEach(sp => {
+          const nt = t.cloneNode(false);
+          nt.setAttribute('x', sp.getAttribute('x') || x0); nt.setAttribute('y', sp.getAttribute('y') || y0);
+          ['dx', 'dy'].forEach(a => { if (sp.hasAttribute(a)) nt.setAttribute(a, sp.getAttribute(a)); });
+          ['fill', 'font-size', 'font-weight', 'font-style', 'text-anchor', 'opacity', 'fill-opacity', 'letter-spacing'].forEach(a => { if (sp.hasAttribute(a)) nt.setAttribute(a, sp.getAttribute(a)); });
+          nt.textContent = sp.textContent;
+          t.before(nt);
+        });
+        t.remove();
+        return;
+      }
+      const lines = spans.filter(sp => sp.hasAttribute('x'));
+      for (let i = 1; i < lines.length; i++){
+        const a = lines[i - 1].getBoundingClientRect(), b = lines[i].getBoundingClientRect();
+        if (b.top < a.bottom - 1 && a.top < b.bottom - 1){ lines[i].removeAttribute('y'); lines[i].setAttribute('dy', '1.25em'); }
+      }
+    });
     const texts = [...svg.querySelectorAll('text')].filter(t => t.textContent.trim() && !t.closest('defs, clipPath'));
     if (!texts.length) return;
     const size = t => parseFloat(getComputedStyle(t).fontSize) || 16;
@@ -984,7 +1009,7 @@ function fitLabels(root){
       const x = (t.getAttribute('x') || '0').trim().split(/[\s,]+/)[0];
       t.textContent = '';
       [words.slice(0, cut).join(' '), words.slice(cut).join(' ')].forEach((line, i) => {
-        const sp = document.createElementNS(SVGNS, 'tspan'); sp.setAttribute('x', x); if (i) sp.setAttribute('dy', '1.15em'); sp.textContent = line; t.append(sp);
+        const sp = document.createElementNS(SVGNS, 'tspan'); sp.setAttribute('x', x); if (i) sp.setAttribute('dy', '1.25em'); sp.textContent = line; t.append(sp);
       });
       t.dataset.wrapped = '1'; return true;
     };
@@ -994,7 +1019,8 @@ function fitLabels(root){
       const unit = vb[2] / svg.getBoundingClientRect().width;
       t.setAttribute('transform', (`translate(${Math.round(dxPx * unit * 10) / 10} ${Math.round(dyPx * unit * 10) / 10}) ` + (t.getAttribute('transform') || '')).trim());
     };
-    for (let pass = 0; pass < texts.length * 6 + 10; pass++){
+    // every pass fixes one problem; once a label has used its three steps it can only move, so this always ends
+    for (let pass = 0; pass < texts.length * texts.length * 4 + 40; pass++){
       const box = svg.getBoundingClientRect(), R = texts.map(r);
       let done = true;
       // 1. labels running past the left or right edge
@@ -1098,7 +1124,7 @@ const DRAWING_RULES = `7. Plan the composition before drawing:
    - fussy small details that clutter the silhouette
    - accidental reads: a shape that reads as something else (a blob as a face, stripes as a flag, two circles as eyes)
    - a second focal point competing with the hero
-   - labels crossing the hero, each other or a busy coastline, or falling below a readable size after scaling. Estimate each label's width before placing it (about 0.55 × font-size per character, 0.62 for bold or wide fonts), keep at least 4 units between labels and inside the drawing's edges, and break a long label into two tspans (same x, dy="1.15em") instead of letting it run into another
+   - labels crossing the hero, each other or a busy coastline, or falling below a readable size after scaling. Estimate each label's width before placing it (about 0.55 × font-size per character, 0.62 for bold or wide fonts), keep at least 4 units between labels and inside the drawing's edges, and break a long label into two tspans (same x, dy="1.25em") instead of letting it run into another
    - mechanical spacing where a scatter would look natural, or a messy scatter where a count must be read
    - wrong proportions, floating objects, light coming from two directions`;
 
@@ -1509,7 +1535,9 @@ function livePreview(project){
     try{
       const sy = posterSymbols(html);
       const view = sy ? {...project, entities: sy.entities, accent: sy.accent || project.accent} : project;
-      $('#out').replaceChildren(renderIG(html, view));
+      const ig = renderIG(html, view);
+      $('#out').replaceChildren(ig);
+      fitSoon(ig); // labels stay readable while the poster is still being written
     }catch{}
   };
 }
