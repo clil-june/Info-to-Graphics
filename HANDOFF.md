@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: drawing styles from claude-drawing-skill).
+Last updated 2026-11-19 (Claude Code: moodboard house style).
 
 ## Current task
 
@@ -17,6 +17,30 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Moodboard house style (Claude Code, 2026-11-19, twelfth change)
+
+- **Owner's request:** 17 reference images as "a moodboard for how I want the style of the infographics outputs".
+- **What they share:**
+  - flat mid-century poster illustration
+  - one bold saturated colour field (cobalt, sky, coral, teal, orange, mustard, navy)
+  - 3 to 5 colours
+  - crisp hard-edged flat shapes, with no outlines, gradients or glows
+  - light as hard geometry: lit and shade planes split by a clean edge, long hard diagonal cast shadows, one or two cream shine slivers
+  - one large, simplified, often cropped hero object with lots of empty field
+  - bold viewpoints (top-down, three-quarter, side, close-up)
+  - repetition patterns (lemons, blueberries, umbrellas)
+  - stripes as accents, a little wit, a fine print grain
+- **In `index.html`:**
+  - `DRAWING_RULES` rule 8 is now the house style (always used unless the user asks for another look). It replaces the 16-style menu from the eleventh change, which can be found in commit `f03bbaa`. The composition plan (7), craft (9) and failure checks (10) remain, re-aimed at the house style (for example, failure mode: gradients, glows, outlines or too many colours creeping in).
+  - Rule 6 (art direction) now says that the subject chooses the colour field, palette, hero object and typefaces, not the drawing language. Its examples are rewritten as flat colour fields.
+  - New `grain` texture: fine SVG noise drawn by the app as a data-URI background (Claude's own markup still can't use `url()`). It is listed first and suggested for the house style.
+  - Both prompt examples were redrawn in the house style:
+    - `EXAMPLE_POSTER`: sky field, 39 year tiles with hard shadows, 6.96 of them red
+    - `EXAMPLE_SPACE`: navy field, a flat Earth with a hard night side, and a to-scale row of 30 Earths to the Moon
+    They are about 7.7k characters together, down from 21.5k, so the prompt went from about 38.9k to 21.9k characters with a short source.
+  - The SVG notes say that the colour field is the background and that gradients are normally unnecessary.
+
 
 ### Drawing method and styles from claude-drawing-skill (Claude Code, 2026-11-19, eleventh change)
 
@@ -176,6 +200,18 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### House style (2026-11-19)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, local server, stand-in `window.claude` that returns the two new examples:
+  - the prompt contains the house style and no longer the 16-style menu; its length was 21,898 characters
+  - both examples rendered, with grain on the field; at first the grain was too strong (the sky field looked grey) and it was reduced
+  - the periods poster: "All 6 numbers appear in your sources"
+  - the space poster flags "30" as expected, since it is derived and not in the test source
+  - both were inspected by eye
+- **Unverified:** real Claude output in the live artifact (how closely it follows the house style), and whether the data-URI grain shows inside the claude.ai artifact (if it's blocked, the field is simply flat).
+
 
 ### Drawing styles (2026-11-19)
 

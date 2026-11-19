@@ -13,7 +13,7 @@ Drop in sources, say in a sentence or two what the infographic should show, and 
 ## How it makes an infographic
 
 1. **One Claude call.** The prompt holds the sources, the question, the poster rules and two hand-made examples. Claude answers with one themed poster: the subject's look (background, texture, fonts, colours), a short headline and one central drawing. Places get a built-in world map with real coastlines.
-   Before drawing, Claude plans the composition, picks one drawing style suited to the subject (blueprint, linocut, ukiyo-e, flat vector, Art Deco, constructivist poster, isometric, stained glass and others) and checks the picture against a list of real failure modes. The method and style rules are adapted for SVG from [claude-drawing-skill](https://github.com/cloveric/claude-drawing-skill) by cloveric (MIT).
+   Every poster uses one house style taken from the owner's moodboard: flat mid-century poster illustration with one bold colour field, hard-edged flat shapes, light and shadow as hard geometric shapes, 3 to 5 colours and a fine print grain. The subject chooses the colour field, the hero object and the typefaces. Before drawing, Claude plans the composition and afterwards checks the picture against a list of real failure modes, a method adapted from [claude-drawing-skill](https://github.com/cloveric/claude-drawing-skill) by cloveric (MIT).
 2. **Shown as it is written.** The page re-draws about every 0.7 seconds while the answer streams in.
 3. **Check the numbers.** The page lists any number it cannot find in the sources. This is a numeric lookup and does not validate every value's context or attribution.
 
