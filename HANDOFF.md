@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: moodboard house style).
+Last updated 2026-11-19 (Claude Code: map seam line, polar maps, missing symbols).
 
 ## Current task
 
@@ -17,6 +17,24 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Polar-bear bug fixes (Claude Code, 2026-11-19, thirteenth change)
+
+- **Owner's report:** the polar-bear poster had "a weird line across the map and no polar bears". The house style itself "works well".
+- **The line.** In the world-atlas data, Russia, Fiji and Antarctica jump from +180° to −180° longitude. On the flat Natural Earth map that jump was drawn as a straight line across the whole map, at the Bering Strait's latitude. `expandMaps()` now cuts each ring at the seam and closes each piece along the map's edge; a pole-enclosing ring (Antarctica) closes through the pole. Routes over the seam now keep going instead of jumping back across the map.
+- **Round polar maps.** The flat map turns the Arctic into a thin strip, so `data-map="arctic"` / `"antarctic"` is new: an azimuthal equidistant map looking down on the pole, out to `data-rim` (default 55), with `data-rotate` (longitude at the bottom for the Arctic, at the top for Antarctica), a circular clip, sea and graticule. Markers and routes use the same `data-lon`/`data-lat`. The prompt tells Claude to use it for polar subjects and never to show polar regions on the flat map.
+- **The missing bears, most likely cause.** An HTML tag inside `<svg>` (the prompt's own `<i data-sym>` symbol tag, or a `<b>` in a label) makes the browser's parser close the drawing there, so every shape after it is dropped. New `svgSafe()` runs before parsing:
+  - `<i data-sym>` becomes `<g data-sym>`
+  - `<b>`/`<strong>` and `<i>`/`<em>` become bold or italic `<tspan>`
+  - `<span>` becomes `<tspan>`
+  - `<br>`, `<p>`, `<div>` and `<small>` are removed
+
+  It also handles an unclosed drawing (still streaming, or cut off).
+- **Symbols inside drawings.** `<g data-sym="id" data-size="18" transform="translate(x y)">` (or with `data-lon`/`data-lat`) now draws the defined symbol centred there, coloured with its colour and with an accessible name. The prompt encourages this for things that repeat many times, which keeps answers short. It also says never to put HTML tags inside the svg, and to keep the answer under about 15,000 characters.
+- **Cut-off answers.** Another possible cause: a long answer cut off before the bears. `ask()` now records `lastCut` (the runtime's `truncated` flag, or a kept partial answer). `wasCut()` also flags a figure or svg that was never closed. The version stores `cut`, and the stage shows a warning: "The drawing was cut off…".
+- The numbers note is hidden when no numbers were checked, and it uses the singular for one number.
+- **Not confirmed:** which of the two causes hit the owner's poster. The poster itself wasn't available, since it lives in the owner's browser storage.
+
 
 ### Moodboard house style (Claude Code, 2026-11-19, twelfth change)
 
@@ -200,6 +218,18 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Polar-bear fixes (2026-11-19)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- A Node scan of the map data found the seam jumps: Russia 4, Fiji 2, Antarctica 1.
+- Built-in browser pane, local server, stand-in `window.claude` returning three test posters:
+  - **An Arctic map** with 10 bears placed by `<i data-sym>` inside the svg and a `<b>` inside a `<text>`. All 10 bears were drawn and the text after them survived. The map was round (circle clip), with Greenwich at the bottom and the Bering Strait at the top, and was inspected by eye.
+  - **A flat map** with view "-180 40 180 84". The longest straight segment in the country paths is 9 px (it was about 400 px), and no line was visible.
+  - **An answer cut inside the svg.** The cut-off warning showed and all 10 bears were still drawn (the first version of the fix missed unclosed drawings and was corrected).
+  - No console errors.
+- **Unverified:** a real polar-bear run in the live artifact.
+
 
 ### House style (2026-11-19)
 

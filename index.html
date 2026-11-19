@@ -431,7 +431,7 @@ const SVG_TAGS = new Set('svg g path rect circle ellipse line polyline polygon t
 const GRAD_TAGS = new Set(['linearGradient', 'radialGradient']);
 const PAINT_URL = /^url\(#[A-Za-z][\w-]{0,40}\)$/;
 const HTML_ATTR = new Set('class style role aria-label aria-hidden scope colspan rowspan href title data-sym data-size data-n data-unit data-section open'.split(' '));
-const SVG_ATTR = new Set('viewBox d x y x1 y1 x2 y2 cx cy r rx ry width height points transform fill stroke stroke-width stroke-linecap stroke-linejoin stroke-dasharray opacity fill-opacity stroke-opacity fill-rule text-anchor dominant-baseline font-size font-weight font-style font-family letter-spacing preserveAspectRatio role aria-label aria-hidden id offset stop-color stop-opacity gradientUnits gradientTransform fx fy spreadMethod data-map data-view data-box data-land data-sea data-stroke data-fill data-graticule data-lon data-lat data-route data-curve'.split(' '));
+const SVG_ATTR = new Set('viewBox d x y x1 y1 x2 y2 cx cy r rx ry width height points transform fill stroke stroke-width stroke-linecap stroke-linejoin stroke-dasharray opacity fill-opacity stroke-opacity fill-rule text-anchor dominant-baseline font-size font-weight font-style font-family letter-spacing preserveAspectRatio role aria-label aria-hidden id offset stop-color stop-opacity gradientUnits gradientTransform fx fy spreadMethod data-map data-view data-box data-land data-sea data-stroke data-fill data-graticule data-lon data-lat data-route data-curve data-rim data-rotate data-sym data-size'.split(' '));
 const BAD = /url\s*\(|expression\s*\(|javascript:|@import|behavio(u)?r\s*:|-moz-binding|[<>]/i;
 function cleanStyle(v){
   return v.split(';').map(part => part.trim()).filter(part =>
@@ -631,46 +631,88 @@ function findCountry(name){
   const all = worldShapes();
   return all.find(c => normName(c.name) === want) || all.find(c => normName(c.name).startsWith(want)) || null;
 }
-/* One map per drawing: <g data-map="world" data-view="lonW latS lonE latN" data-box="x y w h" ...>. */
+/* One map per drawing.
+   <g data-map="world" data-view="lonW latS lonE latN" data-box="x y w h">: Natural Earth projection, cropped to the view.
+   <g data-map="arctic" data-rim="55" data-box="x y w h"> (or "antarctic", data-rim="-55"): a round map looking down on the pole,
+   out to the rim latitude; data-rotate="lon" puts that longitude at the bottom (arctic) or top (antarctic). */
 function expandMaps(root){
   root.querySelectorAll('figure.ig-hero svg, .ig-illo svg').forEach(svg => {
     const g = svg.querySelector('g[data-map]'); if (!g) return;
     const num = (s, n, def) => { const a = String(s || '').trim().split(/[\s,]+/).map(Number); return a.length === n && a.every(isFinite) ? a : def; };
     const vb = num(svg.getAttribute('viewBox'), 4, [0, 0, 400, 300]);
-    let [lonW, latS, lonE, latN] = num(g.getAttribute('data-view'), 4, [-180, -58, 180, 84]);
-    if (lonE <= lonW) lonE = lonW + 1; if (latN <= latS) latN = latS + 1;
     const [bx, by, bw, bh] = num(g.getAttribute('data-box'), 4, vb);
-    // fit the projected view into the box, keeping proportions
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    for (let i = 0; i <= 12; i++) for (let j = 0; j <= 12; j++){ const [x, y] = natEarth(lonW + (lonE - lonW) * i / 12, latS + (latN - latS) * j / 12); minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
-    const k = Math.min(bw / (maxX - minX), bh / (maxY - minY)), ox = bx + (bw - (maxX - minX) * k) / 2 - minX * k, oy = by + (bh - (maxY - minY) * k) / 2 - minY * k;
-    const P = (lon, lat) => { const [x, y] = natEarth(lon, lat); return [x * k + ox, y * k + oy]; };
+    const kind = String(g.getAttribute('data-map') || '').trim().toLowerCase();
+    const polar = kind === 'arctic' ? 1 : kind === 'antarctic' ? -1 : 0;
     const r1 = v => Math.round(v * 10) / 10;
     const hex = v => /^#[0-9a-f]{3,8}$/i.test(String(v || '').trim()) ? String(v).trim() : null;
     const land = hex(g.getAttribute('data-land')) || '#CFC9BE', sea = hex(g.getAttribute('data-sea')), stroke = hex(g.getAttribute('data-stroke')) || null;
     const fills = {};
     String(g.getAttribute('data-fill') || '').split(';').forEach(part => { const i = part.lastIndexOf(':'); if (i < 1) return; const c = findCountry(part.slice(0, i)), col = hex(part.slice(i + 1)); if (c && col) fills[c.name] = col; });
-    const cx0 = r1(minX * k + ox), cy0 = r1(minY * k + oy), cw = r1((maxX - minX) * k), ch = r1((maxY - minY) * k);
-    const clipId = 'mapclip' + (++renderSeq);
     const mk = (tag, attrs) => { const el = document.createElementNS(SVGNS, tag); for (const [a, v] of Object.entries(attrs)) el.setAttribute(a, v); return el; };
-    const layer = mk('g', {'clip-path': `url(#${clipId})`, 'aria-hidden': 'true'});
-    const clip = mk('clipPath', {id: clipId}); clip.append(mk('rect', {x: cx0, y: cy0, width: cw, height: ch, rx: 4}));
-    const defs = mk('defs', {}); defs.append(clip); layer.append(defs);
-    if (sea) layer.append(mk('rect', {x: cx0, y: cy0, width: cw, height: ch, fill: sea}));
     const grat = parseFloat(g.getAttribute('data-graticule'));
-    if (grat >= 5){
-      let d = '';
-      for (let lon = Math.ceil(lonW / grat) * grat; lon <= lonE; lon += grat){ for (let t = 0; t <= 24; t++){ const [x, y] = P(lon, latS + (latN - latS) * t / 24); d += (t ? 'L' : 'M') + r1(x) + ' ' + r1(y); } }
-      for (let lat = Math.ceil(latS / grat) * grat; lat <= latN; lat += grat){ for (let t = 0; t <= 24; t++){ const [x, y] = P(lonW + (lonE - lonW) * t / 24, lat); d += (t ? 'L' : 'M') + r1(x) + ' ' + r1(y); } }
-      layer.append(mk('path', {d, fill: 'none', stroke: stroke || land, 'stroke-opacity': '0.25', 'stroke-width': '0.5'}));
+    let P, near, frame, gratD = '';
+    if (polar){
+      // azimuthal equidistant, looking down on the pole: distance from the centre is distance from the pole
+      let rim = Math.abs(parseFloat(g.getAttribute('data-rim')));
+      if (!isFinite(rim)) rim = 55;
+      rim = Math.min(85, Math.max(0, rim));
+      const rot = parseFloat(g.getAttribute('data-rotate')) || 0;
+      const R = Math.min(bw, bh) / 2, cx = bx + bw / 2, cy = by + bh / 2, span = 90 - rim;
+      P = (lon, lat) => { const rr = (90 - polar * lat) / span * R, an = (lon - rot) * Math.PI / 180; return [cx + rr * Math.sin(an), cy + polar * rr * Math.cos(an)]; };
+      near = poly => poly[0].some(([, lat]) => polar * lat >= rim - 8);
+      frame = () => mk('circle', {cx: r1(cx), cy: r1(cy), r: r1(R)});
+      if (grat >= 5){
+        for (let lat = Math.ceil(rim / grat) * grat; lat < 90; lat += grat){ const rr = (90 - lat) / span * R; gratD += `M${r1(cx - rr)} ${r1(cy)}a${r1(rr)} ${r1(rr)} 0 1 0 ${r1(2 * rr)} 0a${r1(rr)} ${r1(rr)} 0 1 0 ${r1(-2 * rr)} 0`; }
+        const step = Math.max(grat, 30);
+        for (let lon = -180; lon < 180; lon += step){ const [x, y] = P(lon, polar * rim); gratD += `M${r1(cx)} ${r1(cy)}L${r1(x)} ${r1(y)}`; }
+      }
+    } else {
+      let [lonW, latS, lonE, latN] = num(g.getAttribute('data-view'), 4, [-180, -58, 180, 84]);
+      if (lonE <= lonW) lonE = lonW + 1; if (latN <= latS) latN = latS + 1;
+      // fit the projected view into the box, keeping proportions
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (let i = 0; i <= 12; i++) for (let j = 0; j <= 12; j++){ const [x, y] = natEarth(lonW + (lonE - lonW) * i / 12, latS + (latN - latS) * j / 12); minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
+      const k = Math.min(bw / (maxX - minX), bh / (maxY - minY)), ox = bx + (bw - (maxX - minX) * k) / 2 - minX * k, oy = by + (bh - (maxY - minY) * k) / 2 - minY * k;
+      P = (lon, lat) => { const [x, y] = natEarth(lon, lat); return [x * k + ox, y * k + oy]; };
+      const pad = Math.max(lonE - lonW, latN - latS) * 0.15;
+      near = poly => poly[0].some(([lon, lat]) => lon >= lonW - pad && lon <= lonE + pad && lat >= latS - pad && lat <= latN + pad);
+      const cx0 = r1(minX * k + ox), cy0 = r1(minY * k + oy), cw = r1((maxX - minX) * k), ch = r1((maxY - minY) * k);
+      frame = () => mk('rect', {x: cx0, y: cy0, width: cw, height: ch, rx: 4});
+      if (grat >= 5){
+        for (let lon = Math.ceil(lonW / grat) * grat; lon <= lonE; lon += grat){ for (let t = 0; t <= 24; t++){ const [x, y] = P(lon, latS + (latN - latS) * t / 24); gratD += (t ? 'L' : 'M') + r1(x) + ' ' + r1(y); } }
+        for (let lat = Math.ceil(latS / grat) * grat; lat <= latN; lat += grat){ for (let t = 0; t <= 24; t++){ const [x, y] = P(lonW + (lonE - lonW) * t / 24, lat); gratD += (t ? 'L' : 'M') + r1(x) + ' ' + r1(y); } }
+      }
     }
-    const pad = Math.max(lonE - lonW, latN - latS) * 0.15;
+    const line = pts => pts.map(([lon, lat], i) => { const [x, y] = P(lon, lat); return (i ? 'L' : 'M') + r1(x) + ' ' + r1(y); }).join('');
+    /* A few shapes (Russia, Fiji, Antarctica) jump from +180° to -180° longitude. On the flat world map that jump would be
+       drawn as a line right across the map, so the ring is cut at the seam and each piece is closed along the map's edge.
+       On a polar map the seam is just a meridian, so nothing needs cutting. */
+    const ringD = ring => {
+      const same = ring.length > 1 && ring[0][0] === ring[ring.length - 1][0] && ring[0][1] === ring[ring.length - 1][1];
+      const pts = same ? ring.slice(0, -1) : ring, n = pts.length;
+      const cuts = polar ? [] : pts.map((_, i) => i).filter(i => Math.abs(pts[i][0] - pts[(i + n - 1) % n][0]) > 180);
+      if (!cuts.length) return line(pts) + 'Z';
+      const crossLat = i => { const [l0, a0] = pts[(i + n - 1) % n], [l1, a1] = pts[i]; const side = l0 > 0 ? 180 : -180, u1 = l1 + (l0 > 0 ? 360 : -360); return a0 + (a1 - a0) * (side - l0) / (u1 - l0); };
+      let d = '';
+      cuts.forEach((c, k) => {
+        const next = cuts[(k + 1) % cuts.length], startSide = pts[c][0] > 0 ? 180 : -180, chain = [[startSide, crossLat(c)]];
+        let i = c; do { chain.push(pts[i]); i = (i + 1) % n; } while (i !== next);
+        const endSide = pts[(next + n - 1) % n][0] > 0 ? 180 : -180;
+        chain.push([endSide, crossLat(next)]);
+        if (endSide !== startSide){ const pole = chain.reduce((t, p) => t + p[1], 0) > 0 ? 89.9 : -89.9; chain.push([endSide, pole], [startSide, pole]); }
+        d += line(chain) + 'Z';
+      });
+      return d;
+    };
+    const clipId = 'mapclip' + (++renderSeq);
+    const layer = mk('g', {'clip-path': `url(#${clipId})`, 'aria-hidden': 'true'});
+    const clip = mk('clipPath', {id: clipId}); clip.append(frame());
+    const defs = mk('defs', {}); defs.append(clip); layer.append(defs);
+    if (sea){ const bg = frame(); bg.setAttribute('fill', sea); layer.append(bg); }
+    if (gratD) layer.append(mk('path', {d: gratD, fill: 'none', stroke: stroke || land, 'stroke-opacity': '0.25', 'stroke-width': '0.5'}));
     worldShapes().forEach(c => {
       let d = '';
-      c.polys.forEach(poly => {
-        if (!poly[0].some(([lon, lat]) => lon >= lonW - pad && lon <= lonE + pad && lat >= latS - pad && lat <= latN + pad)) return;
-        poly.forEach(ring => { ring.forEach(([lon, lat], i) => { const [x, y] = P(lon, lat); d += (i ? 'L' : 'M') + r1(x) + ' ' + r1(y); }); d += 'Z'; });
-      });
+      c.polys.forEach(poly => { if (near(poly)) poly.forEach(ring => { d += ringD(ring); }); });
       if (!d) return;
       const f = fills[c.name] || land;
       layer.append(mk('path', {d, fill: f, stroke: stroke || f, 'stroke-width': stroke ? '0.5' : '0.3', 'stroke-linejoin': 'round'}));
@@ -684,13 +726,16 @@ function expandMaps(root){
       el.setAttribute('transform', `translate(${r1(x)} ${r1(y)})` + (el.getAttribute('transform') ? ' ' + el.getAttribute('transform') : ''));
     });
     svg.querySelectorAll('[data-route]').forEach(el => {
-      const pts = String(el.getAttribute('data-route')).trim().split(/\s+/).map(p => p.split(',').map(Number)).filter(p => p.length === 2 && p.every(isFinite)).map(([lon, lat]) => P(lon, lat));
+      const ll = String(el.getAttribute('data-route')).trim().split(/\s+/).map(p => p.split(',').map(Number)).filter(p => p.length === 2 && p.every(isFinite));
+      // on the flat map, a route over the Pacific seam keeps going instead of jumping back across the whole map
+      if (!polar) for (let i = 1; i < ll.length; i++){ while (ll[i][0] - ll[i - 1][0] > 180) ll[i][0] -= 360; while (ll[i][0] - ll[i - 1][0] < -180) ll[i][0] += 360; }
+      const pts = ll.map(([lon, lat]) => P(lon, lat));
       if (pts.length < 2) return;
-      const bend = parseFloat(el.getAttribute('data-curve')); const b = isFinite(bend) ? bend : 0.2;
+      const bend = parseFloat(el.getAttribute('data-curve')); const bb = isFinite(bend) ? bend : 0.2;
       let d = `M${r1(pts[0][0])} ${r1(pts[0][1])}`;
       for (let i = 1; i < pts.length; i++){
         const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
-        d += `Q${r1(mx - (y1 - y0) * b)} ${r1(my + (x1 - x0) * b)} ${r1(x1)} ${r1(y1)}`;
+        d += `Q${r1(mx - (y1 - y0) * bb)} ${r1(my + (x1 - x0) * bb)} ${r1(x1)} ${r1(y1)}`;
       }
       if (el.localName === 'path') el.setAttribute('d', d);
       if (!el.getAttribute('fill')) el.setAttribute('fill', 'none');
@@ -698,8 +743,19 @@ function expandMaps(root){
   });
 }
 
+/* Inside <svg>, an HTML tag such as <i>, <b> or <span> makes the browser's parser close the drawing at that point,
+   so every shape after it would be lost. Turn the ones Claude is likely to write into their SVG equivalents first. */
+function svgSafe(html){
+  // an unclosed drawing (still streaming, or cut off) runs to the end of the text
+  return String(html).replace(/<svg\b[\s\S]*?(?:<\/svg>|$)/gi, block => block
+    .replace(/<i\b([^>]*\bdata-sym\b[^>]*?)\s*\/?>(?:\s*<\/i>)?/gi, '<g$1></g>')
+    .replace(/<(b|strong)\b[^>]*>/gi, '<tspan font-weight="700">').replace(/<\/(b|strong)>/gi, '</tspan>')
+    .replace(/<(i|em)\b[^>]*>/gi, '<tspan font-style="italic">').replace(/<\/(i|em)>/gi, '</tspan>')
+    .replace(/<span\b[^>]*>/gi, '<tspan>').replace(/<\/span>/gi, '</tspan>')
+    .replace(/<br\s*\/?>/gi, ' ').replace(/<\/?(p|div|small)\b[^>]*>/gi, ''));
+}
 function renderIG(html, proj, expand = true){
-  const doc = new DOMParser().parseFromString('<!doctype html><body>' + html + '</body>', 'text/html');
+  const doc = new DOMParser().parseFromString('<!doctype html><body>' + svgSafe(html) + '</body>', 'text/html');
   const root = h('article', {class:'ig', style:`--acc:${proj.accent || '#A3203A'}`});
   for (const c of Array.from(doc.body.childNodes)){ const k = cleanTree(c, false, false); if (k) root.append(k); }
   root.querySelectorAll('details[open]').forEach(el => el.removeAttribute('open'));
@@ -773,6 +829,14 @@ function expandIG(root, proj){
   // symbols
   root.querySelectorAll('[data-sym]').forEach(el => {
     const e = ents[el.getAttribute('data-sym')]; if (!e) return;
+    if (el.namespaceURI === SVGNS){
+      // drawn centred on the group's own origin, so a transform or data-lon/data-lat places it
+      const size = clampInt(el.getAttribute('data-size'), 18, 6, 200), sv = glyphSvg(e, size);
+      sv.setAttribute('x', String(-size / 2)); sv.setAttribute('y', String(-size / 2));
+      el.setAttribute('color', e.color); el.setAttribute('role', 'img'); el.setAttribute('aria-label', e.name);
+      el.prepend(sv);
+      return;
+    }
     const ctx = el.parentElement;
     const def = el.classList.contains('ig-dot') ? 26 : el.classList.contains('ig-lead') ? 18 : ctx?.classList.contains('ig-bar') ? 44 : ctx?.closest('.ig-timeline') ? 32 : 28;
     const g = glyphEl(e, clampInt(el.getAttribute('data-size'), def, 12, 160));
@@ -864,13 +928,14 @@ const POSTER_FORMAT = `Output only HTML, in this order (anything else is removed
 1. The theme, plus optional small symbols: <div class="ig-symdefs" data-bg="#HEX" data-bg2="#HEX optional, rarely needed: only for a sky that is two flat bands" data-ink="#HEX text colour" data-muted="#HEX secondary text" data-accent="#HEX" data-font="display font" data-body="text font" data-texture="TEXTURE" data-dir="rtl only for Hebrew or Arabic"> symbols </div>.
    Fonts: any Google Fonts family, by its exact name. Pick a display and text pairing made for THIS subject, not a habit: avoid Inter and Bricolage Grotesque unless they truly fit, and do not reuse the examples' fonts by default. Ideas by mood:
 ${Object.entries(FONT_GROUPS).map(([g, l]) => '   - ' + g + ': ' + l.join(', ')).join('\n')}
-   Textures, choose from: ${TEXTURES.join(', ')} (grain suits the house style best). Only if a recurring physical thing appears as small repeated marks in HTML parts, define it once here: <svg data-def="short-id" data-name="Name" data-color="#HEX" viewBox="0 0 32 32">...</svg>, then place it with <i data-sym="short-id"></i>. ${GLYPH_RULES} Most posters need none.
+   Textures, choose from: ${TEXTURES.join(', ')} (grain suits the house style best). If one physical thing repeats many times (animals, people, cups, trees), define it once here: <svg data-def="short-id" data-name="Name" data-color="#HEX" viewBox="0 0 32 32">...</svg>. Place it in HTML parts with <i data-sym="short-id"></i>, and inside your drawing with <g data-sym="short-id" data-size="18" transform="translate(x y)"></g> (centred on x y; on a map use data-lon and data-lat instead of transform). This keeps the answer short. ${GLYPH_RULES}
 2. <header class="ig-head"><p class="ig-q"><b>The question</b> the reader's question?</p><h1 class="ig-h1">the answer, max 12 words</h1></header>
 3. ONE central graphic: <figure class="ig-hero"> ... <figcaption>optional one line: what is counted, out of how many</figcaption></figure>. Inside it, preferably ONE drawing:
    <svg viewBox="0 0 400 H" role="img" aria-label="what the picture shows, with the numbers"> (H between 260 and 560).
-   Allowed SVG elements: g, path, rect, circle, ellipse, line, polyline, polygon, text, tspan, and gradients: <defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#HEX"/><stop offset="1" stop-color="#HEX" stop-opacity="0"/></linearGradient></defs> (radialGradient with cx, cy, r, fx, fy too), used as fill="url(#a)". Attributes: geometry, transform, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin, stroke-dasharray, opacity, fill-opacity, stroke-opacity, text-anchor, font-size, font-weight, font-style. Hex colours. The house style uses flat fills, so gradients are normally unnecessary. No use, filters, masks, clip paths, images or foreignObject: they are removed, so write repeated shapes out (group them with transform="translate(x y)"). Up to about 400 elements. Text font-size at least 12 (the 400-wide drawing shrinks to about 340 px on a phone). The drawing sits on the theme's colour field, so leave its own background transparent: the field IS the background. Add flat planes (a wall, a table, a road, a sea) only where the scene needs them.
+   Allowed SVG elements: g, path, rect, circle, ellipse, line, polyline, polygon, text, tspan, and gradients: <defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#HEX"/><stop offset="1" stop-color="#HEX" stop-opacity="0"/></linearGradient></defs> (radialGradient with cx, cy, r, fx, fy too), used as fill="url(#a)". Attributes: geometry, transform, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin, stroke-dasharray, opacity, fill-opacity, stroke-opacity, text-anchor, font-size, font-weight, font-style. Hex colours. The house style uses flat fills, so gradients are normally unnecessary. No use, filters, masks, clip paths, images or foreignObject: they are removed, so write repeated shapes out (group them with transform="translate(x y)"). Up to about 400 elements, and keep the whole answer under about 15,000 characters: a longer answer is cut off and loses whatever comes last. Never put HTML tags (i, b, span, p, div, br) inside the svg; use tspan for bold or italic words. Text font-size at least 12 (the 400-wide drawing shrinks to about 340 px on a phone). The drawing sits on the theme's colour field, so leave its own background transparent: the field IS the background. Add flat planes (a wall, a table, a road, a sea) only where the scene needs them.
    MAPS. Whenever the fact is about places (where things are, countries, regions, oceans, routes, spread), draw a map, never a list. Do NOT draw coastlines yourself: place the built-in world map, with accurate coastlines and borders, inside your svg:
    <g data-map="world" data-view="lonWest latSouth lonEast latNorth" data-box="x y width height" data-land="#HEX" data-sea="#HEX" data-stroke="#HEX border colour, optional" data-graticule="30 (optional grid every N degrees)" data-fill="Country:#HEX;Other country:#HEX (optional, common English names)"></g>
+   For the Arctic or Antarctica (polar animals, sea ice, polar routes) use a round polar map instead, looking down on the pole: <g data-map="arctic" data-rim="50" data-box="x y size size" data-land data-sea data-stroke data-graticule data-fill></g> ("antarctic" with data-rim="-50" for the south); data-rim is the latitude at the edge of the circle (50 to 70), data-rotate="lon" turns that longitude to the bottom. Never show polar regions on the flat world map.
    Crop data-view tightly to the region that matters: a whole-world map is small on a phone, so show the whole world only when the fact is global. data-view crops the world (for example "-100 0 40 70" for the North Atlantic, "-180 -60 180 84" for the whole world, "25 10 65 45" for the Middle East); data-box is where the map sits in the viewBox.
    Put everything you place on the map at real coordinates: <g data-lon="-30.5" data-lat="55"> marker, leader line and label drawn around 0,0 </g>. Routes: <path data-route="lon,lat lon,lat lon,lat" data-curve="0.2" stroke="#HEX" stroke-width="2"/> (the app draws the path; data-curve 0 is straight). Size markers by the data (circle AREA proportional to the value), keep labels off the busiest coast, and style land and sea in the theme's colours.
    Only if the fact is a plain ranking or share that no drawing can show better, you may use one of these instead of the svg: a pictogram <div class="ig-picto" data-sym="ID" data-n="10" style="--v:1.9"></div> (data-n marks drawn, --v filled); sorted bars <div class="ig-bars" style="--max:50"><div class="ig-bar" style="--v:47"><i data-sym="ID"></i><b class="ig-bar-v">47%</b></div></div>; or one big number <div class="ig-stats"><div class="ig-stat"><b class="ig-big ig-big--hero">≈7</b><span>years</span></div></div>.
@@ -1057,10 +1122,11 @@ function renderStage(){
   const cur = Math.max(0, Math.min(proj.cur ?? vs.length - 1, vs.length - 1));
   const ig = renderIG(vs[cur].html, proj);
   out.append(ig);
+  if (vs[cur].cut) top.append(h('div', {class: 'check warn', role: 'status'}, h('span', {}, h('b', {}, 'The drawing was cut off. '), 'Claude’s answer stopped before the end, so the last parts of the picture may be missing. Try again, or ask for a simpler picture.')));
   const chk = checkNumbers(ig, proj);
   top.append(chk.missing.length
     ? h('div', {class: 'check warn', role: 'status'}, h('span', {}, h('b', {}, `${chk.missing.length} number${chk.missing.length === 1 ? '' : 's'} to double-check. `), `Not found in your sources: ${chk.missing.slice(0, 12).join(', ')}${chk.missing.length > 12 ? ' …' : ''}. They may be rounded or worked out; ask for a change if any is wrong.`))
-    : h('div', {class: 'check ok', role: 'status'}, h('span', {}, h('b', {}, 'Numbers checked. '), `All ${chk.checked} numbers on the page appear in your sources.`)));
+    : chk.checked ? h('div', {class: 'check ok', role: 'status'}, h('span', {}, h('b', {}, 'Numbers checked. '), `All ${chk.checked} number${chk.checked === 1 ? '' : 's'} on the page appear${chk.checked === 1 ? 's' : ''} in your sources.`)) : '');
   if (vs.length > 1) top.append(h('div', {class: 'versions'}, h('span', {class: 'label'}, 'Versions'),
     vs.map((v, i) => h('button', {type: 'button', 'aria-pressed': String(i === cur), title: v.label || '', onclick: () => { proj.cur = i; save(); renderStage(); }}, `${i + 1}. ${v.label || 'Version'}`))));
 }
@@ -1193,6 +1259,7 @@ function errCopy(e){
   }
 }
 let ctl = null, t0 = 0, tick = null;
+let lastCut = false; // set by ask(): the runtime said the answer was truncated, or a partial answer was kept
 function stage(name){
   const order = ['read', 'compose', 'check'], at = order.indexOf(name);
   document.querySelectorAll('.ps').forEach(el => { const i = order.indexOf(el.dataset.s); el.className = 'ps' + (i < at ? ' done' : i === at ? ' on' : ''); });
@@ -1204,9 +1271,15 @@ function startRun(){
 }
 function endRun(){ clearInterval(tick); ctl = null; $('#goBtn').disabled = false; $('#refineBtn').disabled = false; $('#againBtn').disabled = false; }
 $('#stopBtn').addEventListener('click', () => ctl?.abort());
+/* An answer that stops early loses whatever Claude drew last. Count it as cut when the runtime says so,
+   or when the drawing or the figure was never closed. */
+function wasCut(html){
+  const n = re => (html.match(re) || []).length;
+  return lastCut || !/<\/figure>/i.test(html) || n(/<svg\b/gi) > n(/<\/svg>/gi);
+}
 function addVersion(html, label){
   proj.versions ||= [];
-  proj.versions.push({html, at: Date.now(), label});
+  proj.versions.push({html, at: Date.now(), label, cut: wasCut(html) || undefined});
   if (proj.versions.length > 8) proj.versions.shift();
   proj.cur = proj.versions.length - 1; proj.example = false; save();
 }
@@ -1221,11 +1294,11 @@ async function ask(sample, prompt, {signal, tier = 'default', onText, usable = (
   for (const modelTier of tiers){
     try{
       const r = await sample(prompt, {cache:false, signal, modelTier, onText});
-      if (usable(r.text)) return r.text;
+      if (usable(r.text)){ lastCut = !!r.truncated; return r.text; }
       last = {code:failCode};
     }catch(e){
       signal.throwIfAborted();
-      if (e?.text && usable(e.text)) return e.text;
+      if (e?.text && usable(e.text)){ lastCut = true; return e.text; }
       if (NO_RETRY.has(e?.code)) throw e;
       last = e;
     }
