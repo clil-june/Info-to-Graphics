@@ -1,10 +1,10 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: bold colour field back, owner decision).
+Last updated 2026-11-19 (Claude Code: Material Design colour palette).
 
 ## Current task
 
-**Owner decision (2026-11-19, after Codex's `744413c`):** "Bring back bold colours". The poster again uses the moodboard's ONE bold, saturated colour field. Codex's readability rules (contrast against the actual surface, label sizes on phones) stay, now under `READABILITY_AND_PALETTE_V2` in [the guide](docs/visual-communication-research.md#text-readability-and-contextual-palettes).
+**Owner decision (2026-11-19, after Codex's `744413c`):** "Bring back bold colours". The poster again uses the moodboard's ONE bold, saturated colour field. Codex's readability rules (contrast against the actual surface, label sizes on phones) stay, now under `READABILITY_AND_PALETTE_V3` in [the guide](docs/visual-communication-research.md#text-readability-and-contextual-palettes).
 
 **Typography update (2026-11-19):** apply `TYPOGRAPHY_BY_SUBJECT_V1` from [the guide](docs/visual-communication-research.md#typography-by-subject). The owner wants topic/story-aware font pairs (12 options), not an identical grid or one fixed pair for every subject. Typography only: illustration/palette work is deferred in this session.
 
@@ -22,11 +22,29 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What changed
 
+### Material Design colour palette (Claude Code, 2026-11-19)
+
+- **Owner's request:** "expand the color palette using the material design color system so that the outputs will be more versatile and that the color will vary in accordance with context", linking m2.material.io's colour system page. The page was read in the browser pane (it needs JavaScript, so WebFetch only returned the title).
+- **`index.html`, app side:**
+  - `MATERIAL` holds the full 2014 palette exactly as published: 19 hues in colour-wheel order, 50 to 900 plus A100 to A700.
+  - `MATERIAL_HEX` maps tokens such as `teal-700` to hex. `colorValue()` accepts hex or a token (and the `gray` spelling).
+  - Tokens resolve in the sanitizer for SVG `fill`, `stroke`, `stop-color` and the map attributes, in `readTheme()`, in `expandMaps()` (including `data-fill` country colours) and in `posterSymbols()` (`data-color`).
+- **`index.html`, prompt:** `READABILITY_AND_PALETTE_V2` becomes **`V3`**, and its palette paragraph is now a Material colour theme:
+  - **Primary:** the bold field's hue comes from the subject's own world, with hue suggestions per kind of subject and "do not default to blue".
+  - **Field tone:** set by the mood (300 to 900).
+  - **Variants:** shadow and highlight tones are two to four steps darker or lighter in the same hue.
+  - **Secondary:** the accent's harmony (analogous, complementary or triadic) follows the mood.
+  - **Other roles:** a surface or cream colour, and real data colours kept.
+  - **"On" colours:** a per-hue list of the lightest tone that carries white text at 4.5:1, computed at load from the palette with `luminance()`.
+  - **Unchanged:** Codex's contrast and label-size rules. Map hints say tokens work there too.
+- **Guide** section 9 has a new "Material Design colour theme (V3)" subsection. **README** mentions it.
+
+
 ### Bold colour field back (Claude Code, 2026-11-19)
 
 - **Owner's choice,** asked directly after Codex's calm-palette rule (`744413c`) and the moodboard disagreed: "Bring back bold colours".
 - **`index.html`:**
-  - `READABILITY_AND_PALETTE_V1` is renamed `READABILITY_AND_PALETTE_V2` everywhere, so the change is visible.
+  - `READABILITY_AND_PALETTE_V1` is renamed `READABILITY_AND_PALETTE_V3` everywhere, so the change is visible.
   - Its palette paragraph ("calm palette… low to moderate saturation") is replaced by the moodboard field: ONE bold, saturated field (cobalt, sky, coral, teal, burnt orange, mustard, deep navy, deep plum, or a strong subject hue), 3 to 5 colours, a dark shadow tone, cream or white, one small warm accent, and real data colours kept.
   - New ink rule: cream or white on deep fields at any size; near-black or deep navy for small labels on bright fields, with cream there only for large text.
   - Codex's contrast thresholds and label-size rules are unchanged.
@@ -286,11 +304,31 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Material palette (2026-11-19)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, local server, stand-in `window.claude` returning a poster written entirely in tokens. Each one resolved:
+
+  | Token | Became |
+  | --- | --- |
+  | field `teal-800` | `#00695C` |
+  | ink `teal-50` | `#E0F2F1` |
+  | accent and symbol colour `amber-A200` | `#FFD740` |
+  | gradient stops `cyan-A100` / `cyan-900` | `#84FFFF` / `#006064` |
+  | `blue-gray-900` | `#263238` |
+  | sea `light-blue-100` | `#B3E5FC` |
+  | land `green-700` | `#388E3C` |
+  | Norway `deep-orange-500` | `#FF5722` |
+
+  The poster was inspected by eye. The prompt contains the Material theme rules and the computed "on" list (for example teal 700, blue 700, indigo 400; yellow, amber and orange none).
+- **Unverified:** whether real Claude output in the live artifact now varies its colours with the subject and uses tokens correctly.
+
+
 ### Bold field back (2026-11-19)
 
 - WCAG contrast computed in Node for 14 field/ink pairs; it is the basis of the ink rule (for example coral/cream 3.27, burnt orange/cream 3.33, coffee red #C23F28/cream 4.67).
 - `node --check` (Node 14) on the extracted inline script: parses. No "calm", "low to moderate" or "V1" palette wording is left in the code, guide or README.
-- Built-in browser pane, stand-in `window.claude`: the Generate and Change it prompts contain the bold-field rule, the ink rule, `READABILITY_AND_PALETTE_V2`, the 4.5:1 contrast rule and the hero rule; no V1 or calm wording; no console errors.
+- Built-in browser pane, stand-in `window.claude`: the Generate and Change it prompts contain the bold-field rule, the ink rule, `READABILITY_AND_PALETTE_V3`, the 4.5:1 contrast rule and the hero rule; no V1 or calm wording; no console errors.
 - **Unverified:** real output colours and label contrast in the live artifact.
 
 

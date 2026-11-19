@@ -271,6 +271,18 @@ Before the next live generation, Claude Code must read this section, fetch the l
 
 Ratios were computed with the WCAG 2.2 relative-luminance formula for these solid pairs. The last row passes only for large text, which is why bright fields need dark ink for small labels.
 
+### Material Design colour theme (V3)
+
+**Owner request, 19 November 2026:** expand the palette with the [Material Design colour system](https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors) so colours vary with the context. The poster keeps one bold field, built as a Material colour theme from the 2014 Material palette (19 hues, tones 50 to 900 plus A100 to A700 accents):
+
+- **Tokens.** Claude may write any palette colour as `HUE-TONE` (for example `teal-700`, `deep-orange-A200`, `blue-grey-900`, also spelled `gray`); the app turns it into the exact hex in the theme, SVG paint, gradient stops, map land, sea, borders, country fills and symbol colours. Hex still works.
+- **Primary.** The bold field takes its hue from the subject's own world (the real colour of the object, material, place, season or period), not a habitual blue.
+- **Tone from the mood.** Bright and joyful 300 to 500; confident 500 to 700; serious, dramatic, historic or night 800 to 900; light and airy 100 to 200.
+- **Variants.** The shadow tone is the same hue two to four tones darker; highlights are two to four tones lighter, or the hue's 50.
+- **Secondary.** The accent's harmony follows the mood, as Material's palette generator offers: analogous (neighbouring hue) for calm and natural stories, complementary (about eight hues away on the wheel) for contrast and comparison, triadic (about five away) for playful ones. It is used sparingly.
+- **"On" colours.** The prompt lists, for each hue, the lightest tone that carries white text at 4.5:1 (computed by the app from the palette with the WCAG formula; for example teal 700, blue 700, indigo 400; yellow, amber and orange never). On lighter tones, small text uses near-black or the hue's 900.
+- Real data colours stay real, and 3 to 5 colours in total remain the limit.
+
 ### Measure contrast where the element appears
 
 | Element | WCAG 2.2 AA minimum |
@@ -292,4 +304,4 @@ Check the weakest part of the background under the lettering. Account for compos
 
 ### Generator rule
 
-`READABILITY_AND_PALETTE_V2` in `index.html` supplies the condensed rule to Generate, Change it and Try a different picture. During revisions, apply the checks to affected elements and preserve unrelated design decisions. Verify colour and label size in the composed result, including the website's theme styles and the HTML export.
+`READABILITY_AND_PALETTE_V3` in `index.html` supplies the condensed rule to Generate, Change it and Try a different picture. During revisions, apply the checks to affected elements and preserve unrelated design decisions. Verify colour and label size in the composed result, including the website's theme styles and the HTML export.
