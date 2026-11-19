@@ -1,10 +1,10 @@
 # Handoff
 
-Last updated 2026-11-18 (Claude: fixed adding several links as sources).
+Last updated 2026-11-19 (Claude Code: optimisation and clean-up pass).
 
 ## Current task
 
-**Owner's direction (2026-11-17):** "I want to ask for one piece of information and get one infographic depicting only that central piece of information with a lot less text and veering out of this monotonous formation of box after box." Runs were also "really really slow". The single-graphic poster is now the default output. The earlier long-page work below is kept in the code, but new runs no longer use it.
+**Owner's direction (2026-11-17):** "I want to ask for one piece of information and get one infographic depicting only that central piece of information with a lot less text and veering out of this monotonous formation of box after box." Runs were also "really really slow". The single-graphic poster is now the default output. The earlier long-page pipeline was removed from the code on 2026-11-19 (it is in git history before that date).
 
 Earlier task: Apply the full-page visual approach developed in the Apollo 11 and US car color benchmarks to the infographic generator.
 
@@ -15,6 +15,18 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Optimisation and clean-up (Claude Code, 2026-11-19, tenth change)
+
+- **Faster opening.** pdf.js and mammoth.js (about 1 MB) no longer load before the app can respond. `loadLib()` adds them from cdnjs only when a PDF or Word file is first added. Schibsted Grotesk (no longer the UI font) was dropped from the start-up font link. Boot no longer renders the example poster hidden behind the start page.
+- **Storage can't fill up.** Every draft and infographic used to stay in `localStorage` forever, with full source text, and none could be reopened since Recent was removed. `saveNow()` keeps the 12 most recent projects (newest first, the open one always kept). If the browser still refuses the save, it drops the oldest until it fits, and shows the "could not save" toast only if the open project alone doesn't fit.
+- **Dead code removed (about 33 KB, 370 lines).** Removed: `RULES`, `FORMAT`, `planPrompt`, `composePrompt`, `sanitizePlan`, `EXAMPLE_HTML`, `EXAMPLE_ENTITIES`, the phone review (`reviewImages`, `inspectLayout`, `repairLayout`, `checkLayout`, `REVIEW_BUDGET_MS`), `coverageOf`/`planCovered`/`sourceMarkup`, `parseJSON`, `openProject`, the hidden title input and project picker, the review/coverage banners, and the `plan`/`review` fields. The `ig-*` CSS for long pages is kept, so older saved pages still render if a way back is added.
+- **"Change it" prompt.** It is poster-only now and no longer repeats every symbol's SVG as JSON (the page's own `ig-symdefs` already has them). The JSON is only added for a page without symbol definitions.
+- **"Try a different picture"** described the first `svg` on the page, which could be a symbol definition. It now uses the hero drawing's `aria-label`.
+- **Live preview** skips a re-render when no new text has arrived.
+- **README** rewritten to describe the one-call poster, not the removed plan/compose/review pipeline.
+- `index.html`: 269.6 KB → about 234 KB (104 KB of that is the inline world map).
+
 
 ### Several links as sources (Claude, 2026-11-18, ninth change)
 
@@ -147,6 +159,19 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Optimisation pass (2026-11-19)
+
+- `node --check` (Node 14, with `||=` rewritten for that old parser only) on the extracted inline script: parses.
+- Claude desktop app's built-in browser (Chromium) on a local copy served by a small Node server, with a stand-in `window.claude` (streamed `sample` returning a themed map poster, and a fake `mcp` browser):
+  - plain start: start page shown, no pdf.js or mammoth script loaded, no console errors
+  - a generated test PDF added through the file picker: pdf.js loaded on demand and the text was read ("ready")
+  - a typed link, a pasted second link and a duplicate: `preview_start`/`get_page_text` called in order with tab ids t1 then t2, each source titled from its own page, duplicate refused with a toast
+  - Generate: poster rendered with theme, map (country paths, marker, curved route), prefixed gradient ids and "Numbers checked"
+  - "Change it" and "Try a different picture" gave versions 2 and 3; the change prompt had the page and no old FORMAT; the different-picture note used the hero's aria-label
+  - storage: 20 stored projects were capped to 12 on the next save, with the open draft kept; with `setItem` made to refuse anything over 4 million characters, saving dropped the oldest projects until it fit (12 → 3), kept the open one and showed no error
+- **Unverified:** everything in the live artifact (real generation, fonts, links, and pdf.js loading under the artifact's CSP); phone width and export after this change (that code wasn't touched); the artifact has **not** been republished with this change.
+
+
 - Sixth change (Claude, 2026-11-17):
   - `node --check` on the inline script.
   - Headless Chromium on the standalone `index.html` with a stand-in streaming sampler, at 1920×1080 and 390×844: start page → type a text source + Enter → question → Generate → workspace with the poster, status "Done". Screenshots were inspected against the mockup.
@@ -214,4 +239,7 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Next step
 
+Republish the artifact from this commit (a Claude session with the artifact tools: publish to slug `c15c711f-f029-4bad-834b-439acbe47fa8` from live version `1794993578-72c4`, keeping its capabilities), then add a PDF in the live artifact to confirm the on-demand reader loads there. Then carry on with the step below.
+
+Earlier: 
 The owner tries a few one-question posters in the live Artifact and reports how long they take and whether the pictures are good. Tune `POSTER_RULES` and the example from what comes back. A second hand-made example on a different subject may help stop the model copying the calendar idea. Older note: The owner tries a run in the live Artifact while signed in, and reports the time or the exact error text (it now includes the error code). If layout problems on phones come back, consider bringing the screenshot review back as an optional button rather than an automatic step. Then run the two benchmarks without manual corrections. Inspect the opening, middle and final sections on a phone. Confirm the review status, source coverage and timing before merging.
