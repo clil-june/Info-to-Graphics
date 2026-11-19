@@ -220,7 +220,7 @@ Use the display family for the headline and large takeaway numbers; use the text
 
 No identical grid, fixed title position, fixed line breaks or fixed type sizes across topics: compose typography around the information and the drawing. The shared identity comes from clear hierarchy, consistent role assignments, restrained weights and readable annotations, not identical fonts or layouts on every topic. Topic selection does not impose colours or an illustration style.
 
-Set data-font and data-body to the exact selected family names in .ig-symdefs. SVG text inherits the text family; do not hard-code an unrelated font. General Sans is loaded from Fontshare, the others from Google Fonts; if Fontshare is blocked, its fallback is Inter. Offline exports retain local fallbacks.
+Set data-font and data-body to the exact selected family names in .ig-symdefs. SVG text inherits the text family; do not hard-code an unrelated font. All catalogue families load from Google Fonts (the only font source a claude.ai artifact allows). Offline exports retain local fallbacks.
 
 Language coverage takes precedence over this Latin-script catalogue. For Hebrew use Rubik + Heebo (neutral/technical), Secular One + Assistant (strong editorial) or Heebo + Assistant (quiet explanatory), with data-dir="rtl". For another unsupported script choose two script-capable sans-serif families rather than mixing unsupported Latin fonts with accidental fallback glyphs.
 
@@ -232,7 +232,7 @@ For a revision, preserve the current pair unless the user asks to change typogra
 | --- | --- | --- |
 | Transport, mechanisms, industry | Barlow Condensed | Barlow |
 | Transport, mechanisms, industry | Archivo | IBM Plex Mono |
-| Space, technology, engineering | Space Grotesk | General Sans |
+| Space, technology, engineering | Space Grotesk | Plus Jakarta Sans |
 | Space, technology, engineering | Instrument Sans | Chivo Mono |
 | Nature, ecology, animals | Manrope | Work Sans |
 | Nature, ecology, animals | Urbanist | Open Sans |
@@ -243,10 +243,10 @@ For a revision, preserve the current pair unless the user asks to change typogra
 | Sport, records, dynamic comparisons | Special Gothic Condensed One | Special Gothic |
 | Sport, records, dynamic comparisons | Alumni Sans | DM Sans |
 
-The catalogue comes from the owner's Fontpair selection, not a claim that a topic objectively requires a particular font. [Fontpair sans-serif pairings](https://fontpair.co/category/sans-serif?tab=pairings).
+Plus Jakarta Sans replaces the owner's original General Sans (19 November 2026): General Sans is only on Fontshare, which a claude.ai artifact cannot load, and Plus Jakarta Sans was the closest Google Fonts match in a side-by-side comparison (similar width, crisp geometric shapes, single-storey g, straight-tailed y). The catalogue comes from the owner's Fontpair selection, not a claim that a topic objectively requires a particular font. [Fontpair sans-serif pairings](https://fontpair.co/category/sans-serif?tab=pairings).
 
 ### Runtime and handoff anchor
 
-The browser generator cannot read this Markdown from GitHub. Its compact runtime equivalent is `TYPOGRAPHY_PAIRS` plus `TYPOGRAPHY_RULES` in `index.html`, interpolated into `POSTER_FORMAT`. Both `posterPrompt()` (Generate and Try a different picture) and `refinePrompt()` (Change it) receive it. Keep the catalogue and policy synchronized here and in the code. SVG annotations inherit the text family through `--txt`; exports use the same provider links, with local fallbacks offline.
+The browser generator cannot read this Markdown from GitHub. Its compact runtime equivalent is `TYPOGRAPHY_PAIRS` plus `TYPOGRAPHY_RULES` in `index.html`, interpolated into `POSTER_FORMAT`. Both `posterPrompt()` (Generate and Try a different picture) and `refinePrompt()` (Change it) receive it. Keep the catalogue and policy synchronized here and in the code. SVG annotations inherit the text family through `--txt`; exports use the same Google Fonts links, with local fallbacks offline.
 
-Before the next live generation, Claude Code must read this section, fetch the latest `feature/four-elements`, publish its current `index.html` to the existing Info to Graphics Artifact while preserving capabilities, and record the version in `HANDOFF.md`. A GitHub commit alone does not update a published Artifact. Verify real font loading (including Fontshare), a new generation, a revision and a different-picture run there. This update's real model behavior remains unverified until those checks run.
+Before the next live generation, Claude Code must read this section, fetch the latest `feature/four-elements`, publish its current `index.html` to the existing Info to Graphics Artifact while preserving capabilities, and record the version in `HANDOFF.md`. A GitHub commit alone does not update a published Artifact. Verify real font loading, a new generation, a revision and a different-picture run there. This update's real model behavior remains unverified until those checks run.

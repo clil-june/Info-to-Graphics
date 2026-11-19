@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-19 (Codex: topic-aware typography and next-generation anchor).
+Last updated 2026-11-19 (Claude Code: typography pairs on Google Fonts only, published).
 
 ## Current task
 
@@ -19,6 +19,22 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Typography pairs: Google Fonts only (Claude Code, 2026-11-19, after Codex's typography update)
+
+- **Reviewed** Codex's `7dd59b1` (`TYPOGRAPHY_BY_SUBJECT_V1`, 12 pairs). It parses and doesn't touch the house style, maps or symbols.
+- **Problem: General Sans would never load live.** It is only on Fontshare, and a claude.ai artifact only allows stylesheets from Google Fonts, so that pair would always fall back to Inter.
+- **Replacement: Plus Jakarta Sans,** on the owner's request ("find replacements in google fonts but keep the font pairings similar"). Five fonts were compared side by side in the browser at 52 px: General Sans, Figtree, Plus Jakarta Sans, Hanken Grotesk and Onest. Plus Jakarta Sans was the closest (similar width, crisp geometric shapes, single-storey g, straight-tailed y), with Figtree a slightly rounder second. The pair is now **Space Grotesk + Plus Jakarta Sans**, updated in:
+  - `TYPOGRAPHY_PAIRS`
+  - the guide's table, with a note explaining why it was swapped
+  - `TYPOGRAPHY_RULES` and the guide ("All catalogue families load from Google Fonts")
+  - `fontLinks()`, whose Fontshare branch was removed
+  - README
+- **Other fixes:**
+  - The prompt examples now use approved pairs: periods, Manrope + Inter; space, Space Grotesk + Plus Jakarta Sans. Before, they used DM Serif Display + DM Sans and Syne + Space Grotesk, which Claude might copy.
+  - The leftover "Fraunces with DM Sans" suggestion in rule 6 (nature) was removed.
+- **Note:** Special Gothic Condensed One and Secular One have only one weight. The app requests each weight separately, so that's harmless.
+
 
 ### Topic-aware typography (Codex, 2026-11-19)
 
@@ -229,6 +245,15 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Google-Fonts-only typography (2026-11-19)
+
+- Every catalogue and Hebrew family was requested from the Google Fonts CSS API (curl): all return 200 except General Sans (400), which is why it was replaced.
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane on the local server: all 24 families (the 12 pairs plus the Hebrew pairs) loaded with the same per-weight URLs the app builds (`document.fonts.check` true for all).
+- With the stand-in `window.claude`, the generated prompt contains `TYPOGRAPHY_BY_SUBJECT_V1` and "Space Grotesk + Plus Jakarta Sans", both examples' approved pairs, and no "General Sans", "Fontshare" or "Fraunces with". No console errors.
+- **Unverified:** real Claude pair choice and fonts loading inside the live artifact; Hebrew; "Change it" keeping the pair.
+
 
 ### Typography anchor (2026-11-19)
 
