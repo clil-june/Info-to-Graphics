@@ -1,10 +1,10 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: illustrated subjects back, combined with Codex's readability and palette rules).
+Last updated 2026-11-19 (Claude Code: bold colour field back, owner decision).
 
 ## Current task
 
-Apply [text readability and contextual palettes](docs/visual-communication-research.md#text-readability-and-contextual-palettes). The owner wants calm palettes drawn from the subject and readable text on the actual surface under it.
+**Owner decision (2026-11-19, after Codex's `744413c`):** "Bring back bold colours". The poster again uses the moodboard's ONE bold, saturated colour field. Codex's readability rules (contrast against the actual surface, label sizes on phones) stay, now under `READABILITY_AND_PALETTE_V2` in [the guide](docs/visual-communication-research.md#text-readability-and-contextual-palettes).
 
 **Typography update (2026-11-19):** apply `TYPOGRAPHY_BY_SUBJECT_V1` from [the guide](docs/visual-communication-research.md#typography-by-subject). The owner wants topic/story-aware font pairs (12 options), not an identical grid or one fixed pair for every subject. Typography only: illustration/palette work is deferred in this session.
 
@@ -21,6 +21,19 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Bold colour field back (Claude Code, 2026-11-19)
+
+- **Owner's choice,** asked directly after Codex's calm-palette rule (`744413c`) and the moodboard disagreed: "Bring back bold colours".
+- **`index.html`:**
+  - `READABILITY_AND_PALETTE_V1` is renamed `READABILITY_AND_PALETTE_V2` everywhere, so the change is visible.
+  - Its palette paragraph ("calm palette… low to moderate saturation") is replaced by the moodboard field: ONE bold, saturated field (cobalt, sky, coral, teal, burnt orange, mustard, deep navy, deep plum, or a strong subject hue), 3 to 5 colours, a dark shadow tone, cream or white, one small warm accent, and real data colours kept.
+  - New ink rule: cream or white on deep fields at any size; near-black or deep navy for small labels on bright fields, with cream there only for large text.
+  - Codex's contrast thresholds and label-size rules are unchanged.
+  - Rule 8's colour line and rule 6's wording say "bold" again.
+- **Guide section 9** has the owner-decision note (V2). "Pick colours from the story" is rewritten for a bold field, and the calm sample palettes are replaced by bold pairs with computed WCAG ratios: navy/cream 13.20, teal/navy 7.25, burnt orange/near-black 4.78, and coral/cream 3.27 (large text only).
+- **README** says "one bold, saturated colour field" again.
+
 
 ### Illustrated subjects back (Claude Code, 2026-11-19)
 
@@ -272,6 +285,14 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Bold field back (2026-11-19)
+
+- WCAG contrast computed in Node for 14 field/ink pairs; it is the basis of the ink rule (for example coral/cream 3.27, burnt orange/cream 3.33, coffee red #C23F28/cream 4.67).
+- `node --check` (Node 14) on the extracted inline script: parses. No "calm", "low to moderate" or "V1" palette wording is left in the code, guide or README.
+- Built-in browser pane, stand-in `window.claude`: the Generate and Change it prompts contain the bold-field rule, the ink rule, `READABILITY_AND_PALETTE_V2`, the 4.5:1 contrast rule and the hero rule; no V1 or calm wording; no console errors.
+- **Unverified:** real output colours and label contrast in the live artifact.
+
 
 ### Illustrated subjects (2026-11-19)
 

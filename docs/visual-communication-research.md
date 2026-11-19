@@ -254,21 +254,22 @@ Before the next live generation, Claude Code must read this section, fetch the l
 <a id="text-readability-and-contextual-palettes"></a>
 ## 9. Text readability and contextual palettes
 
-The colour palette should suit the subject and support the visual explanation. Choose a calm colour field and reserve stronger colour for the part of the story that needs emphasis. Text and essential graphics must remain legible at their final size.
+**Owner decision, 19 November 2026 (V2):** the poster uses the moodboard's ONE bold, saturated colour field, not a calm or subdued one. The contrast and label-size rules below still apply, and matter more on strong colours. Text and essential graphics must remain legible at their final size.
 
 ### Pick colours from the story
 
-1. Start from a material, setting, period or mood that fits the specific takeaway. A lunar route can use cool, greyed blues. A camping illustration can draw from sand, pine and canvas.
-2. Assign roles before choosing exact colours. Start with a quiet background, readable primary and secondary ink, a family of related tones for the main drawing, and one small accent for the key event or comparison. Favour low to moderate saturation for large surfaces. Use related light and dark tones within the illustration. Add colour categories when the data require them.
-3. Check the full composition at phone size. If a large fill pulls attention away from the takeaway, reduce its saturation or area. Preserve meaningful source colours, such as the actual hues in a car colour comparison, and identify categories directly with labels, line styles, shapes or patterns. [Adobe Colour Contrast](https://www.adobe.com/uk/creativecloud/design/discover/color-contrast.html) · [Material Design 3 Color roles](https://m3.material.io/styles/color/the-color-system) · [W3C Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+1. Start from a material, setting, period or mood that fits the specific takeaway, and turn it into one bold field: a lunar route can sit on deep navy, a car story on teal or plum, a camping scene on burnt orange or pine.
+2. Assign roles: the field, the object colour, a dark shadow tone, cream or white, and one small warm accent; 3 to 5 colours in total, every other shade a tone of these. Preserve meaningful source colours, such as the actual hues in a car colour comparison, and identify categories with labels, line styles, shapes or patterns as well as colour.
+3. Choose ink for the field. On deep fields cream or white reads at any size; on bright fields use near-black or deep navy for small labels and keep cream for large text.
 
-| Example | Background | Text | Illustration family |
-| --- | --- | --- | --- |
-| Apollo 11 | Cool grey `#EDF2F4` | Dark blue-grey `#202D44` | Muted steel blue `#567287` |
-| Car colours | Pale sage `#E7EEDC` | Deep green `#17352B` | Grey-green `#4A6F64` |
-| Camping | Warm sand `#F4EFE3` | Dark pine `#28371F` | Muted olive `#687B50` |
+| Example | Field | Text | Ratio |
+| --- | --- | --- | ---: |
+| Apollo 11 | Deep navy `#16205A` | Cream `#F6EFDF` | 13.20:1 |
+| Car colours | Teal `#5EC4B8` | Deep navy `#16205A` | 7.25:1 |
+| Camping | Burnt orange `#D9662E` | Near-black `#1A1A2E` | 4.78:1 |
+| (large text only) | Coral `#E8524F` | Cream `#FBF1E6` | 3.27:1 |
 
-These are starting points for the three subjects. The main text pairs range from 11.05:1 to 12.24:1 on the listed solid backgrounds. Recheck illustration colours if they become text or appear on another surface. The original Material Design accessibility link did not provide readable article text. The linked official Color roles page supplies the role-based guidance.
+Ratios were computed with the WCAG 2.2 relative-luminance formula for these solid pairs. The last row passes only for large text, which is why bright fields need dark ink for small labels.
 
 ### Measure contrast where the element appears
 
@@ -291,4 +292,4 @@ Check the weakest part of the background under the lettering. Account for compos
 
 ### Generator rule
 
-`READABILITY_AND_PALETTE_V1` in `index.html` supplies the condensed rule to Generate, Change it and Try a different picture. During revisions, apply the checks to affected elements and preserve unrelated design decisions. Verify colour and label size in the composed result, including the website's theme styles and the HTML export.
+`READABILITY_AND_PALETTE_V2` in `index.html` supplies the condensed rule to Generate, Change it and Try a different picture. During revisions, apply the checks to affected elements and preserve unrelated design decisions. Verify colour and label size in the composed result, including the website's theme styles and the HTML export.
