@@ -10,6 +10,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- **Artifact now live:** republished on 2026-11-19 by Claude Code from commit `21bb0e0` as version `1795103932-beef` (version 18, labelled "Optimisation pass (21bb0e0)"). Before publishing, the previous live version `1794993578-72c4` was checked to be byte-identical (ignoring line endings) to `index.html` at `7c58150`, so nothing edited only in the artifact was lost. Capabilities were carried forward unchanged: `sample` with images, `downloads`, `mcp` for `host:claude_browser` (`preview_start`, `get_page_text`). A read-back confirmed the new page is live.
+
 - `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2).
 - The Claude Artifact "Info to Graphics" was updated from this branch at commit `42ec716` on 2026-11-17 by Claude (version `1794929485-5eb5`, labelled "Mobile section review (42ec716)"). Its declared capabilities were kept: `sample` with images (needed by the mobile review), `downloads`, and `mcp` for `host:claude_browser`. Live validation is still pending.
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
@@ -169,7 +171,7 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
   - Generate: poster rendered with theme, map (country paths, marker, curved route), prefixed gradient ids and "Numbers checked"
   - "Change it" and "Try a different picture" gave versions 2 and 3; the change prompt had the page and no old FORMAT; the different-picture note used the hero's aria-label
   - storage: 20 stored projects were capped to 12 on the next save, with the open draft kept; with `setItem` made to refuse anything over 4 million characters, saving dropped the oldest projects until it fit (12 → 3), kept the open one and showed no error
-- **Unverified:** everything in the live artifact (real generation, fonts, links, and pdf.js loading under the artifact's CSP); phone width and export after this change (that code wasn't touched); the artifact has **not** been republished with this change.
+- **Unverified:** everything in the live artifact (real generation, fonts, links, and pdf.js loading under the artifact's CSP); phone width and export after this change (that code wasn't touched); the artifact was republished afterwards (see Branch / PR), but nothing was run in it.
 
 
 - Sixth change (Claude, 2026-11-17):
@@ -239,7 +241,7 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Next step
 
-Republish the artifact from this commit (a Claude session with the artifact tools: publish to slug `c15c711f-f029-4bad-834b-439acbe47fa8` from live version `1794993578-72c4`, keeping its capabilities), then add a PDF in the live artifact to confirm the on-demand reader loads there. Then carry on with the step below.
+The artifact is live at version `1795103932-beef`. In it, add a PDF to confirm the on-demand reader loads there. Then carry on with the step below.
 
 Earlier: 
 The owner tries a few one-question posters in the live Artifact and reports how long they take and whether the pictures are good. Tune `POSTER_RULES` and the example from what comes back. A second hand-made example on a different subject may help stop the model copying the calendar idea. Older note: The owner tries a run in the live Artifact while signed in, and reports the time or the exact error text (it now includes the error code). If layout problems on phones come back, consider bringing the screenshot review back as an optional button rather than an automatic step. Then run the two benchmarks without manual corrections. Inspect the opening, middle and final sections on a phone. Confirm the review status, source coverage and timing before merging.
