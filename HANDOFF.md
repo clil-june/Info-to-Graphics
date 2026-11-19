@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: optimisation and clean-up pass).
+Last updated 2026-11-19 (Claude Code: drawing styles from claude-drawing-skill).
 
 ## Current task
 
@@ -17,6 +17,22 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Drawing method and styles from claude-drawing-skill (Claude Code, 2026-11-19, eleventh change)
+
+- **Owner's request:** "implement this skill in the model", pointing at https://github.com/cloveric/claude-drawing-skill (MIT).
+- **What that skill is:** a Python (numpy + Pillow) raster painting library with 83 styles, plus a method: plan the composition, script the scene, then render, look and fix 2–4 times against a per-style list of failure modes. The library can't run in the browser, so only the method and the style knowledge were adapted, as prompt rules for SVG.
+- **In `index.html`:**
+  - `DRAWING_STYLES` holds 16 styles that work as SVG shapes: flat vector, editorial print, blueprint, linocut, ukiyo-e, constructivist/Bauhaus, Art Deco, letterpress, isometric, stained glass, illuminated manuscript/old map, Greek black-figure, paper cut-out, golden-age comic, synthwave and a clean diagram sheet. Each has the subjects it fits and its rules, condensed from the skill's `docs/PRINCIPLES.md` and translated to SVG (for example, misregistration is a copy shifted 1–2 px, and Ben-Day dots are one path of tiny circles).
+  - `DRAWING_RULES` replaces the old rule 7 ("Illustration craft") in `POSTER_RULES` with four rules:
+    - 7: plan the composition (layers, one focal point, a third empty, the accent in 1–2 places, label placement)
+    - 8: choose ONE style and keep to its rules
+    - 9: craft within the style (gradients only where the style allows; hatching and dots as one path with many subpaths)
+    - 10: check the drawing against real failure modes before writing (accidental reads, competing focal points, labels crossing things, too many colours, mechanical spacing, floating objects)
+  - The prompt is about 5,400 characters longer (33.5k → 38.9k with a short source).
+- **README** credits the skill.
+- **Not done:** the skill's render-look-fix loop. The app makes one call, and the old screenshot review was removed for speed. It could come back as an optional "Polish the drawing" button that renders the SVG, shows it to Claude with the chosen style's failure list, and asks for one fix pass.
+
 
 ### Optimisation and clean-up (Claude Code, 2026-11-19, tenth change)
 
@@ -160,6 +176,13 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Drawing styles (2026-11-19)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, local server, stand-in `window.claude`: the prompt sent to `sample` contains the composition plan, the style list (checked for Editorial print and Blueprint) and the failure-mode list. A hand-made preview poster that follows the new rules (the app's example question "How much of a life is spent on periods?", Editorial print style: 508 dots, one per period from age 12 to 51, and a lifeline with a solid ≈6.96-year block) rendered with "All 7 numbers on the page appear in your sources". It was checked by eye and fixed twice, for hatching coverage and an empty band above the drawing. The poster was drawn by Claude Code following the rules; it is **not** output from the app's model.
+- **Unverified:** how real Claude output in the live artifact responds to the new rules (style choice, quality, speed).
+
 
 ### Optimisation pass (2026-11-19)
 

@@ -805,6 +805,51 @@ function checkNumbers(outEl, proj){
    ====================================================================== */
 const GLYPH_RULES = `Each symbol is an "svg" string: <svg viewBox="0 0 32 32"> using only g, rect, circle, ellipse, line, polyline, polygon, path. Draw the thing as it really looks (front, side or top view), filling most of the 32x32 box, simple and distinctive enough to read at 20px and to tell apart from the other symbols (related things differ by width, shape or a detail). Colour with fill and stroke values chosen ONLY from: acc (the symbol's colour), paper (light details on top of acc), none. Optional: opacity, fill-opacity, stroke-opacity, stroke-width, stroke-linecap, stroke-dasharray. 2-8 shapes. No text, no gradients, no hex colours.`;
 
+/* How to draw: plan the composition, pick ONE drawing style for the subject and keep to its rules, then check
+   for the failure modes that really happen. The method and the style rules are adapted, for SVG shapes, from
+   claude-drawing-skill by cloveric (MIT): https://github.com/cloveric/claude-drawing-skill */
+const DRAWING_STYLES = [
+  ['Flat vector', 'any modern subject, travel, nature, calm explainers', 'win with a few big shapes and empty space, not detail: 3 or 4 background layers, about seven colours (every other shade is a tone of one of them), no outlines; one light, shade faces always on the far side; choose each colour against what sits behind it; lift layers with a soft darker seam (a copy shifted 2 px); one small story told with one or two warm accents; people only as tiny silhouettes'],
+  ['Editorial print', 'news, society, economics, health studies', '4 or 5 inks that overlap on purpose (fill-opacity 0.85 to 0.95 so overlaps mix); each ink layer sits 1 to 2 px off its key outline (misregistration); shade with hatching, not gradients'],
+  ['Blueprint', 'engineering, inventions, buildings, machines, how things work', 'deep blue sheet with pale lines only, never filled shapes; three pen weights (heavy cut outlines, medium edges, thin hatching and dimension lines with arrowheads and measurements); every view obeys drafting conventions; one labelled detail tells the story; red pencil is the single accent'],
+  ['Linocut', 'folk tales, rural life, protest, winter, night', 'start from a solid black block and only ever cut: tone is the spacing and width of white gouge strokes, never grey; keep most of the sky black; give black things on black a carved white halo and white things on white a thin black edge; one spot colour in a few small meaningful places (a lit window, a lamp)'],
+  ['Ukiyo-e woodblock', 'Japan, the sea, mountains, weather, travel', 'flat colour blocks, one dark key line outlining everything; gradient (bokashi) only on skies and seas; clouds as opaque bands; a cartouche label and a small red seal in the empty sky'],
+  ['Constructivist or Bauhaus poster', 'industry, revolution, labour, design, architecture, statistics with punch', 'red, black and paper only (Bauhaus may add one yellow and one blue); bold diagonals, circles, wedges and slabs; each colour is one plate and a whole plate shifts together by 1 to 2 px; knock labels out of solids in paper colour instead of printing dark on dark'],
+  ['Art Deco', '1920s and 30s, trains, liners, cities, luxury, cinema', 'never draw a line: form comes from light and dark only, as stacked gradient fades into cut shapes; stepped symmetry, sunbursts, chrome or gold accents; keep towers below the title band'],
+  ['Letterpress and wood type', 'circus, fairs, posters, the old West, announcements', 'a few flat inks, the second ink 2 px off the first; big condensed type set to the full width; an animal or object as one silhouette with a single outer key line and a few inner contours; hatching whose line width tapers out toward the light'],
+  ['Isometric', 'cities, factories, logistics, systems, architecture, games', 'true 30 degree isometric; light every solid from one sun (top face lightest, one side mid, the other darkest, the same everywhere); leave wide empty ground on the two front edges'],
+  ['Stained glass', 'religion, cathedrals, medieval subjects, celebrations', 'every colour edge is a near-black lead (stroke 2 to 3); plan pieces like a glazier, one piece per area of one glass; show volume with lighter and darker glass, not extra pieces; keep faces and words clear of the bars'],
+  ['Illuminated manuscript or old map', 'history, the Middle Ages, exploration, scripture, old science', 'parchment ground, brown-black ink outlines, rubric red initials and labels, gold accents, ruled guide lines; diagrams drawn as a scribe would'],
+  ['Greek black-figure', 'ancient Greece, myths, the Olympics, early science', 'terracotta ground, figures as black silhouettes; detail as thin lines incised in the ground colour, never a second shade of black; a meander border; horses with bellies well off the ground line'],
+  ['Paper cut-out and collage', 'children, crafts, food, education, environment', 'flat paper shapes in a few colours; each piece casts a darker copy shifted 2 to 3 px as its shadow; a torn white rim along part of an edge only; texture only as an accent'],
+  ['Golden-age comic and pop', 'heroes, consumer products, the 1950s and 60s, fun facts', 'flat colours plus Ben-Day tints (rows of small dots, drawn as one path of tiny circles); a heavy black key line; colour shapes a little too big or small and slightly off the key'],
+  ['Synthwave', 'the 1980s, music, video games, computing, neon nightlife', 'dark violet-to-magenta sky, a striped sun low on the horizon, a perspective grid floor, neon pink and cyan accents; reflections broken into horizontal bands'],
+  ['Clean diagram sheet', 'plain rankings, shares and comparisons when no real object fits', 'flat paper, no borders, no shadows, no gradients; boxes one step off their ground; the accent means something (the one chosen bar, the ringed column), everything else ink and grey']
+];
+const DRAWING_RULES = `7. Plan the composition before drawing:
+   - layers far to near: background, middle, the subject, foreground
+   - one focal point: the key quantity, the biggest and strongest thing on the page
+   - empty space: leave at least a third of the drawing quiet
+   - the accent colour in only one or two places
+   - decide where the labels sit so they never cross the subject or each other
+   - the picture must illustrate the fact itself, never a generic scene
+8. Choose ONE drawing style that fits the subject and follow its rules for the whole poster (background, shapes, labels). Do not mix styles; invent a close variant only if none fits.
+${DRAWING_STYLES.map(([name, fits, rules]) => `   - ${name} (fits ${fits}): ${rules}`).join('\n')}
+9. Craft within the style. Draw like a professional illustrator, never like clip art or a child's drawing:
+   - build objects from several shapes (base, shadow side, highlight, a few telling details); curved paths (C, Q, A) for organic forms; no object is a single plain rectangle or circle
+   - one light direction for everything; ground objects with a contact shadow so nothing floats
+   - true proportions; draw each object from its most recognisable view (a car, a ship or an animal from the side, a person from the front, a building in elevation)
+   - gradients only where the style allows them
+   - hatching, dots and other repeated marks go in ONE path with many subpaths (M…l…M…l…), not hundreds of elements
+   - labels in the theme typefaces, aligned to a grid, joined by thin leader lines; numbers larger and bolder than words
+10. Before you write, check the drawing against the failure modes that really happen, and fix any you find:
+   - accidental reads: a shape that reads as something else (a blob as a face, stripes as a flag, two circles as eyes)
+   - a second focal point competing with the key quantity
+   - labels crossing the subject, each other or a busy coastline; text smaller than 12
+   - too many colours, or colours that vanish against what sits behind them
+   - mechanical spacing (perfectly even rows where nature would vary), or chaos where a count must be read
+   - wrong proportions of real objects, floating objects, inconsistent light`;
+
 /* The one-graphic poster: the default output. One call, one central picture, very few words. */
 const POSTER_RULES = `How to make it:
 1. Answer ONE question. Pick the single most important fact in the sources that answers the user's request and show only that. This is not a summary of the source: leave everything else out, however interesting.
@@ -822,15 +867,7 @@ const POSTER_RULES = `How to make it:
    - technology, data, money: dark slate or white with grid texture, Space Grotesk with IBM Plex Mono, electric blue
    - nature, climate: soft green-beige, Fraunces or DM Serif Display, leaf greens and earth tones
    Invent the right direction for any other subject. Text must contrast strongly with the background. If the user writes in Hebrew, write in Hebrew, use only Rubik, Heebo, Frank Ruhl Libre or Secular One (other fonts have no Hebrew letters) and set data-dir="rtl".
-7. Illustration craft. Draw like a professional editorial illustrator, never like clip art or a child's drawing:
-   - build every object from layered shapes: a base, a shadow side, a highlight and fine details (seams, windows, rivets, craters, grain, stitching); use curved paths (C, Q and A commands) for organic forms; no object may be a single plain rectangle or circle
-   - one light direction: lit side lighter, far side darker, soft low-opacity cast shadows that ground objects
-   - use linear and radial gradients for volume, glow, sky, water and metal (2 to 8 gradients)
-   - true proportions and a silhouette that is recognisable at a glance; draw each object from the view that makes it most recognisable (a car, a ship or an animal from the side, a person from the front, a building in elevation), never as a featureless top-down box
-   - depth: foreground, middle and background, overlap, scale and atmospheric fade (lower opacity further away)
-   - a restrained palette from the theme: one accent, 2 to 4 related tones and neutrals
-   - labels set in the theme typefaces, aligned to a grid, joined to what they label by thin leader lines; numbers larger and bolder than words
-   - one clear focal point, generous empty space, and the key quantity the biggest thing on the page`;
+${DRAWING_RULES}`;
 
 const POSTER_FORMAT = `Output only HTML, in this order (anything else is removed):
 1. The theme, plus optional small symbols: <div class="ig-symdefs" data-bg="#HEX" data-bg2="#HEX optional, for a vertical gradient" data-ink="#HEX text colour" data-muted="#HEX secondary text" data-accent="#HEX" data-font="display font" data-body="text font" data-texture="TEXTURE" data-dir="rtl only for Hebrew or Arabic"> symbols </div>.
