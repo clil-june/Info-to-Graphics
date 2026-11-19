@@ -296,6 +296,7 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
 .ig-take p:not(.ig-take-t):not(.ig-kicker){font-size:17px;line-height:1.5;max-width:760px;color:rgba(255,255,255,.9)}
 .ig-take-syms{display:flex;flex-wrap:wrap;gap:14px;color:rgba(255,255,255,.88)}
 .ig-symdefs{display:none!important}
+.ig-h1,.ig-q,.ig-take-t,.ig-hero figcaption,.ig-foot{overflow-wrap:anywhere;hyphens:auto}
 .ig-hero{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0}
 .ig-hero > svg{width:100%;max-width:760px;height:auto;display:block}
 .ig-hero svg text{font-family:var(--txt, Inter), Arial, sans-serif}
@@ -954,6 +955,82 @@ function expandIG(root, proj){
   root.querySelectorAll('table.ig-table').forEach(t => { if (!t.parentElement.classList.contains('ig-wrap')){ const w = h('div', {class:'ig-wrap'}); t.replaceWith(w); w.append(t); } });
 }
 
+/* Labels must never collide or run out of the drawing. Once a poster is on screen, every SVG text that overlaps another
+   text or crosses the drawing's left or right edge is fixed in this order: a little smaller, then broken onto a second
+   line, then smaller again (never below 70% of its size, or 10 units), and only then moved: down below the label it
+   hits, or sideways back inside. The drawing grows if a label ends up past its top or bottom. Big numbers win: the
+   smaller label is the one that gives way. Safe to run again (after fonts load or the tab is shown). */
+function fitLabels(root){
+  if (!root) return;
+  root.querySelectorAll('figure.ig-hero svg, .ig-illo svg').forEach(svg => {
+    const box0 = svg.getBoundingClientRect(); if (!box0.width || !box0.height) return; // hidden: try again when shown
+    const vb = String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+    if (vb.length !== 4 || !vb.every(isFinite) || !vb[2] || !vb[3]) return;
+    const texts = [...svg.querySelectorAll('text')].filter(t => t.textContent.trim() && !t.closest('defs, clipPath'));
+    if (!texts.length) return;
+    const size = t => parseFloat(getComputedStyle(t).fontSize) || 16;
+    texts.forEach(t => { if (!t.dataset.fs0) t.dataset.fs0 = String(size(t)); });
+    const r = t => { const b = t.getBoundingClientRect(); return {l: b.left, r: b.right, t: b.top, b: b.bottom, w: b.width}; };
+    const gap = 1.5;
+    const hit = (a, b) => a.l < b.r - gap && b.l < a.r - gap && a.t < b.b - gap && b.t < a.b - gap;
+    const setSize = (t, v) => t.setAttribute('font-size', String(Math.round(v * 10) / 10));
+    const shrink = f => t => { const v = Math.max(+t.dataset.fs0 * f, Math.min(10, +t.dataset.fs0)); if (size(t) <= v + 0.05) return false; setSize(t, v); return true; };
+    // break a plain label into two balanced lines (tspans at the same x, the second one line lower)
+    const wrap = t => {
+      if (t.dataset.wrapped || t.querySelector('tspan')) return false;
+      const words = t.textContent.trim().split(/\s+/); if (words.length < 2) return false;
+      const total = words.join(' ').length; let cut = 1, best = Infinity;
+      for (let i = 1; i < words.length; i++){ const d = Math.abs(total / 2 - words.slice(0, i).join(' ').length); if (d < best){ best = d; cut = i; } }
+      const x = (t.getAttribute('x') || '0').trim().split(/[\s,]+/)[0];
+      t.textContent = '';
+      [words.slice(0, cut).join(' '), words.slice(cut).join(' ')].forEach((line, i) => {
+        const sp = document.createElementNS(SVGNS, 'tspan'); sp.setAttribute('x', x); if (i) sp.setAttribute('dy', '1.15em'); sp.textContent = line; t.append(sp);
+      });
+      t.dataset.wrapped = '1'; return true;
+    };
+    const steps = [shrink(0.85), wrap, shrink(0.7)];
+    const tryStep = t => { let k = +(t.dataset.fit || 0); while (k < steps.length){ const ok = steps[k](t); k++; t.dataset.fit = String(k); if (ok) return true; } return false; };
+    const move = (t, dxPx, dyPx) => {
+      const unit = vb[2] / svg.getBoundingClientRect().width;
+      t.setAttribute('transform', (`translate(${Math.round(dxPx * unit * 10) / 10} ${Math.round(dyPx * unit * 10) / 10}) ` + (t.getAttribute('transform') || '')).trim());
+    };
+    for (let pass = 0; pass < texts.length * 6 + 10; pass++){
+      const box = svg.getBoundingClientRect(), R = texts.map(r);
+      let done = true;
+      // 1. labels running past the left or right edge
+      for (let i = 0; i < texts.length && done; i++){
+        const a = R[i];
+        if (a.l < box.left - 0.5 || a.r > box.right + 0.5){
+          done = false;
+          if (!tryStep(texts[i])) move(texts[i], a.w > box.width ? box.left - a.l : a.l < box.left ? box.left - a.l + 1 : box.right - a.r - 1, 0);
+        }
+      }
+      // 2. labels overlapping each other: the smaller one gives way
+      for (let i = 0; i < texts.length && done; i++) for (let j = i + 1; j < texts.length && done; j++){
+        if (!hit(R[i], R[j])) continue;
+        done = false;
+        const v = +texts[j].dataset.fs0 <= +texts[i].dataset.fs0 ? j : i, o = v === j ? i : j;
+        if (!tryStep(texts[v])) move(texts[v], 0, R[o].b - R[v].t + 3);
+      }
+      if (done) break;
+    }
+    // 3. grow the drawing if a label now sits past its top or bottom
+    const box = svg.getBoundingClientRect(), unit = vb[2] / box.width, R = texts.map(r);
+    const top = Math.min(...R.map(a => a.t)), bottom = Math.max(...R.map(a => a.b));
+    const addTop = top < box.top ? (box.top - top) * unit + 3 : 0, addBottom = bottom > box.bottom ? (bottom - box.bottom) * unit + 3 : 0;
+    if (addTop || addBottom) svg.setAttribute('viewBox', [vb[0], vb[1] - addTop, vb[2], vb[3] + addTop + addBottom].map(n => Math.round(n * 10) / 10).join(' '));
+  });
+}
+/* Run after layout, and again once web fonts have loaded (they change label widths). */
+function fitSoon(ig){
+  const run = () => { if (ig.isConnected) try{ fitLabels(ig); }catch(e){} };
+  // the next frame, or a short timer when the tab is in the background (frames don't run there)
+  const later = () => { let done = false; const go = () => { if (!done){ done = true; run(); } }; requestAnimationFrame(go); setTimeout(go, 150); };
+  later();
+  if (document.fonts?.ready) document.fonts.ready.then(later);
+}
+if (document.fonts?.addEventListener) document.fonts.addEventListener('loadingdone', () => { const ig = document.querySelector('#out .ig'); if (ig) fitSoon(ig); });
+
 /* Accuracy check: every number on the page should appear in the sources (allowing rounding). */
 function numbersIn(text){ return Array.from(String(text).matchAll(/\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?/g), m => m[0]); }
 function checkNumbers(outEl, proj){
@@ -1021,7 +1098,7 @@ const DRAWING_RULES = `7. Plan the composition before drawing:
    - fussy small details that clutter the silhouette
    - accidental reads: a shape that reads as something else (a blob as a face, stripes as a flag, two circles as eyes)
    - a second focal point competing with the hero
-   - labels crossing the hero, each other or a busy coastline, or falling below a readable size after scaling
+   - labels crossing the hero, each other or a busy coastline, or falling below a readable size after scaling. Estimate each label's width before placing it (about 0.55 × font-size per character, 0.62 for bold or wide fonts), keep at least 4 units between labels and inside the drawing's edges, and break a long label into two tspans (same x, dy="1.15em") instead of letting it run into another
    - mechanical spacing where a scatter would look natural, or a messy scatter where a count must be read
    - wrong proportions, floating objects, light coming from two directions`;
 
@@ -1181,6 +1258,7 @@ function newProject(){ showHome(); }
 function setTab(t){
   $('#main').dataset.tab = t;
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tab === t)));
+  if (t === 'out'){ const ig = document.querySelector('#out .ig'); if (ig) fitSoon(ig); } // on phones the poster was hidden while it rendered
 }
 
 /* ======================================================================
@@ -1235,6 +1313,7 @@ function renderStage(){
   const cur = Math.max(0, Math.min(proj.cur ?? vs.length - 1, vs.length - 1));
   const ig = renderIG(vs[cur].html, proj);
   out.append(ig);
+  fitSoon(ig);
   if (vs[cur].cut) top.append(h('div', {class: 'check warn', role: 'status'}, h('span', {}, h('b', {}, 'The drawing was cut off. '), 'Claude’s answer stopped before the end, so the last parts of the picture may be missing. Try again, or ask for a simpler picture.')));
   const chk = checkNumbers(ig, proj);
   top.append(chk.missing.length

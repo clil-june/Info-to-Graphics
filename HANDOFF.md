@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: Material Design colour palette).
+Last updated 2026-11-19 (Claude Code: labels never overlap).
 
 ## Current task
 
@@ -21,6 +21,23 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Labels never overlap (Claude Code, 2026-11-19)
+
+- **Owner's report:** in the last output, labels overlapped and were unreadable. "Make sure that if text doesn't fit you make it smaller or go down a row so that this won't happen ever."
+- **`fitLabels()` in `index.html`** guarantees this in the app, not only in the prompt. After a poster is on screen, it measures every SVG `<text>` in the hero or illustration drawings. A label that overlaps another label, or crosses the drawing's left or right edge, is fixed in this order:
+  1. 85% of its size
+  2. broken into two balanced lines (`tspan`s at the same x, `dy="1.15em"`)
+  3. 70% of its size, never below 10 units
+  4. only then moved: down below the label it hits, or sideways back inside
+
+  The smaller label gives way, so big numbers keep their size. If labels end up past the top or bottom, the drawing's `viewBox` grows. The fitter is safe to run repeatedly: the original size is kept in `data-fs0` and the step reached in `data-fit`.
+- **`fitSoon()`** runs it after the poster is shown, again after web fonts finish loading (`document.fonts.ready`, `loadingdone`), and again when the phone "Infographic" tab is shown. It uses the next frame **or a 150 ms timer**, because frames don't run in background tabs; the first test missed this.
+- Export copies the fixed drawing.
+- **CSS:** the headline, question, closing line, caption and footer use `overflow-wrap:anywhere; hyphens:auto`, so a long word wraps instead of spilling out.
+- **Prompt:** the failure-mode list now asks Claude to estimate label widths (about 0.55 × font-size per character, 0.62 for bold or wide fonts), keep 4 units between labels and inside the edges, and break long labels into two tspans.
+- **Not handled:** text overlapping drawn shapes. That is often intended (a value on a bar); only text-on-text and text-off-edge are fixed. Labels in the round polar map's markers are fixed like any other text.
+
 
 ### Material Design colour palette (Claude Code, 2026-11-19)
 
@@ -303,6 +320,16 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Label fitting (2026-11-19)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, local server, stand-in `window.claude` returning a deliberately bad poster: two labels on top of each other, a stack of four, a label running past the right edge, a caption hitting a 40-unit number, two labels at the bottom edge, and a headline with a very long word.
+  - **Before** `fitLabels()` ran: 9 overlapping pairs and 1 label outside.
+  - **After:** 0 overlapping pairs, 0 labels outside, the big number untouched, the drawing grown from 300 to 354.1 units, and the headline inside the card. Inspected by eye.
+  - The first attempt never ran because `requestAnimationFrame` doesn't fire in a background tab; this was fixed with the timer fallback.
+- **Unverified:** a real overlapping output in the live artifact.
+
 
 ### Material palette (2026-11-19)
 
