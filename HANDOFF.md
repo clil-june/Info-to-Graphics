@@ -12,7 +12,7 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
-- **Artifact now live:** version `1795108283-d1d0` (version 21, "Polar maps and symbol fixes (8c36123)"), republished 2026-11-19 by Claude Code from `8c36123`, capabilities unchanged. Before that it was version `1795107474-fecd` (house style, `798792a`). Before that it was version `1795104651-5c5b` (drawing styles, `f03bbaa`). Before that, it was republished from commit `21bb0e0` as version `1795103932-beef` (version 18, labelled "Optimisation pass (21bb0e0)"). Before publishing, the previous live version `1794993578-72c4` was checked to be byte-identical (ignoring line endings) to `index.html` at `7c58150`, so nothing edited only in the artifact was lost. Capabilities were carried forward unchanged: `sample` with images, `downloads`, `mcp` for `host:claude_browser` (`preview_start`, `get_page_text`). A read-back confirmed the new page is live.
+- **Artifact now live:** version `1795110419-3636` (version 22, "Typography pairs, Google Fonts (dad6ec1)"), republished 2026-11-19 by Claude Code from `dad6ec1`, which includes Codex's typography update `7dd59b1`; capabilities unchanged. Before that it was version `1795108283-d1d0` (polar maps, `8c36123`). Before that it was version `1795107474-fecd` (house style, `798792a`). Before that it was version `1795104651-5c5b` (drawing styles, `f03bbaa`). Before that, it was republished from commit `21bb0e0` as version `1795103932-beef` (version 18, labelled "Optimisation pass (21bb0e0)"). Before publishing, the previous live version `1794993578-72c4` was checked to be byte-identical (ignoring line endings) to `index.html` at `7c58150`, so nothing edited only in the artifact was lost. Capabilities were carried forward unchanged: `sample` with images, `downloads`, `mcp` for `host:claude_browser` (`preview_start`, `get_page_text`). A read-back confirmed the new page is live.
 
 - `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2).
 - The Claude Artifact "Info to Graphics" was updated from this branch at commit `42ec716` on 2026-11-17 by Claude (version `1794929485-5eb5`, labelled "Mobile section review (42ec716)"). Its declared capabilities were kept: `sample` with images (needed by the mobile review), `downloads`, and `mcp` for `host:claude_browser`. Live validation is still pending.
@@ -365,7 +365,7 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Still open
 
-- Publish the typography update to the existing Artifact and verify `TYPOGRAPHY_BY_SUBJECT_V1` in the actual prompt; check topic selection and Hebrew/font loading. GitHub changes alone do not update the live app.
+- Typography update published (`1795110419-3636`). Verify `TYPOGRAPHY_BY_SUBJECT_V1` in the actual prompt; check topic selection and Hebrew/font loading. GitHub changes alone do not update the live app.
 
 - **Unverified (needs a Claude Artifact test)** Live sampling, receipt of generated PNG files, runtime iframe/canvas restrictions, end-to-end generation quality, latency and Artifact publication.
 - Linked sources use a plain-text extraction. Add structured tables, figure captions and visual chart data to the source intake so coverage can be verified against the full source.
@@ -373,7 +373,7 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Next step
 
-**First, before the next generation:** Claude Code reads the typography anchor in the guide and session instructions, fetches the current `feature/four-elements`, republishes its `index.html` to the existing Info to Graphics Artifact with capabilities unchanged, and records the resulting version. Test two different topics, Change it (pair preserved unless requested), Try a different picture, and a Hebrew example. Confirm the selected fonts really load, including General Sans from Fontshare. Only then mark the live behavior verified.
+**Done 2026-11-19:** the typography update is published (artifact version `1795110419-3636`, with Plus Jakarta Sans in place of General Sans). Still to do in the live artifact: Test two different topics, Change it (pair preserved unless requested), Try a different picture, and a Hebrew example. Confirm the selected fonts really load. Only then mark the live behavior verified.
 
 Previous next step (retained for context):
 
