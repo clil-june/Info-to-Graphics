@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: map seam line, polar maps, missing symbols).
+Last updated 2026-11-19 (Codex: topic-aware typography and next-generation anchor).
 
 ## Current task
+
+**Typography update (2026-11-19):** apply `TYPOGRAPHY_BY_SUBJECT_V1` from [the guide](docs/visual-communication-research.md#typography-by-subject). The owner wants topic/story-aware font pairs (12 options), not an identical grid or one fixed pair for every subject. Typography only: illustration/palette work is deferred in this session.
 
 **Owner's direction (2026-11-17):** "I want to ask for one piece of information and get one infographic depicting only that central piece of information with a lot less text and veering out of this monotonous formation of box after box." Runs were also "really really slow". The single-graphic poster is now the default output. The earlier long-page pipeline was removed from the code on 2026-11-19 (it is in git history before that date).
 
@@ -17,6 +19,15 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Topic-aware typography (Codex, 2026-11-19)
+
+- Added the 12 approved headline/text pairs and topic/tone selection rules to the guide, with the stable anchor `TYPOGRAPHY_BY_SUBJECT_V1`.
+- Embedded the same catalogue and policy in `index.html` via `TYPOGRAPHY_PAIRS` / `TYPOGRAPHY_RULES` in `POSTER_FORMAT`, which reaches Generate, Change it and Try a different picture. It takes precedence over older mood menus and example fonts. Ordinary revisions preserve their current fonts unless typography or subject/tone changes.
+- Added matching Claude/Codex session anchors and a README link. Script coverage takes priority; Hebrew gets defined sans-serif alternatives and RTL.
+- SVG labels now inherit the text family instead of the display family. Added General Sans's Fontshare provider link (also used by export); Google Fonts remains the provider for the other pairs. Local fallbacks remain for offline use.
+- No fixed grid or colour palette was introduced, and no illustration/map/source-processing behavior was changed.
+- **Artifact not republished by Codex.** The live version recorded below still predates this typography update. Claude Code must publish the updated branch before the next live generation.
 
 ### Polar-bear bug fixes (Claude Code, 2026-11-19, thirteenth change)
 
@@ -219,6 +230,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Typography anchor (2026-11-19)
+
+- Local checks: inline JavaScript syntax; generated prompts for all three entry points contain the anchor and all 12 pairs; the guide catalogue matches the runtime catalogue; provider URL routing and font fallback stacks; `git diff --check`.
+- **Unverified (needs a Claude Artifact test):** actual family/weight loading under CSP (especially Fontshare), real Claude pair selection, live Generate/Change it/Try a different picture behavior and exported-font appearance. No live generation or Artifact publication was performed by Codex.
+
 ### Polar-bear fixes (2026-11-19)
 
 - `node --check` (Node 14) on the extracted inline script: parses.
@@ -324,11 +340,17 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Still open
 
+- Publish the typography update to the existing Artifact and verify `TYPOGRAPHY_BY_SUBJECT_V1` in the actual prompt; check topic selection and Hebrew/font loading. GitHub changes alone do not update the live app.
+
 - **Unverified (needs a Claude Artifact test)** Live sampling, receipt of generated PNG files, runtime iframe/canvas restrictions, end-to-end generation quality, latency and Artifact publication.
 - Linked sources use a plain-text extraction. Add structured tables, figure captions and visual chart data to the source intake so coverage can be verified against the full source.
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+**First, before the next generation:** Claude Code reads the typography anchor in the guide and session instructions, fetches the current `feature/four-elements`, republishes its `index.html` to the existing Info to Graphics Artifact with capabilities unchanged, and records the resulting version. Test two different topics, Change it (pair preserved unless requested), Try a different picture, and a Hebrew example. Confirm the selected fonts really load, including General Sans from Fontshare. Only then mark the live behavior verified.
+
+Previous next step (retained for context):
 
 The artifact is live at version `1795108283-d1d0`. Re-run the polar-bear poster (it should now use the round Arctic map and show the bears), then run a few real posters (one place-based, one food or object, one about people) to see how closely real output follows the moodboard house style, and whether the grain shows in the artifact. In it, add a PDF to confirm the on-demand reader loads there. Then carry on with the step below.
 

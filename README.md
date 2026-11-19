@@ -17,7 +17,7 @@ Drop in sources, say in a sentence or two what the infographic should show, and 
 2. **Shown as it is written.** The page re-draws about every 0.7 seconds while the answer streams in.
 3. **Check the numbers.** The page lists any number it cannot find in the sources. This is a numeric lookup and does not validate every value's context or attribution.
 
-The [visual communication guide](docs/visual-communication-research.md) describes the design criteria.
+The [visual communication guide](docs/visual-communication-research.md) describes the design criteria. [Typography by subject](docs/visual-communication-research.md#typography-by-subject) defines 12 topic-aware headline/text pairs (anchor `TYPOGRAPHY_BY_SUBJECT_V1`), selected for the story and tone rather than a fixed grid. This policy is embedded in the Generate, Change it and Try a different picture prompts. General Sans loads from Fontshare; the other catalogue families load from Google Fonts. A published Claude Artifact must be updated from this branch before it uses these rules.
 
 **Safety:** Claude's HTML is treated as untrusted. Only known tags, `ig-*` classes, safe inline styles and `http(s)` links survive. Scripts, event handlers, images and `url()` styles are removed.
 
@@ -29,4 +29,4 @@ Making and changing infographics, reading images and reading links all need Clau
 
 ## Libraries
 
-[pdf.js](https://mozilla.github.io/pdf.js/) and [mammoth.js](https://github.com/mwilliamson/mammoth.js) load from cdnjs only when a PDF or Word file is first added. Fonts come from Google Fonts: Varela Round and Inter for the app, and any family a poster names. The world map is Natural Earth 1:110m (public domain) from the `world-atlas` package, inlined.
+[pdf.js](https://mozilla.github.io/pdf.js/) and [mammoth.js](https://github.com/mwilliamson/mammoth.js) load from cdnjs only when a PDF or Word file is first added. Fonts come from Google Fonts: Varela Round and Inter for the app, and the poster's selected families. General Sans loads from Fontshare (with Inter as its local stack fallback). The world map is Natural Earth 1:110m (public domain) from the `world-atlas` package, inlined.

@@ -207,3 +207,46 @@ For a first review, compare the original, a structured visual with precise annot
 - A reader can answer the intended question accurately in a comparison against the current view.
 
 This brief is a curated synthesis and product proposal. No application code or UI was changed during this research.
+
+
+<a id="typography-by-subject"></a>
+## 8. Typography by subject
+
+**Owner decision · 19 November 2026 · Anchor: `TYPOGRAPHY_BY_SUBJECT_V1`.** This is the current typography policy for new infographic generations. It supersedes older unrestricted font menus, subject examples and example-poster fonts. It does not prescribe a shared grid, fixed type sizes, palette or illustration treatment.
+
+Choose ONE pair from the topic catalogue below for a new infographic. First identify the subject AND the story's tone (a car's history differs from its speed record); the topic groups are starting points, not rigid categories. For food or craft, start with the nature/everyday-life pairs; for business or general data, start with Archivo + Inter or Work Sans + JetBrains Mono. For any other subject, choose the closest tonal fit from these same 12 pairs. An explicit user font request takes precedence.
+
+Use the display family for the headline and large takeaway numbers; use the text family for captions, direct SVG labels, units, dates, legends and source notes. Maximum two families per infographic. Use two or three weight levels across the piece, choosing weights the families support. Keep numbers, units and qualifiers readable together; use tabular numerals for aligned numerical comparisons, never compress or distort letters to fit. Keep SVG labels at least 12 in a 400-wide viewBox.
+
+No identical grid, fixed title position, fixed line breaks or fixed type sizes across topics: compose typography around the information and the drawing. The shared identity comes from clear hierarchy, consistent role assignments, restrained weights and readable annotations, not identical fonts or layouts on every topic. Topic selection does not impose colours or an illustration style.
+
+Set data-font and data-body to the exact selected family names in .ig-symdefs. SVG text inherits the text family; do not hard-code an unrelated font. General Sans is loaded from Fontshare, the others from Google Fonts; if Fontshare is blocked, its fallback is Inter. Offline exports retain local fallbacks.
+
+Language coverage takes precedence over this Latin-script catalogue. For Hebrew use Rubik + Heebo (neutral/technical), Secular One + Assistant (strong editorial) or Heebo + Assistant (quiet explanatory), with data-dir="rtl". For another unsupported script choose two script-capable sans-serif families rather than mixing unsupported Latin fonts with accidental fallback glyphs.
+
+For a revision, preserve the current pair unless the user asks to change typography or the subject/tone changes; when selecting a new pair apply this anchor. Treat example fonts and the older general mood suggestions as non-binding; this anchor takes precedence for typography. Check hierarchy, glyph coverage and label collisions before returning HTML.
+
+### Approved topic catalogue
+
+| Story / tone | Headline and large numbers | Captions and labels |
+| --- | --- | --- |
+| Transport, mechanisms, industry | Barlow Condensed | Barlow |
+| Transport, mechanisms, industry | Archivo | IBM Plex Mono |
+| Space, technology, engineering | Space Grotesk | General Sans |
+| Space, technology, engineering | Instrument Sans | Chivo Mono |
+| Nature, ecology, animals | Manrope | Work Sans |
+| Nature, ecology, animals | Urbanist | Open Sans |
+| Health, people, everyday life | Manrope | Inter |
+| Health, people, everyday life | Archivo | Inter |
+| History, culture, society | Jost | Libre Franklin |
+| History, culture, society | Work Sans | JetBrains Mono |
+| Sport, records, dynamic comparisons | Special Gothic Condensed One | Special Gothic |
+| Sport, records, dynamic comparisons | Alumni Sans | DM Sans |
+
+The catalogue comes from the owner's Fontpair selection, not a claim that a topic objectively requires a particular font. [Fontpair sans-serif pairings](https://fontpair.co/category/sans-serif?tab=pairings).
+
+### Runtime and handoff anchor
+
+The browser generator cannot read this Markdown from GitHub. Its compact runtime equivalent is `TYPOGRAPHY_PAIRS` plus `TYPOGRAPHY_RULES` in `index.html`, interpolated into `POSTER_FORMAT`. Both `posterPrompt()` (Generate and Try a different picture) and `refinePrompt()` (Change it) receive it. Keep the catalogue and policy synchronized here and in the code. SVG annotations inherit the text family through `--txt`; exports use the same provider links, with local fallbacks offline.
+
+Before the next live generation, Claude Code must read this section, fetch the latest `feature/four-elements`, publish its current `index.html` to the existing Info to Graphics Artifact while preserving capabilities, and record the version in `HANDOFF.md`. A GitHub commit alone does not update a published Artifact. Verify real font loading (including Fontshare), a new generation, a revision and a different-picture run there. This update's real model behavior remains unverified until those checks run.
