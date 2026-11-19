@@ -216,7 +216,7 @@ This brief is a curated synthesis and product proposal. No application code or U
 
 Choose ONE pair from the topic catalogue below for a new infographic. First identify the subject AND the story's tone (a car's history differs from its speed record); the topic groups are starting points, not rigid categories. For food or craft, start with the nature/everyday-life pairs; for business or general data, start with Archivo + Inter or Work Sans + JetBrains Mono. For any other subject, choose the closest tonal fit from these same 12 pairs. An explicit user font request takes precedence.
 
-Use the display family for the headline and large takeaway numbers; use the text family for captions, direct SVG labels, units, dates, legends and source notes. Maximum two families per infographic. Use two or three weight levels across the piece, choosing weights the families support. Keep numbers, units and qualifiers readable together; use tabular numerals for aligned numerical comparisons, never compress or distort letters to fit. Keep SVG labels at least 12 in a 400-wide viewBox.
+Use the display family for the headline and large takeaway numbers; use the text family for captions, direct SVG labels, units, dates, legends and source notes. Maximum two families per infographic. Use two or three weight levels across the piece, choosing weights the families support. Keep numbers, units and qualifiers readable together; use tabular numerals for aligned numerical comparisons, never compress or distort letters to fit. Size SVG labels at their intended display width using [Text readability and contextual palettes](#text-readability-and-contextual-palettes).
 
 No identical grid, fixed title position, fixed line breaks or fixed type sizes across topics: compose typography around the information and the drawing. The shared identity comes from clear hierarchy, consistent role assignments, restrained weights and readable annotations, not identical fonts or layouts on every topic. Topic selection does not impose colours or an illustration style.
 
@@ -250,3 +250,45 @@ Plus Jakarta Sans replaces the owner's original General Sans (19 November 2026):
 The browser generator cannot read this Markdown from GitHub. Its compact runtime equivalent is `TYPOGRAPHY_PAIRS` plus `TYPOGRAPHY_RULES` in `index.html`, interpolated into `POSTER_FORMAT`. Both `posterPrompt()` (Generate and Try a different picture) and `refinePrompt()` (Change it) receive it. Keep the catalogue and policy synchronized here and in the code. SVG annotations inherit the text family through `--txt`; exports use the same Google Fonts links, with local fallbacks offline.
 
 Before the next live generation, Claude Code must read this section, fetch the latest `feature/four-elements`, publish its current `index.html` to the existing Info to Graphics Artifact while preserving capabilities, and record the version in `HANDOFF.md`. A GitHub commit alone does not update a published Artifact. Verify real font loading, a new generation, a revision and a different-picture run there. This update's real model behavior remains unverified until those checks run.
+
+<a id="text-readability-and-contextual-palettes"></a>
+## 9. Text readability and contextual palettes
+
+The colour palette should suit the subject and support the visual explanation. Choose a calm colour field and reserve stronger colour for the part of the story that needs emphasis. Text and essential graphics must remain legible at their final size.
+
+### Pick colours from the story
+
+1. Start from a material, setting, period or mood that fits the specific takeaway. A lunar route can use cool, greyed blues. A camping illustration can draw from sand, pine and canvas.
+2. Assign roles before choosing exact colours. Start with a quiet background, readable primary and secondary ink, a family of related tones for the main drawing, and one small accent for the key event or comparison. Favour low to moderate saturation for large surfaces. Use related light and dark tones within the illustration. Add colour categories when the data require them.
+3. Check the full composition at phone size. If a large fill pulls attention away from the takeaway, reduce its saturation or area. Preserve meaningful source colours, such as the actual hues in a car colour comparison, and identify categories directly with labels, line styles, shapes or patterns. [Adobe Colour Contrast](https://www.adobe.com/uk/creativecloud/design/discover/color-contrast.html) · [Material Design 3 Color roles](https://m3.material.io/styles/color/the-color-system) · [W3C Use of Color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
+
+| Example | Background | Text | Illustration family |
+| --- | --- | --- | --- |
+| Apollo 11 | Cool grey `#EDF2F4` | Dark blue-grey `#202D44` | Muted steel blue `#567287` |
+| Car colours | Pale sage `#E7EEDC` | Deep green `#17352B` | Grey-green `#4A6F64` |
+| Camping | Warm sand `#F4EFE3` | Dark pine `#28371F` | Muted olive `#687B50` |
+
+These are starting points for the three subjects. The main text pairs range from 11.05:1 to 12.24:1 on the listed solid backgrounds. Recheck illustration colours if they become text or appear on another surface. The original Material Design accessibility link did not provide readable article text. The linked official Color roles page supplies the role-based guidance.
+
+### Measure contrast where the element appears
+
+| Element | WCAG 2.2 AA minimum |
+| --- | ---: |
+| Ordinary text and images of ordinary text, including most labels, dates, units, legends, qualifiers and sources | 4.5:1 against the local background |
+| Large text, at least 18 pt regular or 14 pt bold, approximately 24 or 18.67 CSS px respectively | 3:1 against the local background |
+| Lines, arrows, markers and other parts of the graphic needed to understand it | 3:1 against adjacent colours |
+
+Aim for 4.5:1 even for large titles where the palette allows. The enhanced AAA thresholds are 7:1 for ordinary text and 4.5:1 for large text. Compare using the unrounded WCAG ratio. Keep secondary text quiet through position, spacing and weight while maintaining sufficient contrast. An off-white surface can support a softer look while retaining strong contrast. [MDN Color contrast](https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Understanding_WCAG/Perceivable/Color_contrast) · [Harvard Use sufficient color contrast](https://accessibility.huit.harvard.edu/use-sufficient-color-contrast) · [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/#distinguishable)
+
+Check the weakest part of the background under the lettering. Account for composited opacity, gradients, shadows and overlapping map fills. If a label is weak, try a quiet area with a clear leader, change the ink or add a small solid backing. Check the repaired pair and leader. Cream `#F6F4EA` on coral `#EF4D52` gives 3.25:1 for large text. Indigo `#17183F` on the same coral gives 4.72:1 and also passes for ordinary text. [W3C Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) · [WCAG contrast ratio](https://www.w3.org/TR/WCAG22/#dfn-contrast-ratio)
+
+### Check the rendered text
+
+- Start at 14–16 CSS px for important short labels and around 16 CSS px for explanatory text at phone size. These are project defaults to adjust for the chosen font and script. Use a readable weight and keep numbers, units and qualifiers together.
+- Measure inside the rendered SVG. At 340 CSS px wide, a 400-wide viewBox scales a 12-unit label to about 10.2 CSS px. Around 17 units gives about 14.5 CSS px before additional transforms. Shorten, wrap or move labels into adjacent HTML if the drawing is too crowded.
+- Inspect the finished page at 360–390 CSS px viewport widths and on desktop. Check overlap, clipping, glyphs, numeric punctuation and right-to-left text after fonts load. Check the HTML export with fallback fonts if it will be read offline. Keep labels as text and check HTML text enlargement up to 200% and user spacing overrides. [W3C Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html) · [W3C Text Spacing](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html)
+- Inspect the design in greyscale to see whether categories, routes and the takeaway remain clear. Measure the essential text and graphic pairs separately. Use a contrast checker for solid pairs and inspect the weakest local pair for layered areas.
+
+### Generator rule
+
+`READABILITY_AND_PALETTE_V1` in `index.html` supplies the condensed rule to Generate, Change it and Try a different picture. During revisions, apply the checks to affected elements and preserve unrelated design decisions. Verify colour and label size in the composed result, including the website's theme styles and the HTML export.

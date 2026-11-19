@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: typography pairs on Google Fonts only, published).
+Last updated 2026-11-19 (Codex: text readability and contextual palette rules).
 
 ## Current task
+
+Apply [text readability and contextual palettes](docs/visual-communication-research.md#text-readability-and-contextual-palettes). The owner wants calm palettes drawn from the subject and readable text on the actual surface under it.
 
 **Typography update (2026-11-19):** apply `TYPOGRAPHY_BY_SUBJECT_V1` from [the guide](docs/visual-communication-research.md#typography-by-subject). The owner wants topic/story-aware font pairs (12 options), not an identical grid or one fixed pair for every subject. Typography only: illustration/palette work is deferred in this session.
 
@@ -19,6 +21,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Text readability and contextual palettes (Codex, 2026-11-19)
+
+- Added guide section 9 with WCAG contrast thresholds, mobile SVG label sizing, palette roles and three sample palettes.
+- Added `READABILITY_AND_PALETTE_V1` to the shared poster rules. Generate, Change it and Try a different picture receive the policy. Updated the related layout instructions and removed the old saturated-field requirement and fixed SVG label minimum. Examples illustrate markup and composition.
 
 ### Typography pairs: Google Fonts only (Claude Code, 2026-11-19, after Codex's typography update)
 
@@ -246,6 +253,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+- Readability and palette update: local inline JavaScript syntax and evaluated prompt checks for generation, revision and an alternate picture. Benchmarks and actual renderer contrast still need inspection in the live Artifact.
+
 ### Google-Fonts-only typography (2026-11-19)
 
 - Every catalogue and Hebrew family was requested from the Google Fonts CSS API (curl): all return 200 except General Sans (400), which is why it was replaced.
@@ -365,6 +374,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Still open
 
+- Publish the readability and palette update to the existing Claude Artifact. The live version recorded above predates this change. The prompt does not measure rendered contrast. Inspect the actual rendered text colours and local SVG backgrounds during validation, including any colours adjusted by the theme code.
+
 - Typography update published (`1795110419-3636`). Verify `TYPOGRAPHY_BY_SUBJECT_V1` in the actual prompt; check topic selection and Hebrew/font loading. GitHub changes alone do not update the live app.
 
 - **Unverified (needs a Claude Artifact test)** Live sampling, receipt of generated PNG files, runtime iframe/canvas restrictions, end-to-end generation quality, latency and Artifact publication.
@@ -372,6 +383,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+For the readability and palette update, publish the branch's current `index.html` to the existing Artifact with capabilities preserved. Measure text contrast and inspect annotation size on a phone-sized Apollo or map example, plus a warm-toned subject. Check a colour/label revision and the HTML export.
 
 **Done 2026-11-19:** the typography update is published (artifact version `1795110419-3636`, with Plus Jakarta Sans in place of General Sans). Still to do in the live artifact: Test two different topics, Change it (pair preserved unless requested), Try a different picture, and a Hebrew example. Confirm the selected fonts really load. Only then mark the live behavior verified.
 
