@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-22 (Codex: composition at the target aspect ratio).
+Last updated 2026-11-22 (Claude Code: lessons from the Monstera slides; published).
 
 ## Current task
 
@@ -39,6 +39,23 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Lessons from three Monstera slides (Claude Code, 2026-11-22)
+
+- **Owner's report,** with three outputs attached. The text placement and spreading now work, but "suddenly the main event, the plant pot, became small and the water is yellow". The owner wants a better version, and for the model to learn not to repeat these mistakes.
+- **What went wrong:**
+  1. **The answer's evidence was small:** the pot cutaway was pushed to the lower right while a big leaf took the left. This is the diagonal stem on the left from `9f26a32`'s Presentation example, copied literally.
+  2. **The water took the amber accent colour.** No rule said real things keep their real colours.
+  3. **Round leaf holes read as eyes, a face.**
+  4. In the oldest output, the headline split "completel/y" and dwarfed the pot (fixed earlier, in `05dab41`).
+- **Prompt (all formats, `DRAWING_RULES` and the palette rule):**
+  - **Hero:** the part that carries the answer (the soil and pot cutaway for a watering question; the counted things for a count) gets about half the drawing or more and the centre of attention. Context objects stay smaller, simpler or cropped, and never push the hero into a corner.
+  - **Real colours:** real things keep their real colours (water blue or clear, soil brown, leaves green). The accent marks the key label, number or a highlight, never repaints an object ("no yellow water, no blue leaves").
+  - **New failure modes:** the answer-carrying part smaller than a context object or cornered; a real object in an unreal accent colour; round holes or dot pairs that read as eyes (cut slits or notches from the edge instead).
+  - **Presentation example:** the Monstera-specific composition sentence is replaced by a general one: the evidence fills the centre at a generous size, labels are aligned beside the parts they name, and any context object is kept smaller.
+- **Guide:** the Monstera worked example is replaced by these lessons, and the colour line is updated.
+- **A corrected slide drawn by Claude Code** in the app (Presentation, 1920 × 1080), for the owner to compare: wide layout; headline "Water when the surface dries slightly"; a large terracotta pot cutaway as the hero, about 44–50% of the slide; a dry, cracked top layer; dark moist soil with blue drops and roots; two monstera leaves with edge slits (no holes); blue water from a watering-can spout onto the dry surface; and labels aligned to the layers ("Surface slightly dry: water now" in amber, "Below: moist, never soggy", "Never let it dry out completely" muted). It was deliberately **not** added as a prompt example, so a fresh Monstera run shows whether the rules work rather than whether Claude copies an example.
+
 
 ### Composition at the target aspect ratio (Codex, 2026-11-22)
 
@@ -440,6 +457,14 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Monstera lessons (2026-11-22)
+
+- Built-in browser pane, stand-in `window.claude`:
+  - **The corrected slide** rendered in Presentation with 0 label overlaps and the drawing at 44% of the slide; inspected by eye.
+  - **Generate in Presentation, Instagram and Print:** each prompt contained the hero rule, the real-colours rule and the eye-holes failure mode, and no Monstera wording outside the user's own sources and question. Prompt lengths were 30,076, 31,850 and 34,882 characters. No console errors.
+- **Unverified:** a fresh real Monstera generation in the live artifact with these rules.
+
 
 ### Composition at the target aspect ratio (2026-11-22)
 

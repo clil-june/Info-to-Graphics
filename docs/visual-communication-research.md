@@ -153,7 +153,7 @@ Choose the audience's reading task before selecting supporting facts. Keep the a
 
 Plan the illustration or chart at the target aspect ratio. Choose the subject's pose, viewpoint or crop and place the labels alongside the relevant features. Use the grid for alignment. If space is tight, move a label with its anchor, redirect the object into open space or choose a different view. Keep recognisable proportions by using the same scale factor on both axes when resizing.
 
-**Worked example, Monstera slide.** Draw the stem diagonally into the free space on the left and keep the leaf's natural silhouette. Use the centre for the cutaway of the pot. Place the soil labels opposite their layers on the right so the cutaway remains the evidence for the takeaway.
+**Lessons from the Monstera slides (owner review, 22 November 2026).** Three outputs failed in the same ways: the pot cutaway, which carried the answer, became small or was pushed into a corner while a big leaf took the space; the water was painted in the amber accent; and round leaf holes read as eyes. Rules since then: the part that carries the answer is the hero and gets about half the drawing or more; context objects stay smaller or cropped; real things keep real colours (water blue, soil brown, leaves green) and the accent marks labels or numbers; holes and dots that read as faces are avoided. A subject-specific composition is no longer written into the general prompt, because it was copied literally onto the output.
 
 For a chart, select the encoding and reading direction for the available space at the outset. In a wide comparison, horizontal bars on a common scale can leave room for direct labels. Check that the layout preserves the units, baseline, quantities and spatial relationships that give the marks meaning.
 
@@ -301,7 +301,7 @@ Ratios were computed with the WCAG 2.2 relative-luminance formula for these soli
 - **Variants.** The shadow tone is the same hue two to four tones darker; highlights are two to four tones lighter, or the hue's 50.
 - **Secondary.** The accent's harmony follows the mood, as Material's palette generator offers: analogous (neighbouring hue) for calm and natural stories, complementary (about eight hues away on the wheel) for contrast and comparison, triadic (about five away) for playful ones. It is used sparingly.
 - **"On" colours.** The prompt lists, for each hue, the lightest tone that carries white text at 4.5:1 (computed by the app from the palette with the WCAG formula; for example teal 700, blue 700, indigo 400; yellow, amber and orange never). On lighter tones, small text uses near-black or the hue's 900.
-- Real data colours stay real, and 3 to 5 colours in total remain the limit.
+- Real things keep real colours (water blue, soil brown, leaves green); the accent marks labels and numbers, never repaints an object. Real data colours stay real, and 3 to 5 colours in total remain the limit.
 
 ### Measure contrast where the element appears
 
