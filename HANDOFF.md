@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-22 (Claude Code: fixed lost circle and line positions).
+Last updated 2026-11-22 (Claude Code: answer first, every fact once, clear secondary level).
 
 ## Current task
 
@@ -21,6 +21,26 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Answer first, every fact once, clear secondary level (Claude Code, 2026-11-22)
+
+- **Owner's rules,** from the Queen poster:
+  - The question asked for the ONE biggest concert, but the answer appeared twice: headline "Rock in Rio, January 1985: 250,000 fans", and again in the drawing as "Rock in Rio, Rio de Janeiro / 12 January 1985 / 250,000".
+  - Hyde Park and Knebworth were unclear.
+  - The owner wants, as rules: the information answering the question is the clear number 1 in the hierarchy; no repetition (each fact once, very clear); secondary information clearly secondary.
+- **Prompt (`POSTER_RULES`):**
+  - **Rule 1:** the answer (the number, place, date, name or thing asked for) is level 1: largest, boldest, in the accent colour, where the eye lands first, with nothing competing.
+  - **Rule 4, "Every fact once, in three clear levels":**
+    - Each fact appears exactly once on the page. The headline answers in words, and the drawing carries the key number once as its largest label. Every other label, the caption and the closing line only add; no number, name, place or date is repeated.
+    - **Level 2** (comparison or runners-up) appears only if it helps, at most 3 items. Its numbers are at most half the size of the answer's, in the muted secondary ink, smaller or simpler, placed after or below the answer, under one short heading saying what it is (for example "For comparison: Queen's next-biggest shows"), one line per item ("Hyde Park, London, 1976 · 150,000+").
+    - **Level 3:** notes, units and source, smallest.
+  - **Rule 10 failure modes:** a repeated number, name, place or date; a supporting item as big, bold or bright as the answer; a comparison with no heading.
+  - **Format hints:** the figcaption and closing line must add something new, never repeat.
+- **Examples fixed to follow the rule:**
+  - The periods example's headline "Periods add up to about seven years." repeated the drawing's "≈ 7 years"; it is now "Gathered together, periods fill years of a life."
+  - The coffee example's caption repeated the Key's "5 mg"; it is now "Typical servings".
+- **App check:** `checkNumbers()` also returns `repeated`, the numbers (same rules as the number check, so "1 in 5", 100% and small whole numbers are ignored) that appear more than once in visible text, excluding the Key and hidden symbol definitions. The stage shows "Shown more than once: … Each fact should appear once" when there are any.
+
 
 ### Lost circle and line positions (Claude Code, 2026-11-22)
 
@@ -348,6 +368,17 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Hierarchy and repetition (2026-11-22)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, stand-in `window.claude` returning a poster that repeats like the owner's Queen poster (headline "Rock in Rio, January 1985: 250,000 fans" plus labels repeating 1985 and 250,000, and a Key with two "Fan, 10,000 people" symbols):
+  - the stage showed "Shown more than once: 1985, 250,000", and 10,000 was not flagged
+  - the prompt contained the level-1 rule, the once rule, the level-2 example heading and the new failure modes
+  - the corrected periods headline and coffee caption were in the prompt; the old headline was gone
+  - no console errors
+- **Unverified:** whether real Claude output in the live artifact now follows the hierarchy (re-run the Queen question).
+
 
 ### Circle and line positions (2026-11-22)
 
