@@ -118,9 +118,9 @@ select.btn{max-width:220px}
 :root{--brand:#1F5796;--brand-ink:#FFFFFF;--word:"Varela Round","Nunito",Arial,sans-serif;--cobalt:#1F5796;--cobalt-soft:#E4ECF6}
 body{font-family:Inter,"Helvetica Neue",Arial,sans-serif}
 /* The start page is drawn from the 1920x1080 mockup: --s is one mockup pixel, scaled to the window. */
-.home{--s:clamp(0.6px, min(0.05208vw, 0.0926vh), 1.15px);position:fixed;inset:0;background:var(--brand);color:var(--brand-ink);display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto;z-index:20}
+.home{--s:clamp(0.6px, min(0.05208vw, 0.0926vh), 1.15px);position:fixed;inset:0;background:var(--brand);color:var(--brand-ink);display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow:auto;z-index:20}
 .home[hidden]{display:none}
-.home-col{width:min(calc(930 * var(--s)),100%);display:flex;flex-direction:column;align-items:center;gap:calc(14 * var(--s))}
+.home-col{width:min(calc(930 * var(--s)),100%);margin-block:auto;display:flex;flex-direction:column;align-items:center;gap:calc(14 * var(--s))}
 .home-title{font-family:var(--word);font-weight:400;font-size:calc(50 * var(--s));letter-spacing:0;margin:0 0 calc(3 * var(--s));line-height:1.2}
 .home-src{position:relative;width:100%;margin:0}
 .home-src input{width:100%;height:calc(70 * var(--s));border:0;border-radius:calc(35 * var(--s));background:#FFFFFF;color:#1C1C1C;padding:0 calc(64 * var(--s)) 0 calc(32 * var(--s));font-size:calc(24 * var(--s));outline:none}
@@ -138,6 +138,15 @@ body{font-family:Inter,"Helvetica Neue",Arial,sans-serif}
 .home-brief{width:100%;height:calc(162 * var(--s));border:0;border-radius:calc(32 * var(--s));background:rgba(255,255,255,.6);color:#1C1C1C;padding:calc(24 * var(--s)) calc(32 * var(--s));font-size:calc(24 * var(--s));line-height:1.4;resize:none;outline:none}
 .home-brief::placeholder{color:#5F6A78}
 .home-brief:focus-visible{background:rgba(255,255,255,.72)}
+.home-formats{width:100%;min-width:0;margin:0;padding:0;border:0}
+.home-formats legend{margin-bottom:8px;padding:0;font-size:14px;font-weight:600}
+.home-format-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 95px),1fr));gap:8px}
+.home-format-options input{position:absolute;width:1px;height:1px;clip-path:inset(50%)}
+.home-format-options label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;padding:6px;border:1px solid rgba(255,255,255,.55);border-radius:14px;color:#fff;text-align:center;font-size:clamp(13px,2.4vw,16px);font-weight:600;cursor:pointer}
+.home-format-options small{font-size:12px;font-weight:400}
+.home-format-options label:hover{background:rgba(255,255,255,.14)}
+.home-format-options input:checked + label{background:#fff;border-color:#fff;color:var(--brand)}
+.home-format-options input:focus-visible + label{outline:2px solid #fff;outline-offset:2px}
 .home-go{margin-top:calc(10 * var(--s));height:calc(77 * var(--s));padding:0 calc(32 * var(--s));border:0;border-radius:calc(39 * var(--s));background:#1C1C1C;color:#E6E6E6;font-size:calc(24 * var(--s));cursor:pointer;box-shadow:calc(4 * var(--s)) calc(6 * var(--s)) calc(14 * var(--s)) rgba(0,0,0,.28);transition:transform .15s}
 .home-go:hover{transform:translateY(-1px)}
 .home-go:disabled{opacity:.6;cursor:default;transform:none}
@@ -326,6 +335,30 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
   .ig-dots{padding-left:38px}
   .ig-data{padding:18px}
 }
+
+/* The output container is also present in standalone exports. */
+.ig-output{container-type:inline-size}
+.ig[data-format]{box-sizing:border-box;width:100%}
+.ig[data-format] .ig-context{color:var(--ink2);font-size:var(--format-copy);line-height:1.45}
+.ig-context h2{margin:0 0 4px;font-size:inherit;font-weight:700}
+.ig[data-format] :is(.ig-q,.ig-hero figcaption){font-size:var(--format-copy)}
+.ig[data-format] :is(.ig-q b,.ig-foot){font-size:var(--format-small)}
+.ig[data-format] .ig-h1{font-size:var(--format-title)}
+.ig[data-format] .ig-take-t{font-size:var(--format-copy);color:var(--ink2)}
+.ig[data-format="presentation"]{--format-title:clamp(40px,7cqi,76px);--format-copy:clamp(16px,2.3cqi,24px);--format-small:clamp(13px,1.7cqi,16px)}
+.ig[data-format="instagram"]{--format-title:clamp(32px,9cqi,52px);--format-copy:16px;--format-small:13px;max-width:560px;aspect-ratio:4 / 5;padding:clamp(16px,4cqi,28px);gap:16px}
+.ig[data-format="print"]{--format-title:clamp(29px,5.4cqi,44px);--format-copy:15px;--format-small:14px;max-width:210mm;aspect-ratio:210 / 297;padding:clamp(16px,5cqi,12mm);gap:clamp(14px,2.5cqi,24px)}
+@container (min-width: 620px){
+  .ig[data-format="presentation"]{aspect-ratio:16 / 9;gap:12px;padding:clamp(20px,4cqi,40px);justify-content:center}
+  .ig[data-format="presentation"]:not([data-layout="wide"]):has(> .ig-head):has(> .ig-hero){
+    display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);
+    grid-template-rows:1fr;align-items:center;column-gap:clamp(14px,3cqi,32px)
+  }
+  .ig[data-layout="wide"] > .ig-hero > svg{max-width:min(760px,76cqi)}
+  .ig[data-format="presentation"] > *{grid-column:1 / -1;min-width:0}
+  .ig[data-format="presentation"] > .ig-head{grid-column:1;grid-row:1}
+  .ig[data-format="presentation"] > .ig-hero{grid-column:2;grid-row:1}
+}
 </style>
 </head>
 <body>
@@ -338,6 +371,17 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
     </form>
     <ul class="home-chips" id="homeSrcList" aria-live="polite"></ul>
     <textarea id="homeBriefIn" class="home-brief" placeholder="Name the information you’re after" aria-label="The information you’re after"></textarea>
+    <fieldset class="home-formats" id="homeFormats">
+      <legend>Output format</legend>
+      <div class="home-format-options">
+        <input type="radio" name="outputFormat" id="format-presentation" value="presentation">
+        <label for="format-presentation">Presentation <small>16:9</small></label>
+        <input type="radio" name="outputFormat" id="format-instagram" value="instagram">
+        <label for="format-instagram">Instagram <small>4:5</small></label>
+        <input type="radio" name="outputFormat" id="format-print" value="print">
+        <label for="format-print">Print <small>A4</small></label>
+      </div>
+    </fieldset>
     <button class="home-go" id="homeGo" type="button">Generate</button>
     <p class="home-status" id="homeStatus" role="status"></p>
   </div>
@@ -395,7 +439,7 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
     </aside>
     <section class="stage" id="stage">
       <div class="stage-top" id="stageTop"></div>
-      <div id="out"></div>
+      <div id="out" class="ig-output"></div>
     </section>
   </div>
 </div>
@@ -866,6 +910,8 @@ function svgSafe(html){
 function renderIG(html, proj, expand = true){
   const doc = new DOMParser().parseFromString('<!doctype html><body>' + svgSafe(html) + '</body>', 'text/html');
   const root = h('article', {class:'ig', style:`--acc:${proj.accent || '#A3203A'}`});
+  if (Object.hasOwn(OUTPUT_FORMATS, proj.format)) root.dataset.format = proj.format;
+  if (proj.format === 'presentation' && doc.querySelector('.ig-symdefs')?.dataset.layout === 'wide') root.dataset.layout = 'wide';
   for (const c of Array.from(doc.body.childNodes)){ const k = cleanTree(c, false, false); if (k) root.append(k); }
   root.querySelectorAll('details[open]').forEach(el => el.removeAttribute('open'));
   if (root.querySelector('.ig-hero')) root.classList.add('ig--poster');
@@ -1138,6 +1184,19 @@ const DRAWING_RULES = `7. Plan the composition before drawing:
    - mechanical spacing where a scatter would look natural, or a messy scatter where a count must be read
    - wrong proportions, floating objects, light coming from two directions`;
 
+// Match the format names on the start page. Existing posters without one keep their original prompt and layout.
+const DEFAULT_FORMAT = 'instagram';
+const OUTPUT_FORMATS = {
+  presentation: `Presentation · 16:9 landscape. One slide, readable at a distance. Show the answer and one visual piece of evidence. Keep support to a single item only if needed. Aim for at most 18 words outside the headline and source. Use the largest headline, key value and graphic labels of the three formats. For a compact hero, draw for an SVG around 400 × 260 units: the heading sits beside it on a wide screen. If a panoramic scene or long timeline needs the full width, set data-layout="wide" on the theme div to put the heading above it and use a shallow viewBox (roughly 400 × 140). Use very short labels, roughly 20–24 SVG units for the compact hero.`,
+  instagram: `Instagram · 4:5 portrait. Design one post for a phone feed. Keep one visual takeaway and up to two short supporting items that clarify it. Aim for at most 28 words outside the headline and source. Stack the main drawing below the heading; aim for a viewBox around 400 × 260 units to leave room for text. Keep key labels at 14–16 rendered CSS px on a phone; on a 320px-wide drawing with a 400-unit viewBox that means at least 18–20 SVG units. Move awkwardly long labels out of the drawing.`,
+  print: `Print · A4 portrait (210 × 297 mm), with 12 mm page margins. Fit one page. Keep the same single takeaway, with up to three supporting points and one short method or context line only where it helps interpret the answer. Aim for at most 50 words outside the headline and source. Draw for a printed SVG around 170 mm wide and a viewBox no taller than 400 units at 400 units wide, leaving space for the heading, context and source. Keep explanatory text around 11 pt, and data labels and sources at least 10 pt at actual print size. Use fewer marks and lines before making type smaller.`
+};
+function formatInstructions(format){
+  return Object.hasOwn(OUTPUT_FORMATS, format)
+    ? 'Output format (applies to the composition, density and sizes in all versions): ' + OUTPUT_FORMATS[format]
+    : 'Use the original portrait poster layout. Keep under 30 words outside the headline.';
+}
+
 /* The one-graphic poster: the default output. One call, one central picture, very few words. */
 const POSTER_RULES = `How to make it:
 1. Answer ONE question, and make the answer the clear number one. Pick the single most important fact in the sources that answers the user's request. This is not a summary of the source: leave everything else out, however interesting. The answer itself (the number, place, date, name or thing the question asks for) is level 1: the largest and boldest element on the page, in the accent colour, where the eye lands first. Nothing else may compete with it in size, weight or colour.
@@ -1148,7 +1207,7 @@ const POSTER_RULES = `How to make it:
    - Level 1, the answer: largest, boldest, accent colour.
    - Level 2, supporting context such as a comparison or the runners-up: include it only if it makes the answer easier to understand, at most 3 items. Make it clearly secondary: numbers at most half the size of the answer's, muted colour (the secondary ink, not the accent), a smaller or simpler drawing, placed after or below the answer, and grouped under one short heading that says what it is (for example "For comparison: Queen's next-biggest shows"). Each item is one clear line: what it is, then its number (for example "Hyde Park, London, 1976 · 150,000+").
    - Level 3, notes, units and the source: smallest and quiet.
-   Very few words: the question, a headline of at most 12 words, direct labels on the drawing (values with units, short names, qualifiers such as "reported" or "about"), and at most one short closing line. No paragraphs. Under 30 words outside the headline.
+   Use a headline of at most 12 words and direct labels on the drawing (values with units, short names, qualifiers such as "reported" or "about"). Follow the output format for the amount of supporting text. Keep the units, qualifiers and source even when space is tight.
 5. Exact numbers only: use values exactly as the sources give them, with units and denominators. Never invent data or proportions. If you round or combine, say "about".
 6. Art direction from the subject. Choose the hero object and follow the house drawing style (rule 8). Choose a bold colour field from the subject and readable labels using the policy below. Choose typefaces using TYPOGRAPHY_BY_SUBJECT_V1 in the output format. If the user writes in Hebrew, write in Hebrew and follow the script-capable pairs and RTL rule in TYPOGRAPHY_BY_SUBJECT_V1.
 
@@ -1162,7 +1221,7 @@ ${TYPOGRAPHY_RULES}
    Textures, choose from: ${TEXTURES.join(', ')} (grain suits the house style best). If a SMALL mark repeats many times (a count of beans, people, trees, or the same animal as small markers), define it once here: <svg data-def="short-id" data-name="Name" data-color="#HEX" viewBox="0 0 32 32">...</svg>. Place it in HTML parts with <i data-sym="short-id"></i>, and inside your drawing with <g data-sym="short-id" data-size="18" transform="translate(x y)"></g> (centred on x y; on a map use data-lon and data-lat instead of transform). Symbols are tiny icons: never use one for the hero, which you draw full size and in detail directly in the svg. ${GLYPH_RULES}
 2. <header class="ig-head"><p class="ig-q"><b>The question</b> the reader's question?</p><h1 class="ig-h1">the answer, max 12 words</h1></header>
 3. ONE central graphic: <figure class="ig-hero"> ... <figcaption>optional one line that adds something new (what is counted, out of how many); never repeat the headline or a label</figcaption></figure>. Inside it, preferably ONE drawing:
-   <svg viewBox="0 0 400 H" role="img" aria-label="what the picture shows, with the numbers"> (H between 260 and 560).
+   <svg viewBox="0 0 400 H" role="img" aria-label="what the picture shows, with the numbers"> (choose H for the output format and drawing; 260 to 560 units is a useful starting range).
    Allowed SVG elements: g, path, rect, circle, ellipse, line, polyline, polygon, text, tspan, and gradients: <defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#HEX"/><stop offset="1" stop-color="#HEX" stop-opacity="0"/></linearGradient></defs> (radialGradient with cx, cy, r, fx, fy too), used as fill="url(#a)". Attributes: geometry, transform, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin, stroke-dasharray, opacity, fill-opacity, stroke-opacity, text-anchor, font-size, font-weight, font-style. Hex colours. The house style uses flat fills, so gradients are normally unnecessary. No use, filters, masks, clip paths, images or foreignObject: they are removed, so write repeated shapes out (group them with transform="translate(x y)"). Up to about 400 elements. Spend the detail on the hero illustration and keep repeated marks cheap (one path, or a symbol), so the answer stays under about 30,000 characters; a much longer answer can be cut off and lose whatever comes last. Never put HTML tags (i, b, span, p, div, br) inside the svg; use tspan for bold or italic words. Size text using READABILITY_AND_PALETTE_V3 at the intended display width. The drawing sits on the theme's colour field, so leave its own background transparent: the field IS the background. Add flat planes (a wall, a table, a road, a sea) only where the scene needs them.
    MAPS. When WHERE is the answer (where things are, countries, regions, oceans, routes, spread), use a map, never a list. The map is the stage, not the picture: the subject still appears as a large illustrated hero on it or beside it (the animal on its ice floe, the ship on its route, the crop in its field), and markers can be small drawings of the subject rather than plain dots. When the fact is about size, amount, time or comparison, draw the subject itself instead of a map. Do NOT draw coastlines yourself: place the built-in world map, with accurate coastlines and borders, inside your svg:
    <g data-map="world" data-view="lonWest latSouth lonEast latNorth" data-box="x y width height" data-land="#HEX or token" data-sea="#HEX or token" data-stroke="#HEX or token, border colour, optional" data-graticule="30 (optional grid every N degrees)" data-fill="Country:#HEX;Other country:#HEX (optional, common English names)"></g>
@@ -1170,7 +1229,7 @@ ${TYPOGRAPHY_RULES}
    Crop data-view tightly to the region that matters: a whole-world map is small on a phone, so show the whole world only when the fact is global. data-view crops the world (for example "-100 0 40 70" for the North Atlantic, "-180 -60 180 84" for the whole world, "25 10 65 45" for the Middle East); data-box is where the map sits in the viewBox.
    Put everything you place on the map at real coordinates: <g data-lon="-30.5" data-lat="55"> marker, leader line and label drawn around 0,0 </g>. Routes: <path data-route="lon,lat lon,lat lon,lat" data-curve="0.2" stroke="#HEX" stroke-width="2"/> (the app draws the path; data-curve 0 is straight). Size markers by the data (circle AREA proportional to the value), keep labels off the busiest coast, and style land and sea in the theme's colours.
    Only if the fact is a plain ranking or share that no drawing can show better, you may use one of these instead of the svg: a pictogram <div class="ig-picto" data-sym="ID" data-n="10" style="--v:1.9"></div> (data-n marks drawn, --v filled); sorted bars <div class="ig-bars" style="--max:50"><div class="ig-bar" style="--v:47"><i data-sym="ID"></i><b class="ig-bar-v">47%</b></div></div>; or one big number <div class="ig-stats"><div class="ig-stat"><b class="ig-big ig-big--hero">≈7</b><span>years</span></div></div>.
-4. Optional: <p class="ig-take-t">one short closing line that adds something new, never a repeat of the headline</p>
+4. Optional: <aside class="ig-context"><h2>Short heading that names the comparison or context</h2><p>One short line per supporting item, up to the output format's limit</p></aside>. A single closing line can instead use <p class="ig-take-t">...</p>. Add new information only.
 5. <footer class="ig-foot"><p><strong>Source:</strong> title, organisation, date</p></footer>`;
 
 const EXAMPLE_POSTER = "<div class=\"ig-symdefs\" data-bg=\"#A9CCF5\" data-ink=\"#1C2A5E\" data-muted=\"#3C4A78\" data-accent=\"#E5463E\" data-font=\"Manrope\" data-body=\"Inter\" data-texture=\"grain\"></div>\n<header class=\"ig-head\"><p class=\"ig-q\"><b>The question</b> How much of a life is spent on periods?</p><h1 class=\"ig-h1\">Gathered together, periods fill years of a life.</h1></header>\n<figure class=\"ig-hero\"><svg viewBox=\"0 70 400 270\" role=\"img\" aria-label=\"39 tiles, one for each year of life from age 12 to 51. Gathered together, period days fill 6.96 of them: about 2,540 days, or 508 periods.\">\n<path d=\"M43 92l7 7v21h-21l-7 -7zM70.4 92l7 7v21h-21l-7 -7zM97.8 92l7 7v21h-21l-7 -7zM125.2 92l7 7v21h-21l-7 -7zM152.6 92l7 7v21h-21l-7 -7zM180 92l7 7v21h-21l-7 -7zM207.4 92l7 7v21h-21l-7 -7zM234.8 92l7 7v21h-21l-7 -7zM262.2 92l7 7v21h-21l-7 -7zM289.6 92l7 7v21h-21l-7 -7zM317 92l7 7v21h-21l-7 -7zM344.4 92l7 7v21h-21l-7 -7zM371.8 92l7 7v21h-21l-7 -7zM43 127.4l7 7v21h-21l-7 -7zM70.4 127.4l7 7v21h-21l-7 -7zM97.8 127.4l7 7v21h-21l-7 -7zM125.2 127.4l7 7v21h-21l-7 -7zM152.6 127.4l7 7v21h-21l-7 -7zM180 127.4l7 7v21h-21l-7 -7zM207.4 127.4l7 7v21h-21l-7 -7zM234.8 127.4l7 7v21h-21l-7 -7zM262.2 127.4l7 7v21h-21l-7 -7zM289.6 127.4l7 7v21h-21l-7 -7zM317 127.4l7 7v21h-21l-7 -7zM344.4 127.4l7 7v21h-21l-7 -7zM371.8 127.4l7 7v21h-21l-7 -7zM43 162.8l7 7v21h-21l-7 -7zM70.4 162.8l7 7v21h-21l-7 -7zM97.8 162.8l7 7v21h-21l-7 -7zM125.2 162.8l7 7v21h-21l-7 -7zM152.6 162.8l7 7v21h-21l-7 -7zM180 162.8l7 7v21h-21l-7 -7zM207.4 162.8l7 7v21h-21l-7 -7zM234.8 162.8l7 7v21h-21l-7 -7zM262.2 162.8l7 7v21h-21l-7 -7zM289.6 162.8l7 7v21h-21l-7 -7zM317 162.8l7 7v21h-21l-7 -7zM344.4 162.8l7 7v21h-21l-7 -7zM371.8 162.8l7 7v21h-21l-7 -7z\" fill=\"#7FA6DA\"/>\n<path d=\"M206.6 92h0.8v21h-0.8zM213.8 92h21v21h-21zM241.2 92h21v21h-21zM268.6 92h21v21h-21zM296 92h21v21h-21zM323.4 92h21v21h-21zM350.8 92h21v21h-21zM22 127.4h21v21h-21zM49.4 127.4h21v21h-21zM76.8 127.4h21v21h-21zM104.2 127.4h21v21h-21zM131.6 127.4h21v21h-21zM159 127.4h21v21h-21zM186.4 127.4h21v21h-21zM213.8 127.4h21v21h-21zM241.2 127.4h21v21h-21zM268.6 127.4h21v21h-21zM296 127.4h21v21h-21zM323.4 127.4h21v21h-21zM350.8 127.4h21v21h-21zM22 162.8h21v21h-21zM49.4 162.8h21v21h-21zM76.8 162.8h21v21h-21zM104.2 162.8h21v21h-21zM131.6 162.8h21v21h-21zM159 162.8h21v21h-21zM186.4 162.8h21v21h-21zM213.8 162.8h21v21h-21zM241.2 162.8h21v21h-21zM268.6 162.8h21v21h-21zM296 162.8h21v21h-21zM323.4 162.8h21v21h-21zM350.8 162.8h21v21h-21z\" fill=\"#FBF6EC\"/>\n<path d=\"M22 92h21v21h-21zM49.4 92h21v21h-21zM76.8 92h21v21h-21zM104.2 92h21v21h-21zM131.6 92h21v21h-21zM159 92h21v21h-21zM186.4 92h20.2v21h-20.2z\" fill=\"#E5463E\"/>\n<path d=\"M22 92h21v2.2h-21zM49.4 92h21v2.2h-21zM76.8 92h21v2.2h-21zM104.2 92h21v2.2h-21zM131.6 92h21v2.2h-21zM159 92h21v2.2h-21zM186.4 92h20.2v2.2h-20.2z\" fill=\"#FF8A7E\"/>\n<text x=\"22\" y=\"82\" font-size=\"12\" font-weight=\"700\" fill=\"#1C2A5E\" letter-spacing=\"1\">AGE 12</text>\n<text x=\"371.8\" y=\"207.8\" font-size=\"12\" font-weight=\"700\" fill=\"#1C2A5E\" text-anchor=\"end\" letter-spacing=\"1\">AGE 51</text>\n<text x=\"22\" y=\"207.8\" font-size=\"12\" fill=\"#1C2A5E\">one tile = one year of life</text>\n<path d=\"M22 223.8h185.8\" stroke=\"#E5463E\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n<text x=\"22\" y=\"265.8\" font-size=\"40\" font-weight=\"800\" fill=\"#1C2A5E\">≈ 7 years</text>\n<text x=\"218\" y=\"249.8\" font-size=\"13\" fill=\"#1C2A5E\">period days, gathered</text>\n<text x=\"218\" y=\"266.8\" font-size=\"13\" fill=\"#1C2A5E\">together: about 2,540 days,</text>\n<text x=\"218\" y=\"283.8\" font-size=\"13\" fill=\"#1C2A5E\">or 508 periods</text>\n</svg><figcaption>Researchers’ estimate, assuming periods of 3 to 7 days about every 28 days</figcaption></figure>\n<footer class=\"ig-foot\"><p><strong>Source:</strong> Harvard T.H. Chan School of Public Health, Apple Women’s Health Study (May 2023).</p></footer>";
@@ -1188,7 +1247,9 @@ ${POSTER_RULES}
 
 ${POSTER_FORMAT}
 
-The examples illustrate HTML structure and how a drawing carries a fact. Use READABILITY_AND_PALETTE_V3 for the actual colours and label sizes of your output.
+${formatInstructions(proj.format)}
+
+The examples illustrate HTML structure and how a drawing carries a fact. Apply the output format and READABILITY_AND_PALETTE_V3 to your design.
 <example subject="a health study: years represented by tiles">
 ${EXAMPLE_POSTER}
 </example>
@@ -1235,6 +1296,8 @@ ${sourcesBlock(proj, 50000)}
 ${POSTER_FORMAT}
 
 ${POSTER_RULES}
+
+${formatInstructions(proj.format)}
 
 The current infographic:
 <page>
@@ -1518,6 +1581,17 @@ function addVersion(html, label){
   proj.cur = proj.versions.length - 1; proj.example = false; save();
 }
 const EXPORT_BODY_CSS = "body{margin:0;padding:32px 16px;background:#E6E4DF}";
+const EXPORT_A4_CSS = `
+@page{size:A4 portrait;margin:12mm}
+@media print{
+  body{padding:0;background:#fff}
+  .ig[data-format="print"]{
+    --format-title:32pt;--format-copy:11pt;--format-small:10pt;
+    min-height:272mm;max-width:none;aspect-ratio:auto;padding:7mm;gap:4mm;
+    border-radius:0;box-shadow:none;print-color-adjust:exact
+  }
+  .ig[data-format="print"] > :is(.ig-head,.ig-hero,.ig-context,.ig-foot){break-inside:avoid}
+}`;
 
 /* One Claude call with one fallback: if the first tier fails (other than a stop or a refusal),
    try once more on the other tier. A rejected call that already wrote a usable answer keeps it. */
@@ -1647,18 +1721,21 @@ $('#exportBtn').addEventListener('click', () => {
   if (!ig){ toast('Make an infographic first'); return; }
   const node = ig.cloneNode(true);
   node.querySelectorAll('details').forEach(d => d.removeAttribute('open'));
-  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(ig.querySelector('.ig-h1')?.textContent.trim() || proj.title)}</title>${(ig.dataset.fonts || '').split('|').filter(Boolean).flatMap(fontLinks).map(u => `<link rel="stylesheet" href="${esc(u)}">`).join('')}<style>${$('#igcss').textContent}${EXPORT_BODY_CSS}</style></head><body>${node.outerHTML}</body></html>`;
+  const printCSS = ig.dataset.format === 'print' ? EXPORT_A4_CSS : '';
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(ig.querySelector('.ig-h1')?.textContent.trim() || proj.title)}</title>${(ig.dataset.fonts || '').split('|').filter(Boolean).flatMap(fontLinks).map(u => `<link rel="stylesheet" href="${esc(u)}">`).join('')}<style>${$('#igcss').textContent}${EXPORT_BODY_CSS}${printCSS}</style></head><body><main class="ig-output">${node.outerHTML}</main></body></html>`;
   saveFile(slug() + '.html', html);
 });
 
 /* ---------- Start page ---------- */
 const homeOpen = () => !$('#home').hidden;
-function freshProject(){ return {id: uid(), title: 'Untitled infographic', brief: '', sources: [], entities: [], accent: '#A3203A', versions: [], cur: -1}; }
+function freshProject(){ return {id: uid(), title: 'Untitled infographic', brief: '', format: DEFAULT_FORMAT, sources: [], entities: [], accent: '#A3203A', versions: [], cur: -1}; }
 function showHome(){
   // a draft for the start page: reuse an untouched one, otherwise start fresh
   if (!(proj && !proj.example && !(proj.versions || []).length)){ const p = freshProject(); store.projects.unshift(p); store.current = p.id; proj = p; save(); }
   $('#home').hidden = false; $('#app').hidden = true;
   $('#homeBriefIn').value = proj.brief || ''; $('#homeStatus').textContent = '';
+  if (!Object.hasOwn(OUTPUT_FORMATS, proj.format)) proj.format = DEFAULT_FORMAT;
+  $('#format-' + proj.format).checked = true;
   renderSources();
   requestAnimationFrame(() => $('#homeSrcIn').focus());
 }
@@ -1692,6 +1769,7 @@ $('#home').addEventListener('drop', e => {
   const t = (e.dataTransfer.getData('text/uri-list').split(/\r?\n/).find(l => l && !l.startsWith('#')) || e.dataTransfer.getData('text') || '').trim();
   if (t){ $('#homeSrcIn').value = t; addHomeInput(); }
 }, true);
+$('#homeFormats').addEventListener('change', e => { proj.format = e.target.value; save(); });
 $('#homeBriefIn').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) $('#homeGo').click(); });
 $('#homeGo').addEventListener('click', async () => {
   const st = $('#homeStatus');
@@ -1708,7 +1786,7 @@ $('#homeGo').addEventListener('click', async () => {
 });
 
 /* ---------- Boot ---------- */
-store.projects = store.projects.filter(x => x.example || (x.versions || []).length || (x.sources || []).length);
+store.projects = store.projects.filter(x => x.example || (x.versions || []).length || (x.sources || []).length || (x.id === store.current && Object.hasOwn(OUTPUT_FORMATS, x.format)));
 if (!store.projects.length){ const p = exampleProject(); store.projects.push(p); }
 proj = store.projects.find(x => x.id === store.current) || store.projects[0];
 showHome(); // the workspace renders when it is opened (showWork), not behind the start page

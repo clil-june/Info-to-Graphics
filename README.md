@@ -1,18 +1,22 @@
 # Info to Graphics
 
-Drop in sources, say in a sentence or two what the infographic should show, and get back a finished infographic page. There's no editor and no customization: the app's job is to make one high-quality infographic per brief, at the standard of the hand-made reference in `references/harvard-period-products-visual/`.
+Drop in sources, say in a sentence or two what the infographic should show, and get back a finished infographic page. The app's job is to make one high-quality infographic per brief, at the standard of the hand-made reference in `references/harvard-period-products-visual/`.
 
 ## Using it
 
 1. **Drop your sources** on the start page: PDF, Word (.docx), text, CSV, JSON or image files, a link, or pasted text.
 2. **Name the information you're after**, for example "Where do blue whales feed?"
-3. **Generate.** The infographic builds on screen as Claude draws it.
-4. **Change it** in plain words ("Use fewer words"), or press **Try a different picture**. Up to eight versions are kept, so you can step back through them.
-5. **Export** it as a standalone HTML file.
+3. **Choose an output format** on the start page.
+   - **Presentation (16:9)** for a single slide, with the largest type and the least text.
+   - **Instagram (4:5)** for a portrait post, with short labels sized for a phone. This is the default.
+   - **Print (A4)** for one portrait page, with room for a short explanation or method note.
+4. **Generate.** The infographic builds on screen as Claude draws it.
+5. **Change it** in plain words ("Use fewer words"), or press **Try a different picture**. The chosen format applies to every version. Up to eight versions are kept, so you can step back through them.
+6. **Export** it as a standalone HTML file. For Print, open the exported HTML in a browser and use Print or Save as PDF.
 
 ## How it makes an infographic
 
-1. **One Claude call.** The prompt holds the sources, the question, the poster rules and two hand-made examples. Claude answers with one themed poster: the subject's look (background, texture, fonts, colours), a short headline and one central drawing. Places get a built-in world map with real coastlines.
+1. **One Claude call.** The prompt holds the sources, the question, the poster rules, the selected format and two hand-made examples. Claude answers with one themed poster: the subject's look (background, texture, fonts, colours), a short headline and one central drawing. Places get a built-in world map with real coastlines.
    Every poster uses one house style taken from the owner's moodboard: flat mid-century poster illustration with one bold, saturated colour field (built as a Material Design colour theme from the 2014 Material palette, chosen for the subject and mood), hard-edged flat shapes, light and shadow as hard geometric shapes, 3 to 5 colours and a fine print grain. The subject guides the palette, the hero object and the typefaces. Large colour fields stay restrained, and the prompt asks Claude to check text against its local background. Before drawing, Claude plans the composition and afterwards checks the picture against a list of real failure modes, a method adapted from [claude-drawing-skill](https://github.com/cloveric/claude-drawing-skill) by cloveric (MIT).
 2. **Shown as it is written.** The page re-draws about every 0.7 seconds while the answer streams in.
 3. **Check the numbers.** The page lists any number it cannot find in the sources. This is a numeric lookup and does not validate every value's context or attribution.

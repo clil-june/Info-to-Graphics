@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-22 (Claude Code: answer first, every fact once, clear secondary level).
+Last updated 2026-11-22 (Codex: output format selection).
 
 ## Current task
+
+**Owner decision (2026-11-22):** add a format choice to the start page. Presentation, Instagram and Print each set how much information to show and how large the text should be.
 
 **Owner decision (2026-11-19, after Codex's `744413c`):** "Bring back bold colours". The poster again uses the moodboard's ONE bold, saturated colour field. Codex's readability rules (contrast against the actual surface, label sizes on phones) stay, now under `READABILITY_AND_PALETTE_V3` in [the guide](docs/visual-communication-research.md#text-readability-and-contextual-palettes).
 
@@ -14,6 +16,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- The format selector is in `feature/four-elements` and awaits publication to the existing Claude Artifact.
+
 - **Artifact now live:** version `1795336706-fed6` (version 29, "Answer first, each fact once (5b4d0c3)"), republished 2026-11-22 by Claude Code from `5b4d0c3`; capabilities unchanged. Before that: version `1795335948-c8f7` (version 28, "Circle and line positions fixed (710743c)"), republished 2026-11-22 by Claude Code from `710743c`; capabilities unchanged. Before that: version `1795115200-6af8` (version 27, "Multi-line labels fixed (a12d1de)"), which dropped every circle's cx and line's y2, republished 2026-11-19 by Claude Code from `a12d1de`; capabilities unchanged. Before that: version `1795114719-0bdb` (version 26, "Labels never overlap (60191c8)"), republished 2026-11-19 by Claude Code from `60191c8`; capabilities unchanged. Before that: version `1795113171-1050` (version 25, "Material colour palette (f92064c)"), republished 2026-11-19 by Claude Code from `f92064c`; capabilities unchanged. Before that: version `1795112140-b391` (version 24, "Bold colours back (01b4f1e)"), republished 2026-11-19 by Claude Code from `01b4f1e`; capabilities unchanged. Before that: version `1795111960-fcd8` (version 23, "Illustrated subjects + calm palettes (da0a865)"), republished 2026-11-19 by Claude Code from `da0a865`, which includes Codex's readability and palette update `744413c`; capabilities unchanged. Before that: version `1795110419-3636` (version 22, "Typography pairs, Google Fonts (dad6ec1)"), republished 2026-11-19 by Claude Code from `dad6ec1`, which includes Codex's typography update `7dd59b1`; capabilities unchanged. Before that it was version `1795108283-d1d0` (polar maps, `8c36123`). Before that it was version `1795107474-fecd` (house style, `798792a`). Before that it was version `1795104651-5c5b` (drawing styles, `f03bbaa`). Before that, it was republished from commit `21bb0e0` as version `1795103932-beef` (version 18, labelled "Optimisation pass (21bb0e0)"). Before publishing, the previous live version `1794993578-72c4` was checked to be byte-identical (ignoring line endings) to `index.html` at `7c58150`, so nothing edited only in the artifact was lost. Capabilities were carried forward unchanged: `sample` with images, `downloads`, `mcp` for `host:claude_browser` (`preview_start`, `get_page_text`). A read-back confirmed the new page is live.
 
 - `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2).
@@ -21,6 +25,12 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Output formats (Codex, 2026-11-22)
+
+- The start page offers Presentation (16:9), Instagram (4:5, the default for new projects) and Print (A4 portrait). The choice is saved with the project. Saved posters without a format keep their legacy layout.
+- Generate, Change it and Try a different picture all use the selected format. The prompt varies the density, supporting detail and expected graphic label sizes. The preview and standalone HTML share the format-specific layout and type sizes. Presentation can place a compact figure beside the heading or a panoramic drawing below it.
+- The Print export includes A4 page size and 12 mm page margins. The browser can print it or save it as PDF.
 
 ### Answer first, every fact once, clear secondary level (Claude Code, 2026-11-22)
 
@@ -369,6 +379,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Output formats (2026-11-22)
+
+- Inline JavaScript parses. A Node harness exercised the selector state, the default for existing drafts, all three prompt paths, format metadata on the rendered article and the export markup, including A4 CSS only for Print. Legacy posters keep their original rendering mode.
+- Browser layout and pagination are unverified in this session. Local Chromium could not launch in the execution environment. Live Claude generation is unverified.
+
 ### Hierarchy and repetition (2026-11-22)
 
 - `node --check` (Node 14) on the extracted inline script: parses.
@@ -581,6 +596,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the format selector to the existing Claude Artifact, preserving its capabilities. Generate the same brief in all three formats to compare text size and density. Inspect the Instagram result on a phone and verify that a browser prints the A4 export on one page.
 
 Published as `1795336706-fed6` (hierarchy and no-repetition rules on top of the earlier fixes). Re-run the Queen concert question: heads and stage lights in place, the answer once and on top, Hyde Park and Knebworth as a clearly labelled comparison. Re-run the poster whose labels overlapped to confirm they are now readable. Run three different subjects to see the colours vary with context, then re-run the polar-bear question and one object subject to check that illustrated subjects are back. For the readability and palette update, measure text contrast and inspect annotation size on a phone-sized Apollo or map example, plus a warm-toned subject. Check a colour/label revision and the HTML export.
 
