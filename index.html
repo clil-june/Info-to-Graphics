@@ -345,32 +345,35 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
 .ig[data-format] :is(.ig-q b,.ig-foot){font-size:var(--format-small)}
 .ig[data-format] .ig-h1{font-size:var(--format-title)}
 .ig[data-format] .ig-take-t{font-size:var(--format-copy);color:var(--ink2)}
-.ig[data-format="presentation"]{--format-title:clamp(40px,7cqi,76px);--format-copy:clamp(16px,2.3cqi,24px);--format-small:clamp(13px,1.7cqi,16px)}
+.ig[data-format="presentation"]{--format-title:50px;--format-copy:18px;--format-small:14px}
 .ig[data-format="instagram"]{--format-title:clamp(32px,9cqi,52px);--format-copy:16px;--format-small:13px;padding:clamp(16px,4cqi,28px);gap:16px}
 .ig[data-format="print"]{--format-title:clamp(29px,5.4cqi,44px);--format-copy:15px;--format-small:14px;padding:clamp(16px,5cqi,12mm);gap:clamp(14px,2.5cqi,24px)}
 .ig[data-composition] > .ig-head{gap:clamp(8px,2cqi,20px);padding:0}
-.ig[data-composition="slide"] .ig-h1{text-wrap:wrap}
-.ig[data-composition="slide"] .ig-head:has(> .ig-answer) .ig-h1{font-size:clamp(26px,4.6cqi,54px);font-weight:700}
-.ig[data-composition="slide"] .ig-answer{
-  font-family:var(--dsp);font-size:clamp(46px,9.5cqi,108px);font-weight:800;line-height:1.02;
-  letter-spacing:-.035em;color:var(--acc);font-variant-numeric:tabular-nums;text-wrap:balance;overflow-wrap:anywhere
+.ig[data-format="presentation"] :is(.ig-h1,.ig-answer,.ig-q,.ig-deck,.ig-context,.ig-take-t,.ig-hero figcaption,.ig-foot){overflow-wrap:normal;word-break:normal;hyphens:none}
+.ig[data-format="presentation"] :is(.ig-h1,.ig-answer){text-wrap:balance}
+.ig[data-format="presentation"] .ig-head:has(> .ig-answer) .ig-h1{font-size:36px;font-weight:700}
+.ig[data-format="presentation"] .ig-answer{
+  font-family:var(--dsp);font-size:76px;font-weight:800;line-height:1.02;
+  letter-spacing:-.035em;color:var(--acc);font-variant-numeric:tabular-nums
 }
-.ig[data-composition="slide"] > .ig-hero{padding:0}
-.ig[data-composition="slide"] .ig-context{font-size:var(--format-small)}
+.ig[data-format="presentation"] > .ig-hero{padding:0}
+.ig[data-format="presentation"] .ig-context{font-size:var(--format-small)}
 .ig[data-composition="feed"]{gap:clamp(10px,3cqi,17px)}
 .ig[data-composition="feed"] .ig-h1{font-size:clamp(31px,8.5cqi,46px);line-height:1.06}
 .ig[data-composition="feed"] > .ig-hero{padding:0;gap:8px}
 .ig[data-composition="feed"] :is(.ig-hero figcaption,.ig-context){text-align:start;align-self:stretch;overflow-wrap:anywhere}
 .ig[data-composition="feed"] > .ig-context{border-block-start:1px solid color-mix(in srgb,var(--ink) 20%,transparent);padding-block-start:10px}
 @container (min-width: 620px){
-  .ig[data-composition="slide"][data-layout="wide"] > .ig-head:has(> .ig-answer){flex-direction:row;justify-content:space-between;align-items:baseline}
-  .ig[data-composition="slide"][data-layout="wide"] .ig-answer{flex:0 1 auto;text-align:end}
-  .ig[data-format="presentation"]{gap:12px;padding:clamp(20px,4cqi,40px);justify-content:center}
-  .ig[data-format="presentation"]:not([data-layout="wide"]):has(> .ig-head):has(> .ig-hero){
-    display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);
-    grid-template-rows:1fr;align-items:center;column-gap:clamp(14px,3cqi,32px)
+  .ig[data-format="presentation"]{gap:14px;padding:30px 38px;justify-content:center}
+  .ig[data-format="presentation"]:not([data-layout="wide"],[data-slide-stacked]):has(> .ig-head):has(> .ig-hero){
+    display:grid;grid-template-columns:minmax(0,37fr) minmax(0,63fr);
+    grid-template-rows:1fr;align-items:center;column-gap:30px
   }
-  .ig[data-layout="wide"] > .ig-hero > svg{max-width:min(760px,76cqi)}
+  .ig[data-format="presentation"]:is([data-layout="wide"],[data-slide-stacked]) > .ig-head:has(> .ig-answer){
+    display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);align-items:center
+  }
+  .ig[data-format="presentation"]:is([data-layout="wide"],[data-slide-stacked]) .ig-answer{text-align:end}
+  .ig[data-format="presentation"] > .ig-hero > svg{max-width:100%}
   .ig[data-format="presentation"] > *{grid-column:1 / -1;min-width:0}
   .ig[data-format="presentation"] > .ig-head{grid-column:1;grid-row:1}
   .ig[data-format="presentation"] > .ig-hero{grid-column:2;grid-row:1}
@@ -937,6 +940,9 @@ function renderIG(html, proj, {expand = true, composition} = {}){
   if (proj.format === 'presentation' && doc.querySelector('.ig-symdefs')?.dataset.layout === 'wide') root.dataset.layout = 'wide';
   for (const c of Array.from(doc.body.childNodes)){ const k = cleanTree(c, false, false); if (k) root.append(k); }
   root.querySelectorAll('details[open]').forEach(el => el.removeAttribute('open'));
+  if (root.dataset.format === 'presentation'){
+    root.querySelectorAll('.ig-h1 br, .ig-answer br').forEach(br => br.replaceWith(' '));
+  }
   if (root.querySelector('.ig-hero')) root.classList.add('ig--poster');
   const theme = readTheme(doc); if (theme) applyTheme(root, theme);
   // gradient ids are made unique per render, so two renders on one page never share them
@@ -1182,13 +1188,73 @@ function fitArtboard(frame){
   frame.style.setProperty('--content-scale', String(fit));
   frame.style.setProperty('--content-y', Math.max(0,(layoutHeight - contentHeight * fit) / 2) + 'px');
 }
+/* Fit the headline and drawing inside the slide before falling back to whole-artboard scaling. */
+function fitPresentation(ig){
+  if (ig.dataset.format !== 'presentation' || !ig.offsetWidth) return;
+  const frame = ig.closest('.ig-frame');
+  const head = ig.querySelector(':scope > .ig-head'), hero = ig.querySelector(':scope > .ig-hero');
+  const title = head?.querySelector('.ig-h1'), answer = head?.querySelector('.ig-answer');
+  if (!frame || !title || !hero) return;
+  const fitText = (el, max, min, lines) => {
+    for (let px = max; px >= min; px -= 2){
+      el.style.fontSize = px + 'px';
+      const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+      if (el.scrollWidth <= el.clientWidth + 1 && el.scrollHeight <= Math.ceil(lineHeight * lines) + 1) return true;
+    }
+    return false;
+  };
+  delete ig.dataset.slideStacked;
+  const wide = ig.dataset.layout === 'wide';
+  if (!wide){
+    const titleFits = fitText(title, answer ? 36 : 50, answer ? 30 : 38, 2);
+    const answerFits = !answer || fitText(answer, 76, 56, 1);
+    if (!titleFits || !answerFits) ig.dataset.slideStacked = '';
+  }
+  const stacked = wide || Object.hasOwn(ig.dataset, 'slideStacked');
+  if (stacked){
+    fitText(title, answer ? 36 : 52, answer ? 28 : 34, 2);
+    if (answer) fitText(answer, 76, 44, 2);
+  }
+  const svg = hero.querySelector(':scope > svg');
+  if (!svg) return;
+  const box = () => (svg.getAttribute('viewBox') || '').trim().split(/[,\s]+/).map(Number);
+  let [x,y,w,h] = box();
+  if (!(w > 0 && h > 0)) return;
+  if (!svg.dataset.slideFramed && typeof svg.getBBox === 'function'){
+    // Remove excess empty gutters while allowing room for strokes. Leave overflowing SVGs to the label fitter.
+    const bounds = svg.getBBox();
+    if (bounds.width > 0 && bounds.height > 0 && bounds.x >= x && bounds.y >= y &&
+        bounds.x + bounds.width <= x + w && bounds.y + bounds.height <= y + h){
+      const pad = Math.max(8, Math.min(w,h) * .04);
+      const left = Math.max(x,bounds.x - pad), top = Math.max(y,bounds.y - pad);
+      const right = Math.min(x + w,bounds.x + bounds.width + pad), bottom = Math.min(y + h,bounds.y + bounds.height + pad);
+      if ((right - left) < w * .9 || (bottom - top) < h * .9){
+        svg.setAttribute('viewBox', [left,top,right - left,bottom - top].join(' '));
+        [x,y,w,h] = box();
+      }
+    }
+    svg.dataset.slideFramed = 'yes';
+  }
+  const css = getComputedStyle(ig), gap = parseFloat(css.rowGap) || 0;
+  const below = [...ig.children].filter(el => el !== head && el !== hero && el.offsetHeight);
+  const caption = hero.querySelector('figcaption');
+  const textHeight = below.reduce((total, el) => total + el.offsetHeight + gap, 0) +
+    (stacked ? head.offsetHeight + gap : 0) +
+    (caption ? caption.offsetHeight + (parseFloat(getComputedStyle(hero).rowGap) || 0) : 0);
+  const available = Number(frame.dataset.layoutHeight) - parseFloat(css.paddingTop) - parseFloat(css.paddingBottom) - textHeight;
+  svg.style.width = Math.min(hero.clientWidth, Math.max(120,available) * w / h) + 'px';
+}
 /* Run after layout, and again once web fonts have loaded (they change label widths). */
 function fitSoon(ig){
   const run = () => {
     if (!ig.isConnected) return;
     const frame = ig.closest('.ig-frame');
+    fitPresentation(ig);
     fitArtboard(frame);
+    const drawing = ig.dataset.format === 'presentation' ? ig.querySelector('.ig-hero > svg') : null;
+    const viewBox = drawing?.getAttribute('viewBox');
     try{ fitLabels(ig); }catch(e){}
+    if (drawing?.getAttribute('viewBox') !== viewBox) fitPresentation(ig);
     fitArtboard(frame);
   };
   // the next frame, or a short timer when the tab is in the background (frames don't run there)
@@ -1294,10 +1360,10 @@ function screenComposition(format){
 }
 const OUTPUT_FORMATS = {
   presentation: `Presentation · 16:9 landscape. Purpose: a person across a room should grasp the answer in one glance.
-- Edit for projection. Include the shortest accurate answer and the visual evidence needed to believe it. Keep units, qualifiers and any indispensable baseline. Leave out runners-up, extra comparisons and background detail that do not change that answer. Aim for at most 18 words outside the headline and source.
-- Choose the composition from the evidence. For one focal object, an answer block sits on the reading-start side and a large evidence illustration occupies the other side (roughly three fifths of the slide). Draw a close-up or compact scene, around a 400 × 240 viewBox. Plan the object and labels to fill that area. For a route, timeline or panorama that needs width, add data-layout="wide" to the theme and draw a wide band, around a 400 × 140 viewBox, below the headline and answer. Run the visual along the width where the evidence allows.
-- If a short value is the answer, put it with its qualifier and unit in <p class="ig-answer"> after the headline inside the header. The value becomes the largest HTML text. In that case the headline names the finding in words and the illustration shows the evidence without printing the value again. If the answer is words rather than a short value, put it in the headline and leave out ig-answer. Use only short, legible labels on the drawing, around 20–24 SVG units on a compact 400-unit viewBox.
-- Use two main levels: the answer and its evidence first, and quiet required notes and source below. Keep the whole slide readable from a distance.`,
+- Edit for projection. Aim for a 3–6 word takeaway that fits at most two lines of whole words. Keep units, qualifiers and any indispensable baseline. Place a necessary qualification beside the feature it describes, in a direct label or a short caption. The footer is for the citation only. Aim for at most 18 words outside the headline and source.
+- Give the evidence the most space. For a focal object use an answer block on the reading-start side and a large illustration filling the other three fifths. Frame the object and its labels tightly inside the SVG, with modest edge clearance and no large empty gutters. Use a close-up or cutaway when it makes the evidence larger or clearer. Keep the subject's proportions. For a route, timeline or wide drawing, set data-layout="wide" and use the width below a shallow header.
+- If a short value is the answer, put it with its qualifier and unit in <p class="ig-answer"> inside the header. Make this the largest type, with a brief descriptive headline and no duplicate number in the picture. For a qualitative answer use the headline alone. Use short labels in the drawing, around 20–24 SVG units on a compact 400-unit viewBox. Let a label identify the evidence or keep a needed qualification. Leave out a second instruction that repeats the headline.
+- Check that the headline never breaks within a word or uses manual line breaks, that the illustration visibly fills the space available to it, and that the citation sits below both. For example, use “Water when the surface dries” as the headline; a large soil cutaway can identify the slightly dry surface and the moist soil below.`,
   instagram: `Instagram · 4:5 portrait. Purpose: hook a reader on a phone, then reward a closer read.
 - Order: short takeaway headline, visual answer, then one compact comparison, explanation or implication if the source supports it. One useful extra detail is preferable to several fragments. Aim for at most 28 words outside the headline and source. Keep the source subordinate.
 - Build the SVG for a narrow column from the start. For one subject, frame it close, put the most revealing part high in the picture and attach the key label to the feature it describes. For a sequence, arrange moments from top to bottom. For a comparison, stack matching views with a common scale; place corresponding marks so the eye can compare them directly. Preserve actual geography in a map; crop it and bring the labels close to the locations. Reposition the objects and their labels for this reading order rather than shrinking a panoramic drawing. A viewBox around 400 × 300 units is a starting point, not a fixed grid.
@@ -1845,6 +1911,7 @@ async function saveFile(name, data){
 }
 function exportNode(ig){
   const frame = ig.closest('.ig-frame');
+  fitPresentation(ig);
   fitArtboard(frame);
   const copy = (frame || ig).cloneNode(true);
   copy.querySelectorAll('details').forEach(d => d.removeAttribute('open'));
@@ -1919,12 +1986,14 @@ $('#exportHtmlBtn').addEventListener('click', () => {
   if (!ig){ toast('Make an infographic first'); return; }
   const node = exportNode(ig);
   const printCSS = ig.dataset.format === 'print' ? EXPORT_A4_CSS : '';
+  const slideFit = ig.dataset.format === 'presentation' ? `(${fitPresentation.toString()})(frame.querySelector('.ig'));` : '';
   const resize = ig.closest('.ig-frame') ? `<script>
 const frame = document.querySelector('.ig-frame');
 const resize = () => (${fitArtboard.toString()})(frame);
-resize();
+const layout = () => { ${slideFit} resize(); };
+layout();
 if (typeof ResizeObserver === 'function') new ResizeObserver(resize).observe(frame);
-document.fonts?.ready.then(resize);
+document.fonts?.ready.then(layout);
 <\/script>` : '';
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(ig.querySelector('.ig-h1')?.textContent.trim() || proj.title)}</title>${posterFonts(ig).map(u => `<link rel="stylesheet" href="${esc(u)}">`).join('')}<style>${$('#igcss').textContent}${EXPORT_BODY_CSS}${printCSS}</style></head><body><main class="ig-output">${node.outerHTML}</main>${resize}</body></html>`;
   saveFile(slug() + '.html', html);

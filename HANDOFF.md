@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-22 (Codex: fixed pixel dimensions for all output formats).
+Last updated 2026-11-22 (Codex: presentation hierarchy, whole-word headlines, and a larger illustration).
 
 ## Current task
+
+**Owner feedback on version 32:** the artboard size is correct and the Instagram example is good. The Monstera slide gives the headline too much space, drops the final letter of “completely” onto its own line and leaves the illustration too small. Correct the Presentation layout at 1920 × 1080 px.
 
 **Owner requirement (2026-11-22):** lock the artboard and graphic export at 1080 × 1350 px for Instagram, 1920 × 1080 px for Presentation, and 3508 × 4961 px for Print. Screen size and long content must not alter the output dimensions.
 
@@ -20,6 +22,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- The slide layout corrections are on `feature/four-elements` and await publication to the existing Claude Artifact.
+
 - The fixed-dimension preview and PNG export are live in version 32 (`1795341792-f077`).
 
 - Version 31 (`1795340031-8b1e`) includes the format selector, the Presentation and Instagram composition rules, and the drawn screen examples.
@@ -31,6 +35,12 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Presentation layout (Codex, 2026-11-22)
+
+- Presentation headlines and prominent values wrap at word boundaries. The layout measures a side-by-side header first, fits it to a restrained type scale, and moves a longer header across the top if it needs more width. The same sizing runs in preview and standalone HTML and is included in the PNG snapshot.
+- Illustration space is budgeted after the header, citation and any direct caption. Oversized empty SVG margins can be trimmed with edge clearance. The graphic keeps its aspect ratio.
+- The Presentation prompt asks for a short takeaway, a properly framed illustration, qualifiers beside the relevant marks, and citation-only footers. The Monstera example uses “Water when the surface dries.” Instagram and Print keep their own prompts and layouts.
 
 ### Fixed output dimensions (Codex, 2026-11-22)
 
@@ -422,6 +432,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Presentation layout (2026-11-22)
+
+- Inline script syntax is valid. A Node regression harness with simulated DOM metrics checked the screenshot headline, a short headline, a wide numeric slide, repeat fitting, no cropping of overflowing drawings, and format isolation. The fixed-dimension export checks also passed with a canvas mock for all three sizes.
+- **Unverified:** actual browser rendering and a new Claude generation of the Monstera slide. Version 32 had been tested by the owner with the attached visual examples.
+
 ### Fixed output dimensions (2026-11-22)
 
 - Inline JavaScript parses. A local Node harness exercised the format sizes, preview scaling at two widths, fitting overflow, exact width and height passed to the PNG rasterization path, and the HTML proportions and print settings for all three formats.
@@ -682,6 +697,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the slide layout update to the existing Artifact and regenerate the owner's Monstera slide using the same source and brief. Check the headline and illustration on the 1920 × 1080 PNG, then verify a wide numerical slide and a fresh Instagram output.
 
 Published as version 32 (`1795341792-f077`). In the live artifact, generate and download a PNG in each mode, confirm the exact dimensions in file properties, and check the edges and source line on a long example. Confirm the standalone Print HTML fits on one A4 page.
 
