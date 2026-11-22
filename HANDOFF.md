@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-19 (Claude Code: multi-line labels no longer overlap).
+Last updated 2026-11-22 (Claude Code: fixed lost circle and line positions).
 
 ## Current task
 
@@ -21,6 +21,20 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Lost circle and line positions (Claude Code, 2026-11-22)
+
+- **Owner's report** (exported "Queen 2.html", Rock in Rio poster):
+  1. The fan figures were headless, or their heads were in the wrong place.
+  2. "Something weird on the left top."
+- **Cause (a regression from the multi-line label fix, `a12d1de`):** adding `dx dy` to `SVG_ATTR` lost a space, so the list read `… x2 y2cx cy …`. `y2` and `cx` were no longer allowed, so the sanitizer removed every circle's `cx` and every line's `y2`.
+  - The fans' head circles (`cx="16"`) fell to x = 0.
+  - The stage lights and the singer's head piled up at the drawing's top-left corner.
+  - This affected live version `1795115200-6af8`.
+- **Fixes:**
+  - The space is restored.
+  - A guard after `SVG_ATTR` checks at load that the core geometry attributes are allowed (d, x, y, dx, dy, x1, y1, x2, y2, cx, cy, r, rx, ry, width, height, points, transform, viewBox, fill, stroke), and logs a console error naming any that are missing.
+
 
 ### Multi-line labels no longer overlap (Claude Code, 2026-11-19)
 
@@ -334,6 +348,18 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Circle and line positions (2026-11-22)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, stand-in `window.claude` returning a Queen-style test poster (the fan symbol from the owner's file with `cx="16"` restored, stage lights, the singer's head and a `<line>` with `y2`):
+  - the circles kept `cx` (120, 200, 280, 200)
+  - the line kept `x2`/`y2`
+  - all 10 placed fans and the key's fan have their head at `cx=16`
+  - no console errors, so the guard found nothing missing
+  - inspected by eye
+- **Unverified:** a real run in the live artifact. Posters made with version `1795115200-6af8` keep their misplaced shapes when exported; re-generating or re-opening them in the fixed app re-sanitizes the saved markup. Exported files can't be repaired after the fact.
+
 
 ### Multi-line labels (2026-11-19)
 
