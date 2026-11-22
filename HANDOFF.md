@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-22 (Codex: different compositions for Presentation and Instagram).
+Last updated 2026-11-22 (Claude Code: drawn house-style examples for Presentation and Instagram; published).
 
 ## Current task
 
@@ -27,6 +27,15 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Drawn examples for the screen compositions (Claude Code, 2026-11-22)
+
+- **Review of Codex's `1a0ffd5`:** it parses, and `fitSoon()` is still called on render, streaming and the phone tab.
+- **One risk, fixed with the owner's approval:** for Presentation and Instagram the prompt no longer included any drawn example (only the written bus description in `SCREEN_EXAMPLES`), and Instagram is the default. The drawn examples are what stopped the "only maps and circles" drift and carry the moodboard look.
+- **New `EXAMPLE_SLIDE` and `EXAMPLE_FEED`,** drawn in the house style and following Codex's layouts and the owner's hierarchy rules. They are added after the matching `SCREEN_EXAMPLES` text, with a note not to copy the picture, colours or numbers. Print still gets the two original examples.
+  - **`EXAMPLE_SLIDE` (Presentation):** the periods study. The headline is in words ("Gathered together, period days fill years of a life"), `<p class="ig-answer">≈ 7 years</p>` is the only place the number appears, and a compact 400 × 156 drawing has 39 year tiles with hard shadows, 6.96 of them red, labelled AGE 12, AGE 51 and "one tile = one year of life" at 16 units. Fonts are Manrope + Inter.
+  - **`EXAMPLE_FEED` (Instagram):** coffee in a vertical reading order. A big mug from above with a long hard shadow, 19 bean symbols and "≈95 mg" (40 units) come first; below, a smaller, quieter espresso with about 13 beans and "63 mg" (26 units, muted ink). Secondary labels are 18–19 units, and the bean Key falls below the drawing. Fonts are Archivo + Inter.
+
 
 ### Composition by format (Codex, 2026-11-22)
 
@@ -404,6 +413,16 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Screen examples (2026-11-22)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, stand-in `window.claude`:
+  - **Instagram** returned `EXAMPLE_FEED`: composition "feed", 4 lines, 0 overlaps, 0 text outside, all numbers found, inspected by eye. The prompt contained the drawn feed example, the bus text, and neither the slide example nor the Print pair.
+  - **Presentation** returned `EXAMPLE_SLIDE`: composition "slide", `ig-answer` "≈ 7 years", 3 lines, 0 overlaps, 0 outside, inspected by eye. The prompt contained the drawn slide example and not the feed one.
+  - The answer wraps to two lines only in the narrow browser pane.
+- **Unverified:** real Claude output in the live artifact in both formats.
+
+
 ### Composition by format (2026-11-22)
 
 - Inline script parses. A local Node harness checked different rules and examples for all three generation paths, retention of style and source rules, version metadata, streamed and saved layout hooks, symbol key order, and earlier-version and Print fallbacks. The export serializes those same rendered styles and attributes.
@@ -645,9 +664,9 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Next step
 
-Publish the new composition rules to the existing Artifact with its capabilities preserved. Generate the same source and question in Presentation and Instagram, ideally the car colours brief. On a large screen check for one strongly emphasized answer and one dominant visual. On a phone check for a vertical reading path, labels attached to their marks, and a supporting comparison only if it helps. Inspect both the preview and the exported HTML.
+The composition rules and drawn screen examples are published (see Branch / PR). Generate the same source and question in Presentation and Instagram, ideally the car colours brief. On a large screen check for one strongly emphasized answer and one dominant visual. On a phone check for a vertical reading path, labels attached to their marks, and a supporting comparison only if it helps. Inspect both the preview and the exported HTML.
 
-Publish the format selector to the existing Claude Artifact, preserving its capabilities. Generate the same brief in all three formats to compare text size and density. Inspect the Instagram result on a phone and verify that a browser prints the A4 export on one page.
+Also generate the same brief in Print to compare density, and verify that a browser prints the A4 export on one page.
 
 Published as `1795336706-fed6` (hierarchy and no-repetition rules on top of the earlier fixes). Re-run the Queen concert question: heads and stage lights in place, the answer once and on top, Hyde Park and Knebworth as a clearly labelled comparison. Re-run the poster whose labels overlapped to confirm they are now readable. Run three different subjects to see the colours vary with context, then re-run the polar-bear question and one object subject to check that illustrated subjects are back. For the readability and palette update, measure text contrast and inspect annotation size on a phone-sized Apollo or map example, plus a warm-toned subject. Check a colour/label revision and the HTML export.
 
