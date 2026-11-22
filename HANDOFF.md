@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-22 (Claude Code: drawn house-style examples for Presentation and Instagram; published).
+Last updated 2026-11-22 (Codex: fixed pixel dimensions for all output formats).
 
 ## Current task
+
+**Owner requirement (2026-11-22):** lock the artboard and graphic export at 1080 × 1350 px for Instagram, 1920 × 1080 px for Presentation, and 3508 × 4961 px for Print. Screen size and long content must not alter the output dimensions.
 
 **Owner feedback on version 30:** Presentation and Instagram displayed almost the same illustration and information in different frames. Compose for the reading task, including the positions of objects and text, the hierarchy and type sizes, and the amount of supporting information.
 
@@ -18,6 +20,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- The fixed-dimension preview and PNG export are on `feature/four-elements` and await publication to the existing Claude Artifact.
+
 - Version 31 (`1795340031-8b1e`) includes the format selector, the Presentation and Instagram composition rules, and the drawn screen examples.
 
 - **Artifact now live:** version `1795340031-8b1e` (version 31, "Format compositions + drawn examples (1a0bafe)"), republished 2026-11-22 by Claude Code from `1a0bafe`, which includes Codex's screen compositions `1a0ffd5`; capabilities unchanged. Before that: version `1795337606-8b11` (version 30, "Label fitter makes room + output formats (c589751)"), republished 2026-11-22 by Claude Code from `c589751`, which includes Codex's output formats `5b8213a`; capabilities unchanged. Before that: version `1795336706-fed6` (version 29, "Answer first, each fact once (5b4d0c3)"), republished 2026-11-22 by Claude Code from `5b4d0c3`; capabilities unchanged. Before that: version `1795335948-c8f7` (version 28, "Circle and line positions fixed (710743c)"), republished 2026-11-22 by Claude Code from `710743c`; capabilities unchanged. Before that: version `1795115200-6af8` (version 27, "Multi-line labels fixed (a12d1de)"), which dropped every circle's cx and line's y2, republished 2026-11-19 by Claude Code from `a12d1de`; capabilities unchanged. Before that: version `1795114719-0bdb` (version 26, "Labels never overlap (60191c8)"), republished 2026-11-19 by Claude Code from `60191c8`; capabilities unchanged. Before that: version `1795113171-1050` (version 25, "Material colour palette (f92064c)"), republished 2026-11-19 by Claude Code from `f92064c`; capabilities unchanged. Before that: version `1795112140-b391` (version 24, "Bold colours back (01b4f1e)"), republished 2026-11-19 by Claude Code from `01b4f1e`; capabilities unchanged. Before that: version `1795111960-fcd8` (version 23, "Illustrated subjects + calm palettes (da0a865)"), republished 2026-11-19 by Claude Code from `da0a865`, which includes Codex's readability and palette update `744413c`; capabilities unchanged. Before that: version `1795110419-3636` (version 22, "Typography pairs, Google Fonts (dad6ec1)"), republished 2026-11-19 by Claude Code from `dad6ec1`, which includes Codex's typography update `7dd59b1`; capabilities unchanged. Before that it was version `1795108283-d1d0` (polar maps, `8c36123`). Before that it was version `1795107474-fecd` (house style, `798792a`). Before that it was version `1795104651-5c5b` (drawing styles, `f03bbaa`). Before that, it was republished from commit `21bb0e0` as version `1795103932-beef` (version 18, labelled "Optimisation pass (21bb0e0)"). Before publishing, the previous live version `1794993578-72c4` was checked to be byte-identical (ignoring line endings) to `index.html` at `7c58150`, so nothing edited only in the artifact was lost. Capabilities were carried forward unchanged: `sample` with images, `downloads`, `mcp` for `host:claude_browser` (`preview_start`, `get_page_text`). A read-back confirmed the new page is live.
@@ -27,6 +31,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Fixed output dimensions (Codex, 2026-11-22)
+
+- The format selector, generation instructions, preview canvas and PNG export use the same fixed sizes. The content stays on a fixed design surface and scales uniformly to fit when it exceeds the available area.
+- The PNG button renders the sanitized poster onto a bitmap of the exact width and height. The HTML button saves the same canvas proportions and the A4 print settings. Web fonts in PNG can fall back to local fonts if embedding is unavailable.
 
 ### Drawn examples for the screen compositions (Claude Code, 2026-11-22)
 
@@ -413,6 +422,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Fixed output dimensions (2026-11-22)
+
+- Inline JavaScript parses. A local Node harness exercised the format sizes, preview scaling at two widths, fitting overflow, exact width and height passed to the PNG rasterization path, and the HTML proportions and print settings for all three formats.
+- **Unverified:** browser rasterization and actual PNG downloads in the Claude Artifact. The cloud browser could not connect to the local browser test page.
+
 ### Screen examples (2026-11-22)
 
 - `node --check` (Node 14) on the extracted inline script: parses.
@@ -663,6 +677,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the locked-dimension build to the existing Artifact, preserving the downloads capability. Generate and download a PNG in each mode, confirm the exact dimensions in file properties, and check the edges and source line on a long example. Confirm the standalone Print HTML fits on one A4 page.
 
 The composition rules and drawn screen examples are published (see Branch / PR). Generate the same source and question in Presentation and Instagram, ideally the car colours brief. On a large screen check for one strongly emphasized answer and one dominant visual. On a phone check for a vertical reading path, labels attached to their marks, and a supporting comparison only if it helps. Inspect both the preview and the exported HTML.
 

@@ -7,12 +7,12 @@ Drop in sources, say in a sentence or two what the infographic should show, and 
 1. **Drop your sources** on the start page: PDF, Word (.docx), text, CSV, JSON or image files, a link, or pasted text.
 2. **Name the information you're after**, for example "Where do blue whales feed?"
 3. **Choose an output format** on the start page.
-   - **Presentation (16:9)** for projection. Show the shortest accurate answer in large type and one dominant visual. Use a side-by-side composition or a wide figure where the subject calls for it.
-   - **Instagram (4:5)** for reading top to bottom on a phone. Place values directly on the artwork, then add a short comparison or explanation if it helps. This is the default.
-   - **Print (A4)** for one portrait page, with room for a short explanation or method note.
+   - **Presentation (1920 × 1080 px, 16:9)** for projection. Show the shortest accurate answer in large type and one dominant visual. Use a side-by-side composition or a wide figure where the subject calls for it.
+   - **Instagram (1080 × 1350 px, 4:5)** for reading top to bottom on a phone. Place values directly on the artwork, then add a short comparison or explanation if it helps. This is the default.
+   - **Print (3508 × 4961 px)** for one portrait page, with room for a short explanation or method note.
 4. **Generate.** The infographic builds on screen as Claude draws it.
 5. **Change it** in plain words ("Use fewer words"), or press **Try a different picture**. The chosen format applies to every version. Up to eight versions are kept, so you can step back through them.
-6. **Export** it as a standalone HTML file. For Print, open the exported HTML in a browser and use Print or Save as PDF.
+6. **PNG** saves an image at the exact selected dimensions. **HTML** saves a standalone page with the same canvas proportions. For Print, open the HTML in a browser and print or save it as a PDF on A4.
 
 ## How it makes an infographic
 

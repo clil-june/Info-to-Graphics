@@ -325,7 +325,7 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
 .ig-foot a{color:inherit}
 .ig-data{background:#FFFFFF;border-radius:22px;padding:22px 30px}
 .ig-data summary{cursor:pointer;font-weight:700;font-size:15px}
-@media (max-width: 760px){
+@container (max-width: 760px){
   .ig{padding:24px 16px;gap:18px;border-radius:14px}
   .ig-h1{font-size:34px} .ig-deck{font-size:16px}
   .ig-panel{padding:22px 18px} .ig-h2,.ig-row .ig-h2{font-size:25px}
@@ -346,8 +346,8 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
 .ig[data-format] .ig-h1{font-size:var(--format-title)}
 .ig[data-format] .ig-take-t{font-size:var(--format-copy);color:var(--ink2)}
 .ig[data-format="presentation"]{--format-title:clamp(40px,7cqi,76px);--format-copy:clamp(16px,2.3cqi,24px);--format-small:clamp(13px,1.7cqi,16px)}
-.ig[data-format="instagram"]{--format-title:clamp(32px,9cqi,52px);--format-copy:16px;--format-small:13px;max-width:560px;aspect-ratio:4 / 5;padding:clamp(16px,4cqi,28px);gap:16px}
-.ig[data-format="print"]{--format-title:clamp(29px,5.4cqi,44px);--format-copy:15px;--format-small:14px;max-width:210mm;aspect-ratio:210 / 297;padding:clamp(16px,5cqi,12mm);gap:clamp(14px,2.5cqi,24px)}
+.ig[data-format="instagram"]{--format-title:clamp(32px,9cqi,52px);--format-copy:16px;--format-small:13px;padding:clamp(16px,4cqi,28px);gap:16px}
+.ig[data-format="print"]{--format-title:clamp(29px,5.4cqi,44px);--format-copy:15px;--format-small:14px;padding:clamp(16px,5cqi,12mm);gap:clamp(14px,2.5cqi,24px)}
 .ig[data-composition] > .ig-head{gap:clamp(8px,2cqi,20px);padding:0}
 .ig[data-composition="slide"] .ig-h1{text-wrap:wrap}
 .ig[data-composition="slide"] .ig-head:has(> .ig-answer) .ig-h1{font-size:clamp(26px,4.6cqi,54px);font-weight:700}
@@ -365,7 +365,7 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
 @container (min-width: 620px){
   .ig[data-composition="slide"][data-layout="wide"] > .ig-head:has(> .ig-answer){flex-direction:row;justify-content:space-between;align-items:baseline}
   .ig[data-composition="slide"][data-layout="wide"] .ig-answer{flex:0 1 auto;text-align:end}
-  .ig[data-format="presentation"]{aspect-ratio:16 / 9;gap:12px;padding:clamp(20px,4cqi,40px);justify-content:center}
+  .ig[data-format="presentation"]{gap:12px;padding:clamp(20px,4cqi,40px);justify-content:center}
   .ig[data-format="presentation"]:not([data-layout="wide"]):has(> .ig-head):has(> .ig-hero){
     display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);
     grid-template-rows:1fr;align-items:center;column-gap:clamp(14px,3cqi,32px)
@@ -375,6 +375,11 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
   .ig[data-format="presentation"] > .ig-head{grid-column:1;grid-row:1}
   .ig[data-format="presentation"] > .ig-hero{grid-column:2;grid-row:1}
 }
+/* A fixed design surface inside a preview that can scale to the available screen width. */
+.ig-frame{position:relative;width:100%;max-width:var(--art-width);aspect-ratio:var(--art-ratio);margin:auto;overflow:hidden}
+.ig-surface{position:absolute;top:0;left:0;width:var(--art-width);height:var(--art-height);overflow:hidden;transform:scale(var(--preview-scale,1));transform-origin:top left;background:#F3F2EF}
+.ig-surface > .ig{width:100%;max-width:none;min-height:100%;margin:0;border-radius:0;box-shadow:none;background:transparent;overflow-wrap:anywhere;transform:translateY(var(--content-y,0px)) scale(var(--content-scale,1));transform-origin:top center}
+.ig-surface > .ig > .ig-foot{margin-block-start:auto}
 </style>
 </head>
 <body>
@@ -391,11 +396,11 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
       <legend>Output format</legend>
       <div class="home-format-options">
         <input type="radio" name="outputFormat" id="format-presentation" value="presentation">
-        <label for="format-presentation">Presentation <small>16:9</small></label>
+        <label for="format-presentation">Presentation <small></small></label>
         <input type="radio" name="outputFormat" id="format-instagram" value="instagram">
-        <label for="format-instagram">Instagram <small>4:5</small></label>
+        <label for="format-instagram">Instagram <small></small></label>
         <input type="radio" name="outputFormat" id="format-print" value="print">
-        <label for="format-print">Print <small>A4</small></label>
+        <label for="format-print">Print <small></small></label>
       </div>
     </fieldset>
     <button class="home-go" id="homeGo" type="button">Generate</button>
@@ -408,7 +413,8 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
     <button class="wordmark" id="homeBtn" type="button" title="Start a new infographic">Info-to-Graphics</button>
     <div class="bar-actions">
       <button id="newBtn" class="btn bar-btn" type="button">New</button>
-      <button id="exportBtn" class="btn bar-btn solid" type="button">Export</button>
+      <button id="exportHtmlBtn" class="btn bar-btn" type="button" aria-label="Export HTML">HTML</button>
+      <button id="exportBtn" class="btn bar-btn solid" type="button" aria-label="Export PNG">PNG</button>
     </div>
   </header>
   <nav class="tabs" aria-label="Panels">
@@ -1146,9 +1152,45 @@ function fitLabels(root){
     if (addTop || addBottom) svg.setAttribute('viewBox', [vb[0], vb[1] - addTop, vb[2], vb[3] + addTop + addBottom].map(n => Math.round(n * 10) / 10).join(' '));
   });
 }
+function artboard(ig){
+  const size = outputSize(ig.dataset.format);
+  if (!size) return ig;
+  const {width, height, layoutWidth} = size;
+  const layoutHeight = layoutWidth * height / width;
+  const frame = h('div', {class:'ig-frame',
+    style:`--art-width:${layoutWidth}px;--art-height:${layoutHeight}px;--art-ratio:${width} / ${height}`,
+    'data-layout-width':layoutWidth, 'data-layout-height':layoutHeight});
+  const surface = h('div', {class:'ig-output ig-surface'}, ig);
+  surface.style.backgroundColor = ig.style.getPropertyValue('--bg') || '#F3F2EF';
+  surface.style.backgroundImage = ig.style.backgroundImage;
+  surface.style.backgroundSize = ig.style.backgroundSize;
+  ig.style.removeProperty('background-image');
+  ig.style.removeProperty('background-size');
+  frame.append(surface);
+  return frame;
+}
+/* Keep the whole composition inside the fixed surface if a long label or drawing needs extra room. */
+function fitArtboard(frame){
+  if (!frame) return;
+  const previewWidth = frame.getBoundingClientRect().width;
+  if (!previewWidth) return;
+  const {layoutWidth, layoutHeight} = frame.dataset;
+  const ig = frame.firstElementChild.firstElementChild;
+  const contentHeight = Math.max(ig.offsetHeight, ig.scrollHeight);
+  const fit = Math.min(1, Number(layoutWidth) / ig.scrollWidth, Number(layoutHeight) / contentHeight);
+  frame.style.setProperty('--preview-scale', String(previewWidth / layoutWidth));
+  frame.style.setProperty('--content-scale', String(fit));
+  frame.style.setProperty('--content-y', Math.max(0,(layoutHeight - contentHeight * fit) / 2) + 'px');
+}
 /* Run after layout, and again once web fonts have loaded (they change label widths). */
 function fitSoon(ig){
-  const run = () => { if (ig.isConnected) try{ fitLabels(ig); }catch(e){} };
+  const run = () => {
+    if (!ig.isConnected) return;
+    const frame = ig.closest('.ig-frame');
+    fitArtboard(frame);
+    try{ fitLabels(ig); }catch(e){}
+    fitArtboard(frame);
+  };
   // the next frame, or a short timer when the tab is in the background (frames don't run there)
   const later = () => { let done = false; const go = () => { if (!done){ done = true; run(); } }; requestAnimationFrame(go); setTimeout(go, 150); };
   later();
@@ -1237,6 +1279,15 @@ const DRAWING_RULES = `7. Plan the composition before drawing:
 
 // The two screen formats use distinct compositions, captured per version so older posters keep their layout.
 const DEFAULT_FORMAT = 'instagram';
+const OUTPUT_SIZES = Object.freeze({
+  presentation: Object.freeze({width:1920, height:1080, layoutWidth:960}),
+  instagram: Object.freeze({width:1080, height:1350, layoutWidth:540}),
+  print: Object.freeze({width:3508, height:4961, layoutWidth:720})
+});
+function outputSize(format){
+  return Object.hasOwn(OUTPUT_SIZES, format) ? OUTPUT_SIZES[format] : null;
+}
+function sizeText({width, height}){ return `${width} × ${height} px`; }
 function screenComposition(format){
   if (format === 'presentation') return 'slide';
   if (format === 'instagram') return 'feed';
@@ -1259,7 +1310,8 @@ const SCREEN_EXAMPLES = {
 };
 function formatInstructions(format){
   return Object.hasOwn(OUTPUT_FORMATS, format)
-    ? 'Output format. Plan for this audience before selecting supporting facts and allocating space. Draw for the chosen reading direction and use only facts from the supplied sources. When revising, preserve a composition that already fits unless the requested change affects it.\n' + OUTPUT_FORMATS[format]
+    ? 'Fixed output canvas: ' + sizeText(outputSize(format)) + '. Fit all content within these proportions, including the source.\n' +
+      'Output format. Plan for this audience before selecting supporting facts and allocating space. Draw for the chosen reading direction and use only facts from the supplied sources. When revising, preserve a composition that already fits unless the requested change affects it.\n' + OUTPUT_FORMATS[format]
     : 'Use the original portrait poster layout. Keep under 30 words outside the headline.';
 }
 
@@ -1491,7 +1543,8 @@ function renderStage(){
   }
   const cur = Math.max(0, Math.min(proj.cur ?? vs.length - 1, vs.length - 1));
   const ig = renderIG(vs[cur].html, proj, {composition: vs[cur].composition});
-  out.append(ig);
+  out.append(artboard(ig));
+  fitArtboard(ig.closest('.ig-frame'));
   fitSoon(ig);
   if (vs[cur].cut) top.append(h('div', {class: 'check warn', role: 'status'}, h('span', {}, h('b', {}, 'The drawing was cut off. '), 'Claude’s answer stopped before the end, so the last parts of the picture may be missing. Try again, or ask for a simpler picture.')));
   const chk = checkNumbers(ig, proj);
@@ -1660,12 +1713,8 @@ const EXPORT_A4_CSS = `
 @page{size:A4 portrait;margin:12mm}
 @media print{
   body{padding:0;background:#fff}
-  .ig[data-format="print"]{
-    --format-title:32pt;--format-copy:11pt;--format-small:10pt;
-    min-height:272mm;max-width:none;aspect-ratio:auto;padding:7mm;gap:4mm;
-    border-radius:0;box-shadow:none;print-color-adjust:exact
-  }
-  .ig[data-format="print"] > :is(.ig-head,.ig-hero,.ig-context,.ig-foot){break-inside:avoid}
+  .ig-frame{width:186mm;max-width:none;break-inside:avoid;print-color-adjust:exact}
+  .ig-surface{transform:scale(${186 * 96 / 25.4 / OUTPUT_SIZES.print.layoutWidth})}
 }`;
 
 /* One Claude call with one fallback: if the first tier fails (other than a stop or a refusal),
@@ -1701,7 +1750,8 @@ function livePreview(project){
       const sy = posterSymbols(html);
       const view = sy ? {...project, entities: sy.entities, accent: sy.accent || project.accent} : project;
       const ig = renderIG(html, view, {composition: screenComposition(project.format)});
-      $('#out').replaceChildren(ig);
+      $('#out').replaceChildren(artboard(ig));
+      fitArtboard(ig.closest('.ig-frame'));
       fitSoon(ig); // labels stay readable while the poster is still being written
     }catch{}
   };
@@ -1779,6 +1829,8 @@ $('#newBtn').addEventListener('click', newProject);
 $('#briefIn').addEventListener('change', e => { proj.brief = e.target.value; save(); });
 document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
 
+if (typeof ResizeObserver === 'function') new ResizeObserver(() => fitArtboard($('#out .ig-frame'))).observe($('#out'));
+
 const slug = () => (proj.title || 'infographic').toLowerCase().replace(/[^a-z0-9֐-׿]+/g, '-').replace(/^-|-$/g, '') || 'infographic';
 async function saveFile(name, data){
   const dl = window.claude?.use ? await window.claude.use('downloads').catch(() => null) : null;
@@ -1791,13 +1843,90 @@ async function saveFile(name, data){
   const a = document.createElement('a'); a.href = url; a.download = name; document.body.append(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000); toast('Saved ' + name);
 }
-$('#exportBtn').addEventListener('click', () => {
+function exportNode(ig){
+  const frame = ig.closest('.ig-frame');
+  fitArtboard(frame);
+  const copy = (frame || ig).cloneNode(true);
+  copy.querySelectorAll('details').forEach(d => d.removeAttribute('open'));
+  return copy;
+}
+const posterFonts = ig => (ig.dataset.fonts || '').split('|').filter(Boolean).flatMap(fontLinks);
+function blobDataUrl(blob){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+/* SVG images cannot fetch web fonts. Embed needed subsets of the already selected families. */
+async function exportFontCss(ig){
+  const glyphs = [...new Set(ig.textContent)].map(c => c.codePointAt(0));
+  const signal = AbortSignal.timeout(4500);
+  const results = await Promise.allSettled(posterFonts(ig).map(async link => {
+    const response = await fetch(link, {signal});
+    if (!response.ok) return '';
+    const faces = (await response.text()).match(/@font-face\s*\{[^}]+\}/g) || [];
+    const embedded = await Promise.allSettled(faces.map(async face => {
+      const ranges = [...(face.match(/unicode-range:\s*([^;}]+)/i)?.[1] || '').matchAll(/U\+([0-9A-F]+)(?:-([0-9A-F]+))?/gi)];
+      if (ranges.length && !ranges.some(([,start,end]) => {
+        const min = parseInt(start, 16), max = parseInt(end || start, 16);
+        return glyphs.some(point => point >= min && point <= max);
+      })) return '';
+      const url = face.match(/url\(['"]?(https:\/\/fonts\.gstatic\.com\/[^)'"]+)['"]?\)/)?.[1];
+      if (!url) return '';
+      const font = await fetch(url, {signal});
+      if (!font.ok) return '';
+      return face.replace(url, await blobDataUrl(await font.blob())).replace(/font-display:\s*swap/g, 'font-display: block');
+    }));
+    return embedded.filter(r => r.status === 'fulfilled').map(r => r.value).join('\n');
+  }));
+  return results.filter(r => r.status === 'fulfilled').map(r => r.value).join('\n');
+}
+async function posterPng(ig, size){
+  const copy = exportNode(ig);
+  const {layoutWidth, layoutHeight} = copy.dataset;
+  copy.style.setProperty('--preview-scale', '1');
+  const body = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+  const style = h('style', {}, $('#igcss').textContent + '\n' + await exportFontCss(ig));
+  body.append(style, copy);
+  const {width, height} = size;
+  const content = new XMLSerializer().serializeToString(body);
+  const svg = `<svg xmlns="${SVGNS}" width="${width}" height="${height}" viewBox="0 0 ${layoutWidth} ${layoutHeight}"><foreignObject width="${layoutWidth}" height="${layoutHeight}">${content}</foreignObject></svg>`;
+  const img = new Image();
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  await img.decode();
+  const canvas = h('canvas', {width, height});
+  const context = canvas.getContext('2d');
+  if (!context) throw new Error('Canvas unavailable');
+  context.drawImage(img, 0, 0, width, height);
+  const png = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  if (!png) throw new Error('PNG unavailable');
+  return png;
+}
+$('#exportBtn').addEventListener('click', async () => {
+  const ig = $('#out .ig'), size = outputSize(ig?.dataset.format);
+  if (!size){ toast('Generate an infographic in one of the fixed formats first'); return; }
+  const name = slug() + '.png';
+  const button = $('#exportBtn');
+  button.disabled = true;
+  try{ await saveFile(name, await posterPng(ig, size)); }
+  catch(e){ toast('Could not create the PNG'); }
+  finally{ button.disabled = false; }
+});
+$('#exportHtmlBtn').addEventListener('click', () => {
   const ig = $('#out .ig');
   if (!ig){ toast('Make an infographic first'); return; }
-  const node = ig.cloneNode(true);
-  node.querySelectorAll('details').forEach(d => d.removeAttribute('open'));
+  const node = exportNode(ig);
   const printCSS = ig.dataset.format === 'print' ? EXPORT_A4_CSS : '';
-  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(ig.querySelector('.ig-h1')?.textContent.trim() || proj.title)}</title>${(ig.dataset.fonts || '').split('|').filter(Boolean).flatMap(fontLinks).map(u => `<link rel="stylesheet" href="${esc(u)}">`).join('')}<style>${$('#igcss').textContent}${EXPORT_BODY_CSS}${printCSS}</style></head><body><main class="ig-output">${node.outerHTML}</main></body></html>`;
+  const resize = ig.closest('.ig-frame') ? `<script>
+const frame = document.querySelector('.ig-frame');
+const resize = () => (${fitArtboard.toString()})(frame);
+resize();
+if (typeof ResizeObserver === 'function') new ResizeObserver(resize).observe(frame);
+document.fonts?.ready.then(resize);
+<\/script>` : '';
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(ig.querySelector('.ig-h1')?.textContent.trim() || proj.title)}</title>${posterFonts(ig).map(u => `<link rel="stylesheet" href="${esc(u)}">`).join('')}<style>${$('#igcss').textContent}${EXPORT_BODY_CSS}${printCSS}</style></head><body><main class="ig-output">${node.outerHTML}</main>${resize}</body></html>`;
   saveFile(slug() + '.html', html);
 });
 
@@ -1844,6 +1973,7 @@ $('#home').addEventListener('drop', e => {
   const t = (e.dataTransfer.getData('text/uri-list').split(/\r?\n/).find(l => l && !l.startsWith('#')) || e.dataTransfer.getData('text') || '').trim();
   if (t){ $('#homeSrcIn').value = t; addHomeInput(); }
 }, true);
+for (const [format, size] of Object.entries(OUTPUT_SIZES)) $(`label[for="format-${format}"] small`).textContent = sizeText(size);
 $('#homeFormats').addEventListener('change', e => { proj.format = e.target.value; save(); });
 $('#homeBriefIn').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) $('#homeGo').click(); });
 $('#homeGo').addEventListener('click', async () => {
