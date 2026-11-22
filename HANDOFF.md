@@ -425,7 +425,12 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 ### Fixed output dimensions (2026-11-22)
 
 - Inline JavaScript parses. A local Node harness exercised the format sizes, preview scaling at two widths, fitting overflow, exact width and height passed to the PNG rasterization path, and the HTML proportions and print settings for all three formats.
-- **Unverified:** browser rasterization and actual PNG downloads in the Claude Artifact. The cloud browser could not connect to the local browser test page.
+- **Checked by Claude Code (2026-11-22), built-in Chromium browser pane, standalone page with the stand-in `window.claude` returning `EXAMPLE_FEED` in Instagram:**
+  - the format labels read 1920 × 1080, 1080 × 1350 and 3508 × 4961 px
+  - the preview frame ratio was 0.800 (4:5), and the labels had 0 overlaps after artboard scaling
+  - the PNG button produced a 1080 × 1350 `image/png` of 1,386 KB, captured instead of downloaded; inspected by eye: headline in Archivo (font embedding worked locally), grain present, layout as in the preview, content uniformly scaled to fit
+  - no console errors
+- **Still unverified:** PNG export inside the claude.ai artifact (its content-security rules may block fetching fonts, so they fall back, or the foreignObject canvas may be treated differently); Presentation and Print PNGs; the Print HTML on one A4 page.
 
 ### Screen examples (2026-11-22)
 
