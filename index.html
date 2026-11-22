@@ -1003,20 +1003,25 @@ function expandIG(root, proj){
   root.querySelectorAll('table.ig-table').forEach(t => { if (!t.parentElement.classList.contains('ig-wrap')){ const w = h('div', {class:'ig-wrap'}); t.replaceWith(w); w.append(t); } });
 }
 
-/* Labels must never collide or run out of the drawing. Once a poster is on screen, every SVG text that overlaps another
-   text or crosses the drawing's left or right edge is fixed in this order: a little smaller, then broken onto a second
-   line, then smaller again (never below 70% of its size, or 10 units), and only then moved: down below the label it
-   hits, or sideways back inside. The drawing grows if a label ends up past its top or bottom. Big numbers win: the
-   smaller label is the one that gives way. Safe to run again (after fonts load or the tab is shown). */
+/* Labels must never collide, never be crossed by a bar or rule, and never run out of the drawing, wherever they are
+   and whatever their size. Once a poster is on screen:
+   - Every label becomes one movable piece first (a <text> made of separately placed tspans is split; lines inside one
+     label that land on each other are stacked).
+   - A label running past the left or right edge is made a little smaller, then broken onto two lines, then smaller
+     again, and finally nudged back inside.
+   - Two labels side by side on the same row: the smaller one is made a little smaller first.
+   - Otherwise the fix is to MAKE ROOM, the way a designer would: the lower label and everything below it (other labels,
+     and the thin bars, rules and small symbols that belong to labels) move down together, so the reading order and each
+     label's own bar stay intact. Big illustration shapes never move. The drawing grows to fit.
+   Safe to run again after fonts load or when the tab is shown. */
 function fitLabels(root){
   if (!root) return;
   root.querySelectorAll('figure.ig-hero svg, .ig-illo svg').forEach(svg => {
-    const box0 = svg.getBoundingClientRect(); if (!box0.width || !box0.height) return; // hidden: try again when shown
-    const vb = String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
-    if (vb.length !== 4 || !vb.every(isFinite) || !vb[2] || !vb[3]) return;
-    /* First make every label one movable piece. A <text> whose tspans each carry their own y is really several labels:
-       split it into separate texts. A <text> whose lines (tspans with their own x) land on top of each other, for
-       example because a line break lost its dy, gets its lines stacked one line apart. */
+    if (!svg.getBoundingClientRect().width) return; // hidden: try again when shown
+    const vbOf = () => String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+    const vb0 = vbOf(); if (vb0.length !== 4 || !vb0.every(isFinite) || !vb0[2] || !vb0[3]) return;
+    const unit = () => vbOf()[2] / svg.getBoundingClientRect().width; // user units per screen px
+    // 1. one movable piece per label
     svg.querySelectorAll('text').forEach(t => {
       if (t.closest('defs, clipPath')) return;
       const spans = [...t.children].filter(c => c.localName === 'tspan');
@@ -1025,8 +1030,7 @@ function fitLabels(root){
         spans.forEach(sp => {
           const nt = t.cloneNode(false);
           nt.setAttribute('x', sp.getAttribute('x') || x0); nt.setAttribute('y', sp.getAttribute('y') || y0);
-          ['dx', 'dy'].forEach(a => { if (sp.hasAttribute(a)) nt.setAttribute(a, sp.getAttribute(a)); });
-          ['fill', 'font-size', 'font-weight', 'font-style', 'text-anchor', 'opacity', 'fill-opacity', 'letter-spacing'].forEach(a => { if (sp.hasAttribute(a)) nt.setAttribute(a, sp.getAttribute(a)); });
+          ['dx', 'dy', 'fill', 'font-size', 'font-weight', 'font-style', 'text-anchor', 'opacity', 'fill-opacity', 'letter-spacing'].forEach(k => { if (sp.hasAttribute(k)) nt.setAttribute(k, sp.getAttribute(k)); });
           nt.textContent = sp.textContent;
           t.before(nt);
         });
@@ -1035,25 +1039,38 @@ function fitLabels(root){
       }
       const lines = spans.filter(sp => sp.hasAttribute('x'));
       for (let i = 1; i < lines.length; i++){
-        const a = lines[i - 1].getBoundingClientRect(), b = lines[i].getBoundingClientRect();
-        if (b.top < a.bottom - 1 && a.top < b.bottom - 1){ lines[i].removeAttribute('y'); lines[i].setAttribute('dy', '1.25em'); }
+        const p = lines[i - 1].getBoundingClientRect(), q = lines[i].getBoundingClientRect();
+        if (q.top < p.bottom - 1 && p.top < q.bottom - 1){ lines[i].removeAttribute('y'); lines[i].setAttribute('dy', '1.25em'); }
       }
     });
     const texts = [...svg.querySelectorAll('text')].filter(t => t.textContent.trim() && !t.closest('defs, clipPath'));
     if (!texts.length) return;
     const size = t => parseFloat(getComputedStyle(t).fontSize) || 16;
     texts.forEach(t => { if (!t.dataset.fs0) t.dataset.fs0 = String(size(t)); });
-    const r = t => { const b = t.getBoundingClientRect(); return {l: b.left, r: b.right, t: b.top, b: b.bottom, w: b.width}; };
-    const gap = 1.5;
-    const hit = (a, b) => a.l < b.r - gap && b.l < a.r - gap && a.t < b.b - gap && b.t < a.b - gap;
+    const box = el => { const r = el.getBoundingClientRect(); return {l: r.left, r: r.right, t: r.top, b: r.bottom, w: r.width, h: r.height}; };
+    // thin marks that belong with labels (bars, rules, underlines) and small symbols: they move with the labels
+    const u0 = unit();
+    const marks = [...svg.children].filter(el => {
+      if (el.localName === 'text' || el.localName === 'defs' || el.matches('g[data-map]')) return false;
+      if (el.matches('g[data-sym]')) return true;
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && r.height * u0 <= 14 && r.width > r.height * 3;
+    });
+    const markBox = m => { const p = box(m), sw = (parseFloat(getComputedStyle(m).strokeWidth) || 0) / 2 / unit(); const hasStroke = getComputedStyle(m).stroke !== 'none'; const e = hasStroke ? sw : 0; return {l: p.l - e, r: p.r + e, t: p.t - e, b: p.b + e, w: p.w + 2 * e, h: p.h + 2 * e}; };
+    const movers = [...texts, ...marks];
+    const moverBox = el => marks.includes(el) ? markBox(el) : box(el);
+    const shift = (el, dy) => el.setAttribute('transform', ('translate(0 ' + Math.round(dy * 10) / 10 + ') ' + (el.getAttribute('transform') || '')).trim());
+    const makeRoom = (cutPx, deltaPx, keep) => {
+      const d = deltaPx * unit();
+      movers.forEach(el => { if (el !== keep && moverBox(el).t >= cutPx - 0.5) shift(el, d); });
+    };
     const setSize = (t, v) => t.setAttribute('font-size', String(Math.round(v * 10) / 10));
-    const shrink = f => t => { const v = Math.max(+t.dataset.fs0 * f, Math.min(10, +t.dataset.fs0)); if (size(t) <= v + 0.05) return false; setSize(t, v); return true; };
-    // break a plain label into two balanced lines (tspans at the same x, the second one line lower)
+    const shrinkTo = (t, f) => { const v = Math.max(+t.dataset.fs0 * f, Math.min(10, +t.dataset.fs0)); if (size(t) <= v + 0.05) return false; setSize(t, v); return true; };
     const wrap = t => {
       if (t.dataset.wrapped || t.querySelector('tspan')) return false;
       const words = t.textContent.trim().split(/\s+/); if (words.length < 2) return false;
       const total = words.join(' ').length; let cut = 1, best = Infinity;
-      for (let i = 1; i < words.length; i++){ const d = Math.abs(total / 2 - words.slice(0, i).join(' ').length); if (d < best){ best = d; cut = i; } }
+      for (let i = 1; i < words.length; i++){ const dd = Math.abs(total / 2 - words.slice(0, i).join(' ').length); if (dd < best){ best = dd; cut = i; } }
       const x = (t.getAttribute('x') || '0').trim().split(/[\s,]+/)[0];
       t.textContent = '';
       [words.slice(0, cut).join(' '), words.slice(cut).join(' ')].forEach((line, i) => {
@@ -1061,37 +1078,48 @@ function fitLabels(root){
       });
       t.dataset.wrapped = '1'; return true;
     };
-    const steps = [shrink(0.85), wrap, shrink(0.7)];
-    const tryStep = t => { let k = +(t.dataset.fit || 0); while (k < steps.length){ const ok = steps[k](t); k++; t.dataset.fit = String(k); if (ok) return true; } return false; };
-    const move = (t, dxPx, dyPx) => {
-      const unit = vb[2] / svg.getBoundingClientRect().width;
-      t.setAttribute('transform', (`translate(${Math.round(dxPx * unit * 10) / 10} ${Math.round(dyPx * unit * 10) / 10}) ` + (t.getAttribute('transform') || '')).trim());
-    };
-    // every pass fixes one problem; once a label has used its three steps it can only move, so this always ends
-    for (let pass = 0; pass < texts.length * texts.length * 4 + 40; pass++){
-      const box = svg.getBoundingClientRect(), R = texts.map(r);
-      let done = true;
-      // 1. labels running past the left or right edge
-      for (let i = 0; i < texts.length && done; i++){
-        const a = R[i];
-        if (a.l < box.left - 0.5 || a.r > box.right + 0.5){
-          done = false;
-          if (!tryStep(texts[i])) move(texts[i], a.w > box.width ? box.left - a.l : a.l < box.left ? box.left - a.l + 1 : box.right - a.r - 1, 0);
-        }
+    const edgeSteps = [t => shrinkTo(t, 0.85), wrap, t => shrinkTo(t, 0.75)];
+    const gap = 3;
+    const hit = (p, q) => p.l < q.r - 1 && q.l < p.r - 1 && p.t < q.b - 1 && q.t < p.b - 1;
+    for (let pass = 0; pass < 400; pass++){
+      const sv = svg.getBoundingClientRect(), R = texts.map(box);
+      let changed = false;
+      // a. past the left or right edge
+      for (let i = 0; i < texts.length && !changed; i++){
+        const p = R[i];
+        if (p.l >= sv.left - 0.5 && p.r <= sv.right + 0.5) continue;
+        changed = true;
+        const t = texts[i]; let k = +(t.dataset.fit || 0), done = false;
+        while (k < edgeSteps.length && !done){ done = edgeSteps[k](t); k++; }
+        t.dataset.fit = String(k);
+        if (!done){ const u = unit(), dx = p.w > sv.width ? sv.left - p.l : p.l < sv.left ? sv.left - p.l + 1 : sv.right - p.r - 1; t.setAttribute('transform', ('translate(' + Math.round(dx * u * 10) / 10 + ' 0) ' + (t.getAttribute('transform') || '')).trim()); }
       }
-      // 2. labels overlapping each other: the smaller one gives way
-      for (let i = 0; i < texts.length && done; i++) for (let j = i + 1; j < texts.length && done; j++){
-        if (!hit(R[i], R[j])) continue;
-        done = false;
-        const v = +texts[j].dataset.fs0 <= +texts[i].dataset.fs0 ? j : i, o = v === j ? i : j;
-        if (!tryStep(texts[v])) move(texts[v], 0, R[o].b - R[v].t + 3);
+      // b. label on label
+      for (let i = 0; i < texts.length && !changed; i++) for (let j = i + 1; j < texts.length && !changed; j++){
+        const p = R[i], q = R[j];
+        if (!hit(p, q)) continue;
+        changed = true;
+        const sameRow = Math.abs(p.t - q.t) < Math.min(p.h, q.h) * 0.5;
+        if (sameRow){ const small = +texts[j].dataset.fs0 <= +texts[i].dataset.fs0 ? j : i; if (shrinkTo(texts[small], 0.8)) continue; }
+        const lo = q.t > p.t || (q.t === p.t && sameRow) ? j : i, hi = lo === j ? i : j;
+        makeRoom(R[lo].t, R[hi].b - R[lo].t + gap, texts[hi]);
       }
-      if (done) break;
+      // c. a bar or rule cutting through a label (a short touch, like a leader line's end, is fine; a label sitting inside its bar is fine)
+      for (let i = 0; i < texts.length && !changed; i++) for (const m of marks){
+        if (changed) break;
+        const p = R[i], q = markBox(m);
+        const ox = Math.min(p.r, q.r) - Math.max(p.l, q.l), oy = Math.min(p.b, q.b) - Math.max(p.t, q.t);
+        if (ox <= 6 || ox <= p.w * 0.15 || oy <= 1) continue;
+        if (q.l <= p.l + 0.5 && q.r >= p.r - 0.5 && q.t <= p.t + 0.5 && q.b >= p.b - 0.5) continue;
+        changed = true;
+        if (q.t < p.t) makeRoom(p.t, q.b - p.t + gap, m); else makeRoom(q.t, p.b - q.t + gap, texts[i]);
+      }
+      if (!changed) break;
     }
-    // 3. grow the drawing if a label now sits past its top or bottom
-    const box = svg.getBoundingClientRect(), unit = vb[2] / box.width, R = texts.map(r);
-    const top = Math.min(...R.map(a => a.t)), bottom = Math.max(...R.map(a => a.b));
-    const addTop = top < box.top ? (box.top - top) * unit + 3 : 0, addBottom = bottom > box.bottom ? (bottom - box.bottom) * unit + 3 : 0;
+    // d. grow the drawing to hold everything that moved
+    const sv = svg.getBoundingClientRect(), vb = vbOf(), u = vb[2] / sv.width, all = movers.map(moverBox);
+    const top = Math.min(...all.map(p => p.t)), bottom = Math.max(...all.map(p => p.b));
+    const addTop = top < sv.top ? (sv.top - top) * u + 3 : 0, addBottom = bottom > sv.bottom ? (bottom - sv.bottom) * u + 3 : 0;
     if (addTop || addBottom) svg.setAttribute('viewBox', [vb[0], vb[1] - addTop, vb[2], vb[3] + addTop + addBottom].map(n => Math.round(n * 10) / 10).join(' '));
   });
 }

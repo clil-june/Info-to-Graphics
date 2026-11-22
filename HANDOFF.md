@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-22 (Codex: output format selection).
+Last updated 2026-11-22 (Claude Code: label fitter rewritten to make room, on top of Codex's output formats).
 
 ## Current task
 
@@ -25,6 +25,23 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Label fitter rewritten: make room, keep order, bars move with labels (Claude Code, 2026-11-22)
+
+- **Owner's report** (screenshot, then the export `D:StudiesYear 4Semester 1AI StudioEngine Buildqueen 4.html`): "Knebworth (Stevenage), 1986" overlapped the heading "For comparison: Queen's next-biggest crowds" and was crossed by the comparison bars. "I've told you should never ever happen."
+- **Cause, read from the export: the old `fitLabels()` made it worse.**
+  - "fans, reported · each head = 1,000" (16) touched the 62-unit "250,000". It was shrunk and wrapped to two lines, which made it taller, so it hit the heading.
+  - The smaller label always gave way. The heading (15 bold) was smaller than the items (16), so it was shrunk to 10.5, wrapped, and pushed down past all three items, ending below them.
+  - Only text moved. The items' bars (`M25 490h210` and so on) stayed put, so moved text landed across them.
+- **New `fitLabels()`:**
+  - **Normalising** each label into one movable piece is kept: split multi-position tspans, stack colliding lines.
+  - **Label off the left or right edge:** shrink to 85%, wrap to two lines, shrink to 75%, nudge inside. This is the only place line-breaking is used.
+  - **Two labels on the same row overlapping:** the smaller is shrunk to 80% once.
+  - **Every other overlap MAKES ROOM:** the lower label and everything at or below it move down together, preserving order and each label's own bar. "Everything" means all texts plus the "marks": direct children of the svg that are thin (at most 14 units tall and at least 3× wider than tall: bars, rules, underlines) and placed symbols `g[data-sym]`. Big illustration shapes and the map never move.
+  - **A bar or rule cutting through a label** also counts. It must overlap by more than 6 px and 15% of the label's width, so a leader line touching a label's end, or a label sitting inside its own bar, doesn't count. The lower of the two and everything below it move down.
+  - **Stroke thickness is counted** for marks: a stroked line's own box has no height, which first left the last bar clipped at the bottom edge.
+  - **The drawing's `viewBox` grows** to hold everything that moved, strokes included.
+  - Up to 400 passes, one fix per pass. A make-room always resolves its pair, because everything below moves equally.
 
 ### Output formats (Codex, 2026-11-22)
 
@@ -378,6 +395,24 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Rewritten label fitter (2026-11-22)
+
+- `node --check` (Node 14) on the extracted inline script: parses.
+- Built-in browser pane, stand-in `window.claude`. The **owner's real Queen 4 drawing** was rebuilt as Claude wrote it: the old fitter's sizes, wraps, transforms and viewBox growth were removed, leaving the original 16/15 label sizes. Three earlier problem posters ran too (the fly agaric two-line labels; lines without `dy` plus a multi-position text; the deliberately messy one with stacks, an edge overflow and a long headline word).
+- The strict check measured every line separately; marks were measured including half their stroke width:
+
+  | Poster | Lines checked | Overlaps | Bars crossing text | Text outside | Bars outside |
+  | --- | ---: | ---: | ---: | ---: | ---: |
+  | Queen 4 | 6 | 0 | 0 | 0 | 0 |
+  | Fly agaric | 4 | 0 | 0 | 0 | 0 |
+  | Lines without dy | 7 | 0 | 0 | 0 | 0 |
+  | Deliberately messy | 12 | 0 | 0 | 0 | 0 |
+
+- Queen 4 kept its reading order (number, unit line, heading, Hyde Park, São Paulo, Knebworth) and every original font size, with each bar under its own item. Inspected by eye. No console errors.
+- The first run of the new fitter left the last bar clipped at the bottom, because stroke widths weren't counted; this was fixed.
+- **After rebasing onto Codex's output formats (`5b8213a`):** the same Queen 4 drawing in the **Instagram** and **Presentation** formats, 6 lines each: 0 overlaps, 0 bars crossing text, 0 text or bars outside, and no console errors. Print was not run.
+- **Unverified:** a fresh real generation in the live artifact.
 
 ### Output formats (2026-11-22)
 
