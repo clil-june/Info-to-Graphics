@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-22 (Codex: presentation hierarchy, whole-word headlines, and a larger illustration).
+Last updated 2026-11-22 (Claude Code: reviewed and browser-checked Codex's slide layout; slide example headline shortened).
 
 ## Current task
 
@@ -435,7 +435,12 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 ### Presentation layout (2026-11-22)
 
 - Inline script syntax is valid. A Node regression harness with simulated DOM metrics checked the screenshot headline, a short headline, a wide numeric slide, repeat fitting, no cropping of overflowing drawings, and format isolation. The fixed-dimension export checks also passed with a canvas mock for all three sizes.
-- **Unverified:** actual browser rendering and a new Claude generation of the Monstera slide. Version 32 had been tested by the owner with the attached visual examples.
+- **Browser check by Claude Code (2026-11-22),** built-in Chromium pane, standalone page, stand-in `window.claude`, Presentation format:
+  - **A Monstera-like slide** with the long headline "Water your monstera only when the topsoil has dried out completely": 2 headline lines, no word split across lines (each word's line boxes measured), the header stacked across the top, the drawing 35% of the slide, 0 label overlaps, and the content fitting the 1920 × 1080 frame with no artboard scaling.
+  - **`EXAMPLE_SLIDE`:** 0 split words, 0 overlaps, the drawing 47% of the slide, fits the frame, inspected by eye.
+  - The order in `fitSoon()` is `fitPresentation` → `fitArtboard` → `fitLabels` → `fitPresentation` again if the viewBox grew → `fitArtboard`, so the two fitters cooperate.
+  - **Change:** `EXAMPLE_SLIDE`'s headline was 9 words, against the new 3–6 word rule, and is now "Periods fill years of a life". "≈ 7 years" stays only in `ig-answer`.
+- **Unverified:** a new Claude generation of the owner's Monstera slide in the live artifact.
 
 ### Fixed output dimensions (2026-11-22)
 
