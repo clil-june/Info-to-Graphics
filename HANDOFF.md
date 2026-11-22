@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-22 (Claude Code: label fitter rewritten to make room, on top of Codex's output formats).
+Last updated 2026-11-22 (Codex: different compositions for Presentation and Instagram).
 
 ## Current task
+
+**Owner feedback on version 30:** Presentation and Instagram displayed almost the same illustration and information in different frames. Compose for the reading task, including the positions of objects and text, the hierarchy and type sizes, and the amount of supporting information.
 
 **Owner decision (2026-11-22):** add a format choice to the start page. Presentation, Instagram and Print each set how much information to show and how large the text should be.
 
@@ -16,7 +18,7 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
-- The format selector is in `feature/four-elements` and awaits publication to the existing Claude Artifact.
+- Version 30 already includes the format selector. The new Presentation and Instagram composition rules are on `feature/four-elements` and await publication to the existing Claude Artifact.
 
 - **Artifact now live:** version `1795337606-8b11` (version 30, "Label fitter makes room + output formats (c589751)"), republished 2026-11-22 by Claude Code from `c589751`, which includes Codex's output formats `5b8213a`; capabilities unchanged. Before that: version `1795336706-fed6` (version 29, "Answer first, each fact once (5b4d0c3)"), republished 2026-11-22 by Claude Code from `5b4d0c3`; capabilities unchanged. Before that: version `1795335948-c8f7` (version 28, "Circle and line positions fixed (710743c)"), republished 2026-11-22 by Claude Code from `710743c`; capabilities unchanged. Before that: version `1795115200-6af8` (version 27, "Multi-line labels fixed (a12d1de)"), which dropped every circle's cx and line's y2, republished 2026-11-19 by Claude Code from `a12d1de`; capabilities unchanged. Before that: version `1795114719-0bdb` (version 26, "Labels never overlap (60191c8)"), republished 2026-11-19 by Claude Code from `60191c8`; capabilities unchanged. Before that: version `1795113171-1050` (version 25, "Material colour palette (f92064c)"), republished 2026-11-19 by Claude Code from `f92064c`; capabilities unchanged. Before that: version `1795112140-b391` (version 24, "Bold colours back (01b4f1e)"), republished 2026-11-19 by Claude Code from `01b4f1e`; capabilities unchanged. Before that: version `1795111960-fcd8` (version 23, "Illustrated subjects + calm palettes (da0a865)"), republished 2026-11-19 by Claude Code from `da0a865`, which includes Codex's readability and palette update `744413c`; capabilities unchanged. Before that: version `1795110419-3636` (version 22, "Typography pairs, Google Fonts (dad6ec1)"), republished 2026-11-19 by Claude Code from `dad6ec1`, which includes Codex's typography update `7dd59b1`; capabilities unchanged. Before that it was version `1795108283-d1d0` (polar maps, `8c36123`). Before that it was version `1795107474-fecd` (house style, `798792a`). Before that it was version `1795104651-5c5b` (drawing styles, `f03bbaa`). Before that, it was republished from commit `21bb0e0` as version `1795103932-beef` (version 18, labelled "Optimisation pass (21bb0e0)"). Before publishing, the previous live version `1794993578-72c4` was checked to be byte-identical (ignoring line endings) to `index.html` at `7c58150`, so nothing edited only in the artifact was lost. Capabilities were carried forward unchanged: `sample` with images, `downloads`, `mcp` for `host:claude_browser` (`preview_start`, `get_page_text`). A read-back confirmed the new page is live.
 
@@ -25,6 +27,12 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Composition by format (Codex, 2026-11-22)
+
+- Presentation and Instagram now get distinct composition rules and examples in place of the same two HTML examples. The prompts instruct Claude to select supporting facts for the intended audience and draw for the reading direction. Generate, Change it and Try a different picture share these format rules.
+- Presentation can place a large text value in the answer block beside a compact figure, or above a wide figure. Instagram places the key value beside its mark in the artwork and can put one short comparison or explanation below. The screen styles control the position and type sizes of these roles. Both bring the graphic ahead of its optional symbol key. Keep units and necessary qualifiers beside the claims they describe.
+- Composition settings are carried through streaming, saved versions and HTML export. The new composition styles apply to newly generated or revised versions. Print still uses its A4 layout and page settings. See [Compose for the output format](docs/visual-communication-research.md#compose-for-the-output-format).
 
 ### Label fitter rewritten: make room, keep order, bars move with labels (Claude Code, 2026-11-22)
 
@@ -396,6 +404,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Composition by format (2026-11-22)
+
+- Inline script parses. A local Node harness checked different rules and examples for all three generation paths, retention of style and source rules, version metadata, streamed and saved layout hooks, symbol key order, and earlier-version and Print fallbacks. The export serializes those same rendered styles and attributes.
+- Live Claude output and final on-screen layout remain unverified. The code checks confirm how the app requests and renders the roles, while the actual placement of illustrated shapes and labels inside the SVG is generated by Claude.
+
 ### Rewritten label fitter (2026-11-22)
 
 - `node --check` (Node 14) on the extracted inline script: parses.
@@ -631,6 +644,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the new composition rules to the existing Artifact with its capabilities preserved. Generate the same source and question in Presentation and Instagram, ideally the car colours brief. On a large screen check for one strongly emphasized answer and one dominant visual. On a phone check for a vertical reading path, labels attached to their marks, and a supporting comparison only if it helps. Inspect both the preview and the exported HTML.
 
 Publish the format selector to the existing Claude Artifact, preserving its capabilities. Generate the same brief in all three formats to compare text size and density. Inspect the Instagram result on a phone and verify that a browser prints the A4 export on one page.
 

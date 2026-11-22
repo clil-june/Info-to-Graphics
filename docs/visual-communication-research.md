@@ -147,6 +147,20 @@ Use the subject itself as the data mark when its shape or surface makes the rela
 
 **Worked example — car colors.** A fleet pictogram shows how much grayscale grew overall, and an annual chart shows when it leveled off. Later sections need evidence of their own. Automotive paint chips can carry paired bars on the same scale to show which colors gained or lost share. For vehicle types, fill matched silhouettes by length so the reader can compare the same body shape across both model years. Put the years and exact shares beside the vehicles. A small comparison chart can then show why sports cars are an exception by plotting non-grayscale shares on a common scale and labeling each population.
 
+### Compose for the output format
+
+Choose the audience's reading task before selecting supporting facts. Keep the answer, evidence, units, qualifiers and source accurate in each format. Allocate space, choose a focal point and position the labels for the intended viewing distance and reading direction.
+
+| Format | First thing to see | Arrangement and supporting information |
+| --- | --- | --- |
+| Presentation, 16:9 | A short answer in large type plus one dominant piece of visual evidence, legible across a room | Place a compact visual on the other side of a short answer block. Give routes, timelines or panoramas the width they need. When the answer is a short number, keep it and its unit together in the answer block and use the picture to show what it means. Keep only the supporting facts needed to read the answer correctly. |
+| Instagram, 4:5 | A short takeaway followed by a close-framed, directly labelled visual | Compose for a vertical eye path. Stack aligned comparisons on a common scale or place sequence steps top to bottom. Place the main value close to the corresponding mark. A brief secondary detail can sit below the drawing. Test on an actual phone. |
+| Print, A4 | An answer and visual evidence that remain clear at page size | Use the space for context, such as a compact method note or a comparison when it helps interpretation. Put the source on the page and check the print preview at actual size. |
+
+**Worked example.** If the question is how common grayscale cars are today, a slide can show the current share in large type beside one silhouette that encodes that share. A feed post can show the current and earlier shares on two aligned silhouettes, with the current result first. Each value is printed once. If the question is how much the share changed, keep both years wherever they are needed to support the answer.
+
+For a format check, use the same brief and source. Inspect what the viewer notices first, where the main graphic and labels sit, and which secondary facts earn room. The intended viewing conditions should be apparent in the composition.
+
 ### Generation instruction for the app
 
 Include this instruction in the app's existing generation prompt and supply the current guide with each run.
