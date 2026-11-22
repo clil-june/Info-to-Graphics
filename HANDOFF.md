@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-22 (Claude Code: reviewed and browser-checked Codex's slide layout; slide example headline shortened).
+Last updated 2026-11-22 (Codex: composition at the target aspect ratio).
 
 ## Current task
+
+**Owner feedback on version 33:** the Monstera slide is much improved, but the leaf looks flattened to fit the grid and clear the text. Plan the illustration or chart for the selected aspect ratio before drawing. On the wide slide the stem can extend diagonally into the open space, with a leaf at its natural proportions and soil labels aligned on the other side of the cutaway.
 
 **Owner feedback on version 32:** the artboard size is correct and the Instagram example is good. The Monstera slide gives the headline too much space, drops the final letter of “completely” onto its own line and leaves the illustration too small. Correct the Presentation layout at 1920 × 1080 px.
 
@@ -22,6 +24,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- The instructions for drawing at the chosen aspect ratio are on `feature/four-elements` and await publication to the existing Claude Artifact.
+
 - The slide layout corrections are live in version 33 (`1795343050-594e`).
 
 - The fixed-dimension preview and PNG export are live in version 32 (`1795341792-f077`).
@@ -35,6 +39,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Composition at the target aspect ratio (Codex, 2026-11-22)
+
+- The drawing rules in `index.html` and the visual communication guide call for choosing the pose, viewpoint, crop or chart orientation and planning the labels before drawing. Resize artwork uniformly. If the shape and labels compete, adjust the composition and redraw.
+- The Presentation prompt treats side-by-side and full-width arrangements as options and uses the Monstera cutaway as a concrete example. Drawn examples demonstrate the hierarchy and craft, with the composition chosen for the current subject.
 
 ### Presentation layout (Codex, 2026-11-22)
 
@@ -432,6 +441,10 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Composition at the target aspect ratio (2026-11-22)
+
+- The inline script parses. A Node harness verified that the composition rules reach the Generate and Change it prompts in Presentation, Instagram and Print and that the Presentation prompt includes the Monstera example. The canvas sizes are intact.
+
 ### Presentation layout (2026-11-22)
 
 - Inline script syntax is valid. A Node regression harness with simulated DOM metrics checked the screenshot headline, a short headline, a wide numeric slide, repeat fitting, no cropping of overflowing drawings, and format isolation. The fixed-dimension export checks also passed with a canvas mock for all three sizes.
@@ -693,6 +706,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Still open
 
+- **Unverified (needs a Claude artifact test):** generation with the new composition instructions. Review a fresh Monstera slide for its leaf silhouette and label alignment, and a wide chart for faithful comparisons.
+
 - Readability and palette update published (`1795111960-fcd8`). The prompt does not measure rendered contrast. Inspect the actual rendered text colours and local SVG backgrounds during validation, including any colours adjusted by the theme code.
 
 - Typography update published (`1795110419-3636`). Verify `TYPOGRAPHY_BY_SUBJECT_V1` in the actual prompt; check topic selection and Hebrew/font loading. GitHub changes alone do not update the live app.
@@ -702,6 +717,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the composition instructions to the existing Artifact. Regenerate the Monstera on the same brief in Presentation and check that the leaf uses open space with its natural silhouette. Review a wide chart for intact scales, alignment and readable labels.
 
 Published as version 33 (`1795343050-594e`). Regenerate the owner's Monstera slide using the same source and brief. Check the headline and illustration on the 1920 × 1080 PNG, then verify a wide numerical slide and a fresh Instagram output.
 
