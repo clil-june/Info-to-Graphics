@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: add the pencil animation and completion confirmation).
+Last updated 2026-11-23 (Claude Code: browser-checked the callouts, regression overlaps and pencil screen).
 
 ## Current task
 
@@ -549,6 +549,16 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Callouts, overlap regressions and pencil screen (Claude Code, 2026-11-23)
+
+- Built-in Chromium pane, standalone page, stand-in `window.claude`:
+  - **Wiring:** `fitSoon()` runs `fitLabels()` (ordinary labels; it skips `[data-callout]` text and treats `g[data-artwork]` and `g[data-callout]` as non-marks) and then `fitCallouts()`, which avoids artwork and ordinary text.
+  - **Four earlier hard overlap cases,** under the strict per-line check with stroke widths counted: the owner's rebuilt Queen 4, the fly agaric two-line labels, lines without `dy` plus a multi-position text, and the deliberately messy poster. All had 0 overlaps, 0 bars crossing text and 0 text outside (6, 4, 7 and 12 lines). No regressions.
+  - **The pencil screen** (with the stand-in slowed to 7 s): `#generationScreen` showed the pencil drawing a pie chart on the blue card with "Generating…", the timer and Stop, and the infographic stayed hidden. On "Try a different picture", Done appeared once at about 7.1 s for about a second, then the result was revealed (version 2) and the export buttons were enabled.
+  - No console errors.
+- Callout groups with real `data-callout` markup were not exercised beyond Codex's own fixture checks.
+
 
 ### Pencil generation screen (2026-11-23)
 
