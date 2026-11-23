@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: request and format per version).
+Last updated 2026-11-23 (Claude Code: restored the hero line lost with the stray $1; browser-checked the format picker and per-version settings).
 
 ## Current task
 
@@ -47,6 +47,13 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Restored hero line (Claude Code, 2026-11-23)
+
+- **Cause of the stray `$1`** Codex removed in `10f6bb2`: Claude Code's Monstera-lessons edit replaced a line with a function that returned the literal text `$1` instead of the matched line, so that line was lost from `DRAWING_RULES`: "one hero: the subject itself (the animal, object, person, vehicle, food, building) drawn as a real illustration in the house style, large… A picture made only of dots, circles, bars or a bare map is not an illustration." This was live in version 35.
+- **Fix:** the exact line is restored from `ef5825f~2`, just before the newer "the hero is the part that carries the answer" line.
+- A search of `index.html`, the guide, README and HANDOFF found no other stray replacement tokens (the remaining `$1` in `svgSafe()` is an intended regex back-reference).
+
 
 ### Editor question and format (Codex, 2026-11-23)
 
@@ -478,6 +485,17 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Format picker and per-version settings (2026-11-23)
+
+- Built-in Chromium pane, standalone page, stand-in `window.claude`:
+  - **Start page:** the compact format button reads "4:5" with a portrait icon beside the source field; its list shows 4:5, A4 and 16:9 with shape icons, and Escape closes it.
+  - **Version 1:** generated as 4:5 with the question "Which has more caffeine, an espresso or a mug of coffee?".
+  - **Version 2:** the editor picker set to 16:9 and the question changed; the next Generate made a Presentation version, and the prompt used the 16:9 rules.
+  - **Back to version 1:** the question, the "4:5" button and the 4:5 artboard (ratio 0.80) were restored.
+  - No console errors.
+- **Unverified:** the same in the live artifact; exporting from a mixed-format history.
+
 
 ### Editor question and format (2026-11-23)
 
