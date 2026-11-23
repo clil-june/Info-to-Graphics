@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: compact format picker on the start page).
+Last updated 2026-11-23 (Codex: request and format per version).
 
 ## Current task
+
+**Owner request (2026-11-23):** keep the question and format available in the editor after generation. Put the same picker beside Generate. Users can change the question, the format or both with the same sources. Revisions use the selected format. Opening a version restores its question and format.
 
 **Owner request (2026-11-23):** Replace the format cards with a single button beside the link and file field. The button shows the selected format and opens a list with icons and the symbols 4:5, A4 and 16:9.
 
@@ -26,6 +28,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- The editor format picker and version settings are on `feature/four-elements`. Publication to the existing Claude Artifact is pending.
+
 - The compact format picker is on `feature/four-elements`. Publication to the existing Claude Artifact is pending.
 
 - The instructions for drawing at the chosen aspect ratio are live in version 34 (`1795343842-b59c`). Watch for the Monstera-specific example being copied onto unrelated subjects.
@@ -43,6 +47,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Editor question and format (Codex, 2026-11-23)
+
+- The same picker moves beside Generate on the editor screen. Changing an input sets up the next generation. Generate, Change it and Try a different picture use the question and format in the editor when clicked.
+- Each new version stores its question, format and visual settings. Selecting a version restores those inputs and renders the original layout for export. Older versions without this metadata use the project’s previously saved question and format.
 
 ### Compact format picker (Codex, 2026-11-23)
 
@@ -470,6 +479,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Editor question and format (2026-11-23)
+
+- The script parses. A Node harness with simulated DOM controls and sampler verified question-only, format-only and combined changes, revisions, alternate compositions, the live preview format, switching history, legacy versions, and retry after a failed request. An HTML parser confirmed one picker with its editor placement target. Output dimensions and export handlers were checked against the previous code.
+- **Unverified (needs a Claude artifact test):** generating and revising across formats in the published Artifact, browser layout and exporting the displayed version from a mixed-format history.
+
 ### Compact format picker (2026-11-23)
 
 - The script parses. A Node harness with stubbed DOM controls verified opening, choosing a format, saving and restoring the selection, arrow-key movement, focus return, and dismissal via Escape, outside clicks and focus leaving the picker. The HTML structure check confirmed the source form and its attachment button, the format control beside it, and the three visible symbols.
@@ -759,6 +773,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the editor picker to the existing Artifact. Generate 4:5, then generate 16:9 from the same question. Switch between versions and check that the editor shows the right question and format and that the resulting export has the selected version’s dimensions.
 
 Publish the start-page format picker to the existing Claude Artifact and check it in a browser at phone and desktop widths. Choose each format and confirm its symbol is reflected in the button.
 
