@@ -1,12 +1,15 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: reserve separate artwork and label space for three-part Instagram diagrams).
+Last updated 2026-11-23 (Claude Code: near-miss three-part answers fall back to the normal layout; published).
 
 ## Three-part Instagram layout
 
 - After the rollback, a generated plate still had white text overlapping pale artwork, detached quarter labels and extra copy below the figure. Generation and revision prompts now reserve distinct areas for independent objects, labels and leaders. The Instagram prompt keeps only the citation below the figure.
 - For a whole with one upper and two lower parts, use `ig-partition`. The renderer keeps the artwork and all three labels in separate rows and columns, uses contrasting ink on a solid field, and renders only the figure, headline and citation. The generator still chooses the artwork and must place the correct sectors for each slot. Other layouts use their existing renderer.
 - Verified in Chromium with a plate fixture at phone width: artwork and labels were disjoint, labels wrapped inside their positions, supplemental copy was removed, and the export clone preserved the result. Verified light and dark field contrast, rejection of malformed slots and normal layout dimensions.
+- **Claude Code fix (2026-11-23):** `validPage()` no longer rejects a whole answer when an `ig-partition` figure misses the exact template (that ended in "The page came back empty"). The strict check moved to `partitionOk()`; `renderIG` uses the special layout only for an exact match and otherwise removes the `ig-partition` class, so the answer shows in the normal layout. A usable page still needs `header.ig-head` and a panel or hero figure.
+  - **Verified** in the in-app Chromium preview of the local standalone `index.html` with the stand-in Claude (`?stub=1`), Instagram format, three answers in a row: a valid plate got the three-part layout with labels clear of the artwork; a near-miss (same plate with a `<text>` inside the drawing) was accepted as version 2 in the normal layout with its three labels shown; a normal poster rendered as version 3. No console errors.
+  - **Unverified:** real Claude output in the live Artifact.
 - GitHub rollback point: `c9d034d`. The last recorded Claude publication is version 40 (`1795459555-c7fa`). Publish this change to the existing Artifact before testing the same plate brief with the original sources in Instagram format.
 
 ## Rollback status

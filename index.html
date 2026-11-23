@@ -963,7 +963,9 @@ function svgSafe(html){
 function renderIG(html, proj, {expand = true, composition} = {}){
   const doc = new DOMParser().parseFromString('<!doctype html><body>' + svgSafe(html) + '</body>', 'text/html');
   const root = h('article', {class:'ig', style:`--acc:${proj.accent || '#A3203A'}`});
-  const partition = proj.format === 'instagram' && doc.body.querySelector(':scope > figure.ig-hero.ig-partition');
+  const partitionFigure = doc.body.querySelector(':scope > figure.ig-hero.ig-partition');
+  const partition = partitionFigure && proj.format === 'instagram' && partitionOk(partitionFigure, proj.format) ? partitionFigure : null;
+  if (partitionFigure && !partition) partitionFigure.classList.remove('ig-partition'); // near-miss: normal layout
   if (partition){
     for (const node of Array.from(doc.body.childNodes)){
       if (!node.matches?.('.ig-symdefs, header.ig-head, figure.ig-hero.ig-partition, footer.ig-foot')) node.remove();
@@ -1919,23 +1921,25 @@ function livePreview(project, target){
   };
 }
 
+/* The exact three-part Instagram template: one top and two lower labels (value and name, optional qualifier) around one
+   text-free drawing. Only an exact match gets the special layout. */
+function partitionOk(partition, format){
+  const drawing = partition.querySelector(':scope > svg');
+  const slots = [...partition.querySelectorAll(':scope > p.ig-part-label')];
+  const positions = ['ig-part-top','ig-part-left','ig-part-right'];
+  const correctSlots = positions.every(name => slots.filter(slot => slot.classList.contains(name)).length === 1);
+  const [, , width, height] = drawing?.getAttribute('viewBox')?.trim().split(/[\s,]+/).map(Number) || [];
+  return !(format !== 'instagram' || slots.length !== 3 || !correctSlots || partition.querySelectorAll(':scope > svg').length !== 1 ||
+    !Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0 ||
+    drawing.querySelector('text, tspan') || !drawing.querySelector('path, circle, ellipse, rect, polygon, line, polyline') ||
+    slots.some(slot => positions.filter(name => slot.classList.contains(name)).length !== 1 ||
+      [...slot.children].some(el => !el.matches('b, span, small')) ||
+      slot.querySelector('svg, img') || !slot.querySelector('b')?.textContent.trim() || !slot.querySelector('span')?.textContent.trim()));
+}
+/* A usable answer has a header and a figure. A three-part answer that misses the exact template is still usable: it is shown
+   in the normal layout (see renderIG) rather than thrown away, which used to end in "The page came back empty". */
 function validPage(html, format){
   const doc = new DOMParser().parseFromString('<body>' + html + '</body>', 'text/html');
-  const partition = doc.body.querySelector(':scope > figure.ig-partition');
-  if (partition){
-    const drawing = partition.querySelector(':scope > svg');
-    const slots = [...partition.querySelectorAll(':scope > p.ig-part-label')];
-    const positions = ['ig-part-top','ig-part-left','ig-part-right'];
-    const correctSlots = positions.every(name =>
-      slots.filter(slot => slot.classList.contains(name)).length === 1);
-    const [, , width, height] = drawing?.getAttribute('viewBox')?.trim().split(/[\s,]+/).map(Number) || [];
-    if (format !== 'instagram' || slots.length !== 3 || !correctSlots || partition.querySelectorAll(':scope > svg').length !== 1 ||
-        !Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0 ||
-        drawing.querySelector('text, tspan') || !drawing.querySelector('path, circle, ellipse, rect, polygon, line, polyline') ||
-        slots.some(slot => positions.filter(name => slot.classList.contains(name)).length !== 1 ||
-          [...slot.children].some(el => !el.matches('b, span, small')) ||
-          slot.querySelector('svg, img') || !slot.querySelector('b')?.textContent.trim() || !slot.querySelector('span')?.textContent.trim())) return false;
-  }
   return !!doc.querySelector('header.ig-head') && !!doc.querySelector('section.ig-panel, figure.ig-hero');
 }
 
