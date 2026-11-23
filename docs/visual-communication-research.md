@@ -2,6 +2,8 @@
 
 12 November 2026 · Research brief and reference guide
 
+[Generation instruction for the app](#generation-instruction-for-the-app) defines the current one-question product. The full-document examples and benchmarks in this guide show techniques for larger editorial projects.
+
 ## 1. The design problem
 
 Info to Graphics starts with prose, tables, or other documents. The design task is to identify what the reader should understand, extract evidence at the right level, and encode the relationships that answer the question. A polished result can still fail if the model selects the wrong relationship upstream. Munzner's nested model is a useful guide because it places the domain problem and data abstraction before visual encoding and implementation. Brehmer and Munzner further distinguish why the reader is doing a task, what goes in and comes out, and how the task is performed. [Munzner](https://www.cs.ubc.ca/labs/imager/tr/2009/NestedModel/) · [Brehmer and Munzner](https://pubmed.ncbi.nlm.nih.gov/24051804/)
@@ -149,7 +151,7 @@ Use the subject itself as the data mark when its shape or surface makes the rela
 
 ### Compose for the output format
 
-Choose the audience's reading task before selecting supporting facts. Keep the answer, evidence, units, qualifiers and source accurate in each format. Allocate space, choose a focal point and position the labels for the intended viewing distance and reading direction.
+Identify the complete answer from the sources before planning its composition. Choose the visual that shows all the evidence the answer needs. Allocate space and position labels for the target format, then choose optional supporting facts for that audience. Keep the units, qualifiers and source accurate in every format.
 
 Plan the illustration or chart at the target aspect ratio. Choose the subject's pose, viewpoint or crop and place the labels alongside the relevant features. Use the grid for alignment. If space is tight, move a label with its anchor, redirect the object into open space or choose a different view. Keep recognisable proportions by using the same scale factor on both axes when resizing.
 
@@ -159,21 +161,24 @@ For a chart, select the encoding and reading direction for the available space a
 
 | Format | First thing to see | Arrangement and supporting information |
 | --- | --- | --- |
-| Presentation, 16:9 | A short answer in large type plus one dominant piece of visual evidence, legible across a room | A short answer block can sit beside a compact visual. Use the whole width below the headline when the subject, route or comparison needs it. When the answer is a short number, keep it and its unit together in the answer block and use the picture to show what it means. Keep only the supporting facts needed to read the answer correctly. Aim for a 3–6 word headline in at most two whole-word lines. Give a longer headline the full width above the illustration when needed. Size the illustration independently, preserve its proportions, and reserve the footer for the citation. |
-| Instagram, 4:5 | A short takeaway followed by a close-framed, directly labelled visual | Compose for a vertical eye path. Stack aligned comparisons on a common scale or place sequence steps top to bottom. Place the main value close to the corresponding mark. A brief secondary detail can sit below the drawing. Test on an actual phone. |
-| Print, A4 | An answer and visual evidence that remain clear at page size | Use the space for context, such as a compact method note or a comparison when it helps interpretation. Put the source on the page and check the print preview at actual size. |
+| Presentation, 16:9 | A short takeaway in large type and the complete visual answer, legible across a room | A single short number and its unit can sit in an answer block beside a compact visual. Give a comparison or scene the whole width under the headline when that makes the evidence clearer. Label each essential part near its mark. Aim for a 3–6 word headline in at most two whole-word lines. Reserve the footer for the citation. |
+| Instagram, 4:5 | A short takeaway followed by a close-framed, directly labelled visual | Compose for a vertical eye path. Stack aligned comparisons on a common scale or place sequence steps top to bottom. Place the values close to their marks. A brief secondary detail can sit below the drawing. Test on an actual phone. |
+| Print, A4 | A takeaway and complete visual evidence at page size | Include a separate question line only if it clarifies the scope. Give every essential fact a place in or beside the drawing. Use remaining space for an optional method or context note. Put the source on the page and check print preview at actual size. |
 
-**Worked example.** If the question is how common grayscale cars are today, a slide can show the current share in large type beside one silhouette that encodes that share. A feed post can show the current and earlier shares on two aligned silhouettes, with the current result first. Each value is printed once. If the question is how much the share changed, keep both years wherever they are needed to support the answer.
+**Worked example.** The same coffee question runs through all three examples in the app prompt. A serving of brewed coffee contains about 95 mg of caffeine per 8 fl oz, and a serving of espresso contains 63 mg per 1 fl oz. The slide uses a wide comparison under the headline. The phone post stacks the two servings. The A4 example places them side by side with a shared baseline. All three keep the serving sizes and quantities directly attached to the two marks.
 
-**When changing format with the same question,** use the open version as the starting point. Keep each source-supported key fact in the main illustration or in a direct label attached to its mark. A single question can have several equally important parts. Redraw or rearrange the visual evidence, shorten labels and remove secondary detail as needed. Use notes below the drawing for supplementary context. Before finishing, check that the main visual still gives the same answer.
+**When only the format changes,** use the open version as a starting point and verify that the answer is complete against the same sources. Redraw or rearrange the evidence and keep all essential facts in the main illustration or directly attached to their marks. Shorten labels and remove optional details as needed. Use notes below the drawing for supplementary context. If the question or sources change, establish the answer again from the current request and sources.
 
-For a format check, use the same brief and source. Inspect what the viewer notices first, where the main graphic and labels sit, and which secondary facts earn room. The intended viewing conditions should be apparent in the composition.
+For a format check, use the same brief and sources. For the four-milestone example, cover the notes below the visual and check that head and chest lift, babbling, smiling back and reaching and grasping are all visible in the illustration or its direct labels on both the slide and the A4 page.
 
 ### Generation instruction for the app
 
-Include this instruction in the app's existing generation prompt and supply the current guide with each run.
+The app sends a compact version of these instructions with generation and revision requests. Keep `POSTER_RULES`, `ANSWER_PRESERVATION_RULES`, `OUTPUT_FORMATS` and `VISUAL_ANSWER_CHECK` in `index.html` aligned with this section.
 
-> Apply the visual communication guide to the full infographic. Before layout, map every major finding and meaningful exception to a section and identify the graphic that will carry it. Plan the opening, middle and ending together. Make each section's main relationship readable from its headline, graphic, direct labels and essential notes. Before export, hide explanatory prose and check every findings section at the target size. Revise any section whose main point disappears. In the default view, remove prose that repeats the graphic and place supplementary details in a labeled secondary layer. Compare the opening, middle and final findings sections for graphic legibility and consistent visual conventions.
+1. **Identify the complete answer.** One reader question gives the infographic one takeaway. List every source-supported fact needed for that answer, including each requested part, relevant units, baselines and qualifications. Indicate what the sources cannot establish.
+2. **Choose how to show it.** Give each essential fact a place in the main drawing or a direct label attached to its evidence. Choose a diagram, comparison, map, sequence or illustration that makes the relationship clear. Use an adjacent key when repeated symbols need decoding.
+3. **Compose at the target size.** Redraw the evidence, place the labels and give the takeaway a clear visual hierarchy. Keep object proportions and data scales faithful. Use the format's word targets for optional context and cut that context first when space is tight.
+4. **Check the visual answer.** Mentally cover explanatory prose and the source footer at the intended display size. The takeaway and main visual should still give the full answer. Check the facts against the sources, and review contrast, clipping and overlapping labels. The app's numeric lookup is a separate check.
 
 ### Examples to study
 
@@ -210,7 +215,7 @@ Create a small benchmark corpus of diverse, rights-cleared samples: the Bauhaus 
 
 For a first review, compare the original, a structured visual with precise annotations, and plain text. Ask target readers to answer a neutral question and point to the evidence. Counterbalance the order where practical. Track answer accuracy, time, confidence, and whether the reader incorrectly infers a causal link or numeric relationship. Separately ask what they noticed first and what they remember. A short pilot yields useful design observations. A formal claim about one design outperforming another needs an appropriately designed study. [Lam et al., Seven Scenarios](https://pubmed.ncbi.nlm.nih.gov/22144529/)
 
-### Implement the smallest meaningful slice
+### Research benchmarks for expanded workflows
 
 1. Add a generation step that produces a **reader question, supported takeaways, typed relationships and source locators**, plus explicit ambiguities. Make that interpretation reviewable before committing to a composition.
 2. Render a focused **timeline with an annotation anchored to an event**. An annotation can contain editable text, a verified image or clearly marked concept illustration, and a passage link. Preserve separate event and interval representations. Keep the focus stable when the layout changes.
@@ -281,8 +286,8 @@ Before the next live generation, Claude Code must read this section, fetch the l
 ### Pick colours from the story
 
 1. Start from a material, setting, period or mood that fits the specific takeaway, and turn it into one bold field: a lunar route can sit on deep navy, a car story on teal or plum, a camping scene on burnt orange or pine.
-2. Assign roles: the field, the object colour, a dark shadow tone, cream or white, and one small warm accent; 3 to 5 colours in total, every other shade a tone of these. Preserve meaningful source colours, such as the actual hues in a car colour comparison, and identify categories with labels, line styles, shapes or patterns as well as colour.
-3. Choose ink for the field. On deep fields cream or white reads at any size; on bright fields use near-black or deep navy for small labels and keep cream for large text.
+2. Assign roles: the field, the object colour, a dark shadow tone, cream or white, and a small accent that fits the subject and mood. Use 3 to 5 colours; treat other shades as tones of these. Preserve meaningful source colours, such as the actual hues in a car colour comparison, and identify categories with labels, line styles, shapes or patterns as well as colour.
+3. Choose ink against the actual local background. Check cream, white and accent text against the same thresholds as dark ink. Use a separate ink for labels if an accent is too close in tone to the background.
 
 | Example | Field | Text | Ratio |
 | --- | --- | --- | ---: |
@@ -301,7 +306,7 @@ Ratios were computed with the WCAG 2.2 relative-luminance formula for these soli
 - **Primary.** The bold field takes its hue from the subject's own world (the real colour of the object, material, place, season or period), not a habitual blue.
 - **Tone from the mood.** Bright and joyful 300 to 500; confident 500 to 700; serious, dramatic, historic or night 800 to 900; light and airy 100 to 200.
 - **Variants.** The shadow tone is the same hue two to four tones darker; highlights are two to four tones lighter, or the hue's 50.
-- **Secondary.** The accent's harmony follows the mood, as Material's palette generator offers: analogous (neighbouring hue) for calm and natural stories, complementary (about eight hues away on the wheel) for contrast and comparison, triadic (about five away) for playful ones. It is used sparingly.
+- **Secondary.** The accent's harmony follows the subject and mood: analogous (neighbouring hue) for calm and natural stories, complementary (about eight hues away on the wheel) for contrast and comparison, triadic (about five away) for playful ones. Use it sparingly and choose a tone that gives the intended emphasis without requiring a vivid accent.
 - **"On" colours.** The prompt lists, for each hue, the lightest tone that carries white text at 4.5:1 (computed by the app from the palette with the WCAG formula; for example teal 700, blue 700, indigo 400; yellow, amber and orange never). On lighter tones, small text uses near-black or the hue's 900.
 - Real things keep real colours (water blue, soil brown, leaves green); the accent marks labels and numbers, never repaints an object. Real data colours stay real, and 3 to 5 colours in total remain the limit.
 

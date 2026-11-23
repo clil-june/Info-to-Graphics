@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: preserve the illustrated answer when adapting formats).
+Last updated 2026-11-23 (Codex: align generation, revision and format examples around the complete visual answer).
 
 ## Current task
+
+**Owner decision (2026-11-23):** one question leads to one takeaway and can require several essential facts. Keep each part of the answer in the visual or directly attached to its evidence. Use the same order in the guide and prompts: determine the complete answer, choose its visual encoding, compose for the format, and check with optional prose covered.
 
 **Owner report (2026-11-23):** the developmental milestones presentation illustrated all four key skills. After changing only the format to A4, the response to a smile moved into a text block and the emphasis changed. Keep the visual answer when recomposing for a new format.
 
@@ -30,7 +32,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
-- Format adaptation is on `feature/four-elements` ([PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2)). Publication to the existing Claude Artifact is pending.
+- The complete-answer update is on `feature/four-elements` ([PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2)). The GitHub rollback point is `32843b6`, the parent of this update. Revert this update's commit to restore it while preserving branch history.
+- Publication of the update is pending. The last recorded Artifact version is 36 (`1795442960-ce11`), published from `0c1def5`. To restore that published version after a later release, republish `index.html` from `0c1def5` with its existing capabilities.
 
 - The editor format picker and version settings are live in version 36 (`1795442960-ce11`).
 
@@ -51,6 +54,12 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Complete visual answer (Codex, 2026-11-23)
+
+- The guide, README, agent instructions and working prompts agree on a complete visual answer. Each essential fact stays in the drawing or beside its evidence. Supporting text and word targets are secondary. The shared prompt includes a check with optional prose covered.
+- All three prompt examples compare the same two coffee servings. The slide uses a wide drawing, Instagram stacks the comparison, and A4 aligns the two servings side by side. A4 can omit the question line. A separate key is optional when the marks need no further decoding. Palette rules choose accents from the subject and mood, with sufficient contrast required for text.
+- The app compares the ready source inputs, question and format against the displayed version. A change of question or sources asks Claude to establish the answer again. Format-only changes preserve the complete visual answer. Older saved versions use the project's stored sources as their initial baseline because they previously shared one source list.
 
 ### Format adaptation (Codex, 2026-11-23)
 
@@ -495,6 +504,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Complete visual answer (2026-11-23)
+
+- Inline JavaScript parses. A Node harness with a stand-in DOM and sampler exercised first generation, format-only adaptation of a four-part answer, ordinary edits, alternate illustrations, changes to the question and source text, source addition/removal, legacy records and retries. The runtime PNG canvas sizes and download wiring match the rollback point.
+- Checked the same quantities and serving sizes in each of the three SVG examples, their proportional scales and label colours against the field. Headless Chromium could not start in this environment. Claude's output quality still needs a live Artifact test.
+
 ### Format adaptation (2026-11-23)
 
 - Inline JavaScript parses. A Node harness with simulated DOM and sampler checked format-only Generate and Change it, alternate composition, whitespace-only question edits, question-only and combined changes, initial generation, legacy versions and retries. A prompt check confirmed that the previous illustration with all four milestones reaches Claude with the visual-preservation rule. Output dimensions and export handlers match the previous implementation.
@@ -807,7 +821,7 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Next step
 
-Publish the format-adaptation update to the existing Claude Artifact. From the four-milestone presentation, switch to A4 with the same question and run Generate. Repeat from the presentation with Change it. Check that the main illustration in each result still includes the response to a smile along with the three other skills.
+Publish the complete-answer update to the existing Claude Artifact. From the four-milestone presentation, switch to A4 with the same question and sources and run Generate. Repeat from the presentation with Change it. Cover the notes below the illustration and locate head and chest lift, babbling, smiling back, and reaching and grasping in the illustration or its direct labels. Compare with the version recorded above if the new result is weaker.
 
 Publish the editor picker to the existing Artifact. Generate 4:5, then generate 16:9 from the same question. Switch between versions and check that the editor shows the right question and format and that the resulting export has the selected version’s dimensions.
 
