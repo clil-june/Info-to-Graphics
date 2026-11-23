@@ -317,6 +317,22 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
 .ig-h1,.ig-q,.ig-take-t,.ig-hero figcaption,.ig-foot{overflow-wrap:anywhere;hyphens:auto}
 .ig-hero{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0}
 .ig-hero > svg{width:100%;max-width:760px;height:auto;display:block}
+.ig[data-format="instagram"] > .ig-partition{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;
+  direction:ltr;column-gap:12px;row-gap:4px;width:min(100%,350px);margin-inline:auto;
+  color:var(--ig-part-ink);text-align:center
+}
+.ig-partition > svg{grid-column:1 / -1;grid-row:2;overflow:hidden}
+.ig-partition > .ig-part-label{display:grid;justify-items:center;gap:2px;position:relative;min-width:0;margin:0;line-height:1.18;font-size:22px;overflow-wrap:anywhere}
+.ig-part-label > b{font-family:var(--dsp);font-size:1.4em;line-height:1.06}
+.ig-part-label > small{font-size:.76em}
+.ig-partition > .ig-part-top{grid-column:1 / -1;grid-row:1;padding-bottom:10px}
+.ig-partition > .ig-part-left{grid-column:1;grid-row:3;padding-top:10px}
+.ig-partition > .ig-part-right{grid-column:2;grid-row:3;padding-top:10px}
+.ig[dir="rtl"] .ig-part-label{direction:rtl}
+.ig-part-label::before{content:"";position:absolute;left:calc(50% - 1px);width:2px;height:7px;background:currentColor}
+.ig-part-top::before{bottom:0}
+.ig-part-left::before,.ig-part-right::before{top:0}
 .ig-hero svg text{font-family:var(--txt, Inter), Arial, sans-serif}
 .ig-hero figcaption{font-size:14px;color:var(--ink2);text-align:center;max-width:640px}
 .ig-hero > .ig-pics, .ig-hero > .ig-bars, .ig-hero > .ig-dots, .ig-hero > .ig-stats, .ig-hero > .ig-picto{width:100%;max-width:760px}
@@ -947,6 +963,15 @@ function svgSafe(html){
 function renderIG(html, proj, {expand = true, composition} = {}){
   const doc = new DOMParser().parseFromString('<!doctype html><body>' + svgSafe(html) + '</body>', 'text/html');
   const root = h('article', {class:'ig', style:`--acc:${proj.accent || '#A3203A'}`});
+  const partition = proj.format === 'instagram' && doc.body.querySelector(':scope > figure.ig-hero.ig-partition');
+  if (partition){
+    for (const node of Array.from(doc.body.childNodes)){
+      if (!node.matches?.('.ig-symdefs, header.ig-head, figure.ig-hero.ig-partition, footer.ig-foot')) node.remove();
+    }
+    for (const node of Array.from(partition.childNodes)){
+      if (!node.matches?.('svg, p.ig-part-label')) node.remove();
+    }
+  }
   if (Object.hasOwn(OUTPUT_FORMATS, proj.format)) root.dataset.format = proj.format;
   if (composition) root.dataset.composition = composition;
   if (proj.format === 'presentation' && doc.querySelector('.ig-symdefs')?.dataset.layout === 'wide') root.dataset.layout = 'wide';
@@ -957,6 +982,17 @@ function renderIG(html, proj, {expand = true, composition} = {}){
   }
   if (root.querySelector('.ig-hero')) root.classList.add('ig--poster');
   const theme = readTheme(doc); if (theme) applyTheme(root, theme);
+  if (partition){
+    const bg = theme?.bg || '#F3F2EF';
+    const ink = luminance(bg) < 0.179 ? '#FFFFFF' : '#000000';
+    root.style.setProperty('--ig-part-ink', ink);
+    root.style.setProperty('--ink', ink);
+    root.style.setProperty('--ink2', ink);
+    // This layout has a solid field so the same contrast applies behind every label.
+    root.style.setProperty('--bg', bg);
+    root.style.removeProperty('background-image');
+    root.style.removeProperty('background-size');
+  }
   // gradient ids are made unique per render, so two renders on one page never share them
   const pfx = 'r' + (++renderSeq) + '-', ids = {};
   root.querySelectorAll('linearGradient[id], radialGradient[id]').forEach(g => { ids[g.id] = pfx + g.id; g.id = pfx + g.id; });
@@ -964,13 +1000,13 @@ function renderIG(html, proj, {expand = true, composition} = {}){
     const m = /^url\(#([\w-]+)\)$/.exec(el.getAttribute(a) || ''); if (m) el.setAttribute(a, ids[m[1]] ? `url(#${ids[m[1]]})` : 'none');
   }));
   try{ expandMaps(root); }catch(e){}
-  if (expand) expandIG(root, proj);
+  if (expand) expandIG(root, proj, !partition);
   return root;
 }
-function expandIG(root, proj){
+function expandIG(root, proj, showKey = true){
   const ents = Object.fromEntries((proj.entities || []).map(e => [e.id, e]));
   // In the screen compositions the evidence comes before the key.
-  if ((proj.entities || []).length){
+  if (showKey && (proj.entities || []).length){
     const key = root.querySelector('.ig-key') || h('section', {class:'ig-key'});
     const hero = root.querySelector('.ig-hero');
     if (root.dataset.composition && hero) hero.after(key);
@@ -1384,9 +1420,9 @@ const OUTPUT_FORMATS = {
 - If a short value is the answer, put it with its qualifier and unit in <p class="ig-answer"> inside the header. Make this the largest type, with a brief descriptive headline and no duplicate number in the picture. For a qualitative answer use the headline alone. Use short labels in the drawing, around 20–24 SVG units on a compact 400-unit viewBox. Let a label identify the evidence or keep a needed qualification. Leave out a second instruction that repeats the headline.
 - Check that the headline never breaks within a word or uses manual line breaks, that the illustration visibly fills the space available to it, and that the citation sits below both. For example, a short takeaway can sit above a wide drawing whose evidence (the part the answer is about) fills the centre at a generous size, with the labels aligned beside the parts they name and any context object kept smaller.`,
   instagram: `Instagram · 4:5 portrait. Purpose: hook a reader on a phone, then reward a closer read.
-- Order: short takeaway headline, visual answer, then one compact comparison, explanation or implication if the source supports it. One useful extra detail is preferable to several fragments. Aim for at most 28 words outside the headline and source. Keep the source subordinate.
+- Order: short takeaway headline, complete visual answer with its direct labels, citation. Keep standalone prose and unrelated source facts out of the result. Aim for at most 28 words outside the headline and source.
 - Build the SVG for a narrow column from the start. For one subject, frame it close, put the most revealing part high in the picture and attach the key label to the feature it describes. For a sequence, arrange moments from top to bottom. For a comparison, stack matching views with a common scale; place corresponding marks so the eye can compare them directly. Preserve actual geography in a map; crop it and bring the labels close to the locations. Reposition the objects and their labels for this reading order rather than shrinking a panoramic drawing. A viewBox around 400 × 300 units is a starting point, not a fixed grid.
-- Keep the numeric answer inside the SVG as a strong direct label near the relevant mark, with no separate ig-answer block. Set secondary labels at roughly 18–20 SVG units when 400 units are displayed around 320 CSS px. Use a short caption immediately below or a small context aside when the additional detail cannot be labeled clearly in the scene. Preserve essential qualifiers beside the claims they qualify.`,
+- Keep the numeric answer inside the SVG as a strong direct label near the relevant mark, with no separate ig-answer block. Set secondary labels at roughly 18–20 SVG units when 400 units are displayed around 320 CSS px. If space is tight, shorten the wording or rearrange the graphic. Preserve essential qualifiers beside the claims they qualify.`,
   print: `Print · A4 portrait (210 × 297 mm), with 12 mm page margins. Fit one page. Keep the same single takeaway, with up to three supporting points and one short method or context line only where it helps interpret the answer. Aim for at most 50 words outside the headline and source. Draw for a printed SVG around 170 mm wide and a viewBox no taller than 400 units at 400 units wide, leaving space for the heading, context and source. Keep explanatory text around 11 pt, and data labels and sources at least 10 pt at actual print size. Use fewer marks and lines before making type smaller.`
 };
 const SCREEN_EXAMPLES = {
@@ -1402,8 +1438,8 @@ function formatInstructions(format){
 
 /* The one-graphic poster: the default output. One call, one central picture, very few words. */
 const POSTER_RULES = `How to make it:
-1. Answer ONE question, and make the answer the clear number one. Pick the single most important fact in the sources that answers the user's request. This is not a summary of the source: leave everything else out, however interesting. The answer itself (the number, place, date, name or thing the question asks for) is level 1: the largest and boldest element on the page, in the accent colour, where the eye lands first. Nothing else may compete with it in size, weight or colour.
-2. Find the picture. Ask what the fact looks like in the real world: the real object at its real proportions, a body, a building, a map or route, a container filling up, a crowd of people, a stack, a timeline of a life, a before and after. Draw that subject so the quantity is encoded faithfully in size, count, length, area, position or fill. A reader should get the answer from the picture before reading any label.
+1. Answer ONE question, and make the answer the clear number one. Pick the single most important fact in the sources that answers the user's request. If the question asks how a whole is divided, all of its necessary parts are the single answer. Leave out unrelated findings. The answer itself (the number, place, date, name or thing the question asks for) is level 1: the largest and boldest element on the page, in the accent colour, where the eye lands first. Nothing else may compete with it in size, weight or colour.
+2. Reserve separate areas before drawing. Distinct objects, label blocks, and leader paths must not overlap each other. Only a leader touching its own mark or shapes that intentionally form one illustration may meet. Inspect the full rendered bounds of every number, label and icon. Shorten labels or recompose when unrelated elements would touch. Route leaders through free space and use a contrasting dark casing if a light line crosses pale artwork. Find the picture. Ask what the fact looks like in the real world: the real object at its real proportions, a body, a building, a map or route, a container filling up, a crowd of people, a stack, a timeline of a life, a before and after. Draw that subject so the quantity is encoded faithfully in size, count, length, area, position or fill. A reader should get the answer from the picture before reading any label.
 3. Break the box. Do NOT make rows of cards, panels, boxes, a dashboard, several small charts, bullet lists or icons in circles. One composition, edge to edge.
 4. Every fact once, in three clear levels:
    - Say each fact exactly once on the whole page. The headline frames the answer; the drawing shows the evidence. Put the key number only in the location defined by the output format, or as the largest label in the drawing when the format does not specify another location. Every other label, caption or closing line adds information. Never repeat the same number, name, place or date in the headline, a label, the caption or the closing line.
@@ -1432,8 +1468,17 @@ ${TYPOGRAPHY_RULES}
    Crop data-view tightly to the region that matters: a whole-world map is small on a phone, so show the whole world only when the fact is global. data-view crops the world (for example "-100 0 40 70" for the North Atlantic, "-180 -60 180 84" for the whole world, "25 10 65 45" for the Middle East); data-box is where the map sits in the viewBox.
    Put everything you place on the map at real coordinates: <g data-lon="-30.5" data-lat="55"> marker, leader line and label drawn around 0,0 </g>. Routes: <path data-route="lon,lat lon,lat lon,lat" data-curve="0.2" stroke="#HEX" stroke-width="2"/> (the app draws the path; data-curve 0 is straight). Size markers by the data (circle AREA proportional to the value), keep labels off the busiest coast, and style land and sea in the theme's colours.
    Only if the fact is a plain ranking or share that no drawing can show better, you may use one of these instead of the svg: a pictogram <div class="ig-picto" data-sym="ID" data-n="10" style="--v:1.9"></div> (data-n marks drawn, --v filled); sorted bars <div class="ig-bars" style="--max:50"><div class="ig-bar" style="--v:47"><i data-sym="ID"></i><b class="ig-bar-v">47%</b></div></div>; or one big number <div class="ig-stats"><div class="ig-stat"><b class="ig-big ig-big--hero">≈7</b><span>years</span></div></div>.
-4. Optional: <aside class="ig-context"><h2>Short heading that names the comparison or context</h2><p>One short line per supporting item, up to the output format's limit</p></aside>. A single closing line can instead use <p class="ig-take-t">...</p>. Add new information only.
-5. <footer class="ig-foot"><p><strong>Source:</strong> title, organisation, date</p></footer>`;
+${format === 'instagram' ? '4. Go straight to the source footer after the figure.' : '4. Optional: use a short context aside only when the selected format calls for it.'}
+5. <footer class="ig-foot"><p><strong>Source:</strong> title, organisation, date</p></footer>
+${format === 'instagram' ? `
+Three-part diagrams. When the answer is a whole divided into three parts that can be arranged as an upper part and two lower parts, use the exact structure below instead of manually positioning SVG text. For example, show an illustrated plate with the upper half, lower-left and lower-right quarters. Allocate each label to its actual position in the image. Set the SVG viewBox tightly around the artwork. Keep illustrations, shadows and any leader segments in this SVG, and all wording in the three HTML labels. The renderer reserves separate areas and adds short external connectors. If drawing internal leaders, start them at the exact feature and end them near the corresponding SVG edge: top centre, bottom quarter-width or bottom three-quarter-width. Keep leaders out of other marks and add a slim dark casing if drawing a light line over a light fill. The SVG must contain no text or tspan. Include positive viewBox dimensions.
+<figure class="ig-hero ig-partition">
+  <p class="ig-part-label ig-part-top"><b>upper value</b><span>upper part</span><small>necessary qualifier, if any</small></p>
+  <svg viewBox="0 0 400 400" role="img" aria-label="Describe the parts and their arrangement">draw the artwork only</svg>
+  <p class="ig-part-label ig-part-left"><b>lower-left value</b><span>lower-left part</span></p>
+  <p class="ig-part-label ig-part-right"><b>lower-right value</b><span>lower-right part</span></p>
+</figure>
+In this layout the HTML labels are the direct annotations of the artwork. Omit extra icons and standalone text. Place the source citation immediately after the figure.` : ''}`;
 
 const EXAMPLE_POSTER = "<div class=\"ig-symdefs\" data-bg=\"#A9CCF5\" data-ink=\"#1C2A5E\" data-muted=\"#3C4A78\" data-accent=\"#E5463E\" data-font=\"Manrope\" data-body=\"Inter\" data-texture=\"grain\"></div>\n<header class=\"ig-head\"><p class=\"ig-q\"><b>The question</b> How much of a life is spent on periods?</p><h1 class=\"ig-h1\">Gathered together, periods fill years of a life.</h1></header>\n<figure class=\"ig-hero\"><svg viewBox=\"0 70 400 270\" role=\"img\" aria-label=\"39 tiles, one for each year of life from age 12 to 51. Gathered together, period days fill 6.96 of them: about 2,540 days, or 508 periods.\">\n<path d=\"M43 92l7 7v21h-21l-7 -7zM70.4 92l7 7v21h-21l-7 -7zM97.8 92l7 7v21h-21l-7 -7zM125.2 92l7 7v21h-21l-7 -7zM152.6 92l7 7v21h-21l-7 -7zM180 92l7 7v21h-21l-7 -7zM207.4 92l7 7v21h-21l-7 -7zM234.8 92l7 7v21h-21l-7 -7zM262.2 92l7 7v21h-21l-7 -7zM289.6 92l7 7v21h-21l-7 -7zM317 92l7 7v21h-21l-7 -7zM344.4 92l7 7v21h-21l-7 -7zM371.8 92l7 7v21h-21l-7 -7zM43 127.4l7 7v21h-21l-7 -7zM70.4 127.4l7 7v21h-21l-7 -7zM97.8 127.4l7 7v21h-21l-7 -7zM125.2 127.4l7 7v21h-21l-7 -7zM152.6 127.4l7 7v21h-21l-7 -7zM180 127.4l7 7v21h-21l-7 -7zM207.4 127.4l7 7v21h-21l-7 -7zM234.8 127.4l7 7v21h-21l-7 -7zM262.2 127.4l7 7v21h-21l-7 -7zM289.6 127.4l7 7v21h-21l-7 -7zM317 127.4l7 7v21h-21l-7 -7zM344.4 127.4l7 7v21h-21l-7 -7zM371.8 127.4l7 7v21h-21l-7 -7zM43 162.8l7 7v21h-21l-7 -7zM70.4 162.8l7 7v21h-21l-7 -7zM97.8 162.8l7 7v21h-21l-7 -7zM125.2 162.8l7 7v21h-21l-7 -7zM152.6 162.8l7 7v21h-21l-7 -7zM180 162.8l7 7v21h-21l-7 -7zM207.4 162.8l7 7v21h-21l-7 -7zM234.8 162.8l7 7v21h-21l-7 -7zM262.2 162.8l7 7v21h-21l-7 -7zM289.6 162.8l7 7v21h-21l-7 -7zM317 162.8l7 7v21h-21l-7 -7zM344.4 162.8l7 7v21h-21l-7 -7zM371.8 162.8l7 7v21h-21l-7 -7z\" fill=\"#7FA6DA\"/>\n<path d=\"M206.6 92h0.8v21h-0.8zM213.8 92h21v21h-21zM241.2 92h21v21h-21zM268.6 92h21v21h-21zM296 92h21v21h-21zM323.4 92h21v21h-21zM350.8 92h21v21h-21zM22 127.4h21v21h-21zM49.4 127.4h21v21h-21zM76.8 127.4h21v21h-21zM104.2 127.4h21v21h-21zM131.6 127.4h21v21h-21zM159 127.4h21v21h-21zM186.4 127.4h21v21h-21zM213.8 127.4h21v21h-21zM241.2 127.4h21v21h-21zM268.6 127.4h21v21h-21zM296 127.4h21v21h-21zM323.4 127.4h21v21h-21zM350.8 127.4h21v21h-21zM22 162.8h21v21h-21zM49.4 162.8h21v21h-21zM76.8 162.8h21v21h-21zM104.2 162.8h21v21h-21zM131.6 162.8h21v21h-21zM159 162.8h21v21h-21zM186.4 162.8h21v21h-21zM213.8 162.8h21v21h-21zM241.2 162.8h21v21h-21zM268.6 162.8h21v21h-21zM296 162.8h21v21h-21zM323.4 162.8h21v21h-21zM350.8 162.8h21v21h-21z\" fill=\"#FBF6EC\"/>\n<path d=\"M22 92h21v21h-21zM49.4 92h21v21h-21zM76.8 92h21v21h-21zM104.2 92h21v21h-21zM131.6 92h21v21h-21zM159 92h21v21h-21zM186.4 92h20.2v21h-20.2z\" fill=\"#E5463E\"/>\n<path d=\"M22 92h21v2.2h-21zM49.4 92h21v2.2h-21zM76.8 92h21v2.2h-21zM104.2 92h21v2.2h-21zM131.6 92h21v2.2h-21zM159 92h21v2.2h-21zM186.4 92h20.2v2.2h-20.2z\" fill=\"#FF8A7E\"/>\n<text x=\"22\" y=\"82\" font-size=\"12\" font-weight=\"700\" fill=\"#1C2A5E\" letter-spacing=\"1\">AGE 12</text>\n<text x=\"371.8\" y=\"207.8\" font-size=\"12\" font-weight=\"700\" fill=\"#1C2A5E\" text-anchor=\"end\" letter-spacing=\"1\">AGE 51</text>\n<text x=\"22\" y=\"207.8\" font-size=\"12\" fill=\"#1C2A5E\">one tile = one year of life</text>\n<path d=\"M22 223.8h185.8\" stroke=\"#E5463E\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n<text x=\"22\" y=\"265.8\" font-size=\"40\" font-weight=\"800\" fill=\"#1C2A5E\">≈ 7 years</text>\n<text x=\"218\" y=\"249.8\" font-size=\"13\" fill=\"#1C2A5E\">period days, gathered</text>\n<text x=\"218\" y=\"266.8\" font-size=\"13\" fill=\"#1C2A5E\">together: about 2,540 days,</text>\n<text x=\"218\" y=\"283.8\" font-size=\"13\" fill=\"#1C2A5E\">or 508 periods</text>\n</svg><figcaption>Researchers’ estimate, assuming periods of 3 to 7 days about every 28 days</figcaption></figure>\n<footer class=\"ig-foot\"><p><strong>Source:</strong> Harvard T.H. Chan School of Public Health, Apple Women’s Health Study (May 2023).</p></footer>";
 const EXAMPLE_OBJECT = "<div class=\"ig-symdefs\" data-bg=\"#C23F28\" data-ink=\"#FBF1E6\" data-muted=\"#F6CDBE\" data-accent=\"#F2B320\" data-font=\"Archivo\" data-body=\"Inter\" data-texture=\"grain\"><svg data-def=\"bean\" data-name=\"Coffee bean, 5 mg of caffeine\" data-color=\"#3A1C10\" viewBox=\"0 0 32 32\"><ellipse cx=\"16\" cy=\"16\" rx=\"10\" ry=\"14\" fill=\"acc\"/><path d=\"M16 3c-5 6 5 13 0 26\" stroke=\"paper\" stroke-opacity=\"0.6\" stroke-width=\"2.2\" fill=\"none\" stroke-linecap=\"round\"/></svg></div>\n<header class=\"ig-head\"><p class=\"ig-q\"><b>The question</b> Which has more caffeine: an espresso or a mug of coffee?</p><h1 class=\"ig-h1\">The mug wins: more coffee, more caffeine.</h1></header>\n<figure class=\"ig-hero\"><svg viewBox=\"0 0 400 380\" role=\"img\" aria-label=\"Seen from above: a mug of filter coffee and an espresso cup. Next to each, coffee beans count the caffeine, one bean for 5 mg: 19 beans for the mug (about 95 mg), about 13 for the espresso (63 mg).\">\n<path d=\"M0 0h400v380H0z\" fill=\"none\"/>\n<path d=\"M71.3 164.7L103.9 197.2A66 66 0 0 0 197.2 103.9L164.7 71.3A66 66 0 0 0 71.3 164.7Z\" fill=\"#8E2716\"/>\n<path d=\"M180 108h34a10 10 0 0 1 0 20h-34z\" fill=\"#8E2716\" transform=\"translate(17.9 17.9)\"/>\n<path d=\"M180 108h34a10 10 0 0 1 0 20h-34z\" fill=\"#FBF4E8\"/>\n<circle cx=\"118\" cy=\"118\" r=\"66\" fill=\"#FBF4E8\"/>\n<path d=\"M178.7 92.9A66 66 0 0 1 92.9 178.7A69.3 69.3 0 0 0 178.7 92.9Z\" fill=\"#E6D7C2\"/>\n<circle cx=\"118\" cy=\"118\" r=\"54\" fill=\"#9A5A2E\"/>\n<circle cx=\"122.3\" cy=\"122.3\" r=\"45.4\" fill=\"#2A140A\"/>\n<path d=\"M84.5 101.8A37.8 37.8 0 0 1 107.2 82.4\" stroke=\"#FFF9F0\" stroke-width=\"4.9\" stroke-linecap=\"round\" fill=\"none\"/>\n<circle cx=\"296\" cy=\"132\" r=\"50\" fill=\"#FBF4E8\" fill-opacity=\"0\"/>\n<path d=\"M262.1 165.9L294.6 198.5A48 48 0 0 0 362.5 130.6L329.9 98.1A48 48 0 0 0 262.1 165.9Z\" fill=\"#8E2716\"/>\n<circle cx=\"296\" cy=\"132\" r=\"48\" fill=\"#FBF4E8\"/>\n<path d=\"M340.2 113.8A48 48 0 0 1 277.8 176.2A50.400000000000006 50.400000000000006 0 0 0 340.2 113.8Z\" fill=\"#E6D7C2\"/>\n<circle cx=\"296\" cy=\"132\" r=\"40\" fill=\"none\" stroke=\"#E6D7C2\" stroke-width=\"1.5\"/>\n<path d=\"M276.2 151.8L308.7 184.3A28 28 0 0 0 348.3 144.7L315.8 112.2A28 28 0 0 0 276.2 151.8Z\" fill=\"#8E2716\"/>\n<path d=\"M320 127.5h18a4.5 4.5 0 0 1 0 9h-18z\" fill=\"#8E2716\" transform=\"translate(17.9 17.9)\"/>\n<path d=\"M320 127.5h18a4.5 4.5 0 0 1 0 9h-18z\" fill=\"#FBF4E8\"/>\n<circle cx=\"296\" cy=\"132\" r=\"28\" fill=\"#FBF4E8\"/>\n<path d=\"M321.8 121.4A28 28 0 0 1 285.4 157.8A29.400000000000002 29.400000000000002 0 0 0 321.8 121.4Z\" fill=\"#E6D7C2\"/>\n<circle cx=\"296\" cy=\"132\" r=\"21\" fill=\"#9A5A2E\"/>\n<circle cx=\"297.7\" cy=\"133.7\" r=\"17.6\" fill=\"#2A140A\"/>\n<path d=\"M283 125.7A14.7 14.7 0 0 1 291.8 118.1\" stroke=\"#FFF9F0\" stroke-width=\"2\" stroke-linecap=\"round\" fill=\"none\"/>\n<g data-sym=\"bean\" data-size=\"20\" transform=\"translate(74 226) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(96 226) rotate(24)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(118 226) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(140 226) rotate(24)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(162 226) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(74 247) rotate(32)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(96 247) rotate(-10)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(118 247) rotate(32)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(140 247) rotate(-10)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(162 247) rotate(32)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(74 268) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(96 268) rotate(24)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(118 268) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(140 268) rotate(24)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(162 268) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(74 289) rotate(32)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(96 289) rotate(-10)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(118 289) rotate(32)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(140 289) rotate(-10)\"></g>\n<g data-sym=\"bean\" data-size=\"20\" transform=\"translate(252 226) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(274 226) rotate(24)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(296 226) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(318 226) rotate(24)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(340 226) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(252 247) rotate(32)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(274 247) rotate(-10)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(296 247) rotate(32)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(318 247) rotate(-10)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(340 247) rotate(32)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(252 268) rotate(-18)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(274 268) rotate(24)\"></g><g data-sym=\"bean\" data-size=\"20\" transform=\"translate(296 268) rotate(-18)\"></g>\n<text x=\"70\" y=\"340\" font-size=\"34\" font-weight=\"800\" fill=\"#FBF1E6\">≈95 mg</text>\n<text x=\"70\" y=\"358\" font-size=\"12\" fill=\"#FBF1E6\">mug of filter coffee, 8 fl oz</text>\n<text x=\"248\" y=\"340\" font-size=\"34\" font-weight=\"800\" fill=\"#FBF1E6\">63 mg</text>\n<text x=\"248\" y=\"358\" font-size=\"12\" fill=\"#FBF1E6\">one espresso shot, 1 fl oz</text>\n</svg><figcaption>Typical servings</figcaption></figure>\n<footer class=\"ig-foot\"><p><strong>Source:</strong> USDA FoodData Central: coffee, brewed (8 fl oz) and espresso (1 fl oz).</p></footer>";
@@ -1497,7 +1542,7 @@ function sourcesBlock(proj, budget){
   return ready.map((x, i) => `<source id="S${i + 1}" name="${String(x.name).replace(/"/g, "'")}"${x.url ? ` url="${x.url}"` : ''}>\n${x.text.slice(0, per)}\n</source>`).join('\n\n');
 }
 const FORMAT_ADAPTATION_RULES = `Preserve the answer when changing format. Identify every key fact that the current infographic uses to answer the same question, including facts conveyed by the drawing or its labels. Keep each fact in the main illustration or in a direct label attached to its visual mark. A single question can have a multi-part answer. Preserve the ordering, units and qualifications that affect its meaning. Keep facts supported by the sources and follow any explicit change the user requests.
-Redraw and rearrange the visual evidence for the new aspect ratio. If space is tight, shorten labels or remove secondary detail. Use the block below the drawing for supplementary context only. The format's suggested word count and space for notes are guidance for supporting detail. Before finishing, check that a reader can recover the same key facts from the main visual.`;
+Redraw and rearrange the visual evidence for the new aspect ratio. If space is tight, shorten labels or remove secondary detail. Follow the selected format's layout rules. For Instagram, only the citation belongs after the figure. Before finishing, check that a reader can recover the same key facts from the main visual.`;
 
 function refinePrompt(proj, html, instr, keepFacts = false){
   // A poster already carries its symbol drawings in div.ig-symdefs; only pages without them need the list spelled out.
@@ -1874,8 +1919,23 @@ function livePreview(project, target){
   };
 }
 
-function validPage(html){
+function validPage(html, format){
   const doc = new DOMParser().parseFromString('<body>' + html + '</body>', 'text/html');
+  const partition = doc.body.querySelector(':scope > figure.ig-partition');
+  if (partition){
+    const drawing = partition.querySelector(':scope > svg');
+    const slots = [...partition.querySelectorAll(':scope > p.ig-part-label')];
+    const positions = ['ig-part-top','ig-part-left','ig-part-right'];
+    const correctSlots = positions.every(name =>
+      slots.filter(slot => slot.classList.contains(name)).length === 1);
+    const [, , width, height] = drawing?.getAttribute('viewBox')?.trim().split(/[\s,]+/).map(Number) || [];
+    if (format !== 'instagram' || slots.length !== 3 || !correctSlots || partition.querySelectorAll(':scope > svg').length !== 1 ||
+        !Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0 ||
+        drawing.querySelector('text, tspan') || !drawing.querySelector('path, circle, ellipse, rect, polygon, line, polyline') ||
+        slots.some(slot => positions.filter(name => slot.classList.contains(name)).length !== 1 ||
+          [...slot.children].some(el => !el.matches('b, span, small')) ||
+          slot.querySelector('svg, img') || !slot.querySelector('b')?.textContent.trim() || !slot.querySelector('span')?.textContent.trim())) return false;
+  }
   return !!doc.querySelector('header.ig-head') && !!doc.querySelector('section.ig-panel, figure.ig-hero');
 }
 
@@ -1912,7 +1972,7 @@ $('#goBtn').addEventListener('click', async () => {
       ? refinePrompt(draft, version.html, 'Recompose the illustration and layout for the requested output format.', true)
       : posterPrompt(draft);
     const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier: 'complex',
-      onText: livePreview(draft, target), usable: t => validPage(stripFences(t))}));
+      onText: livePreview(draft, target), usable: t => validPage(stripFences(t), draft.format)}));
     const sy = posterSymbols(html) || {entities: [], accent: null};
     Object.assign(draft, {entities: sy.entities, accent: sy.accent || draft.accent || '#A3203A'});
     if (proj !== target || homeOpen()) return;
@@ -1957,7 +2017,7 @@ async function revise(kind){
       prompt = posterPrompt(draft, 'Answer the question with a different picture idea and composition from this earlier attempt: ' + previous + '.');
     }
     const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier:'complex',
-      onText:livePreview(draft, target), usable:t => validPage(stripFences(t))}));
+      onText:livePreview(draft, target), usable:t => validPage(stripFences(t), draft.format)}));
     if (proj !== target || homeOpen()) return;
     const sy = posterSymbols(html);
     if (sy){ if (sy.entities.length || kind === 'again') draft.entities = sy.entities; if (sy.accent) draft.accent = sy.accent; }
