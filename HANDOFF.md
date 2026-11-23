@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-23 (Claude Code: near-miss three-part answers fall back to the normal layout; published).
+Last updated 2026-11-23 (Claude Code: near-miss three-part answers fall back to the normal layout; Artifact version 41).
 
 ## Three-part Instagram layout
 
@@ -9,6 +9,7 @@ Last updated 2026-11-23 (Claude Code: near-miss three-part answers fall back to 
 - Verified in Chromium with a plate fixture at phone width: artwork and labels were disjoint, labels wrapped inside their positions, supplemental copy was removed, and the export clone preserved the result. Verified light and dark field contrast, rejection of malformed slots and normal layout dimensions.
 - **Claude Code fix (2026-11-23):** `validPage()` no longer rejects a whole answer when an `ig-partition` figure misses the exact template (that ended in "The page came back empty"). The strict check moved to `partitionOk()`; `renderIG` uses the special layout only for an exact match and otherwise removes the `ig-partition` class, so the answer shows in the normal layout. A usable page still needs `header.ig-head` and a panel or hero figure.
   - **Verified** in the in-app Chromium preview of the local standalone `index.html` with the stand-in Claude (`?stub=1`), Instagram format, three answers in a row: a valid plate got the three-part layout with labels clear of the artwork; a near-miss (same plate with a `<text>` inside the drawing) was accepted as version 2 in the normal layout with its three labels shown; a normal poster rendered as version 3. No console errors.
+  - **Published** as Artifact version 41 (`1795460889-0e3b`) from `e04ff08`, capabilities carried forward (`sample` with images, `downloads`, `mcp` `host:claude_browser`).
   - **Unverified:** real Claude output in the live Artifact.
 - GitHub rollback point: `c9d034d`. The last recorded Claude publication is version 40 (`1795459555-c7fa`). Publish this change to the existing Artifact before testing the same plate brief with the original sources in Instagram format.
 
