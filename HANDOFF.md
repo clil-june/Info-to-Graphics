@@ -1,6 +1,12 @@
 # Handoff
 
-Last updated 2026-11-23 (Claude Code: browser-checked the callouts, regression overlaps and pencil screen).
+Last updated 2026-11-23 (Codex: restore the GitHub code to the pre-change snapshot).
+
+## Rollback status
+
+- GitHub's working branch restores the code and design guides from `32843b6d4f039f6629edf5a20df1093a571e81d1`. The full pre-rollback state `9bae9c95e311f9ece9aec54760ef8411b1d7694f` is preserved on [`backup/before-callout-rework-2026-11-23`](https://github.com/clil-june/Info-to-Graphics/tree/backup/before-callout-rework-2026-11-23).
+- Claude's separate restore point is Artifact version 36 (`1795442960-ce11`). To restore it, republish the exact `index.html` from `0c1def5e0faf1dbee1656a548ab8c5cd14977107` to the existing Artifact and verify the published version. The last publication recorded before this rollback is version 39 (`1795458342-d2f8`).
+- The entries below record earlier work and publications.
 
 ## Current task
 
