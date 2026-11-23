@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: align generation, revision and format examples around the complete visual answer).
+Last updated 2026-11-23 (Claude Code: illustrated comparison examples and illustration safeguards restored; published).
 
 ## Current task
 
@@ -54,6 +54,25 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Illustrated examples and safeguards restored (Claude Code, 2026-11-23, owner-approved)
+
+- **Review of Codex's `32843b6` and `f05f223`:** the format-adaptation and complete-visual-answer changes are kept. Still present: the hero rule, real colours, eye-holes, three levels, the bold field, the label fitter and the repetition check. Four things had weakened, and the owner chose "Restore and publish":
+  1. **`comparisonExample(format)` drew small cup icons with plain bars** in all three formats, replacing the drawn moodboard examples (`EXAMPLE_SLIDE`, `EXAMPLE_FEED`, `EXAMPLE_OBJECT`). Those examples had stopped the earlier "maps and circles" drift.
+  2. **The "no recognisable subject" failure mode was removed.**
+  3. **The chart rule** allowed "a clearly labelled chart or diagram" without the subject.
+  4. **The map rule** went from "the subject still appears as a large illustrated hero" to "when that clarifies".
+- **Changes:**
+  - **`COMPARISON_EXAMPLES`** draws Codex's same comparison and facts, with its headline "Brewed coffee has more caffeine" and source, in the house style: a coral field, cups seen from above with long hard shadows, a saucer under the espresso, and coffee beans as the marks (5 mg each: 19 for about 95 mg, about 13 for 63 mg; drawn as shapes, so no key is needed), plus the caption "One bean = 5 mg of caffeine". There is one layout per format:
+    - **Instagram:** stacked, mug first and larger
+    - **Presentation:** a wide side-by-side scene (`data-layout="wide"`)
+    - **Print:** two columns, each cup above its beans
+
+    `comparisonExample(format)` returns the matching one (Instagram for older formatless projects), and `formatExample()` is unchanged.
+  - The failure mode "no recognisable subject: only circles, dots, plain bars, tiles or a bare map" is back.
+  - The chart rule now says to build a chart from the real subject drawn in the house style, never from plain bars or dots alone.
+  - The map rule adds back "the map is the stage, not the whole picture": the subject is drawn on or beside the map, and markers are small drawings of the subject where possible.
+
 
 ### Complete visual answer (Codex, 2026-11-23)
 
@@ -503,6 +522,15 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Restored examples and safeguards (2026-11-23)
+
+- Built-in Chromium pane, standalone page, stand-in `window.claude` returning each illustrated example. The test used Codex's own flow: Generate as 16:9, then switch the editor picker to 4:5 and Generate, then to A4 and Generate (3 versions).
+  - In each format the prompt contained that format's illustrated example (its viewBox and the "One bean = 5 mg" caption), no bar-chart example, the plain-shapes failure mode and the map rule.
+  - Each render had 0 label overlaps and "All 2 numbers on the page appear in your sources". The 16:9 and A4 versions were inspected by eye.
+  - No console errors.
+- **Unverified:** real Claude output in the live artifact, especially the four-milestone A4 format switch Codex asks to check.
+
 
 ### Complete visual answer (2026-11-23)
 
