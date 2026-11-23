@@ -68,16 +68,6 @@ select.btn{max-width:220px}
 .src .x:hover{color:var(--ink)}
 .area{width:100%;min-height:92px;border:1px solid var(--rule-2);background:var(--sheet);border-radius:10px;padding:9px 11px;font-size:13.5px;resize:vertical;line-height:1.45}
 .go{padding:11px 14px;font-size:14px}
-.progress{display:grid;gap:7px;padding:12px;border:1px solid var(--rule);border-radius:10px;background:var(--sheet)}
-.ps{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-3)}
-.ps i{width:16px;height:16px;border-radius:50%;border:2px solid var(--rule-2);flex:none}
-.ps.on{color:var(--ink);font-weight:600}
-.ps.on i{border-color:var(--cobalt);border-right-color:transparent;animation:spin .9s linear infinite}
-.ps.done{color:var(--ink-2)}
-.ps-n{font-weight:400;color:var(--ink-3);font-variant-numeric:tabular-nums}
-.ps.done i{border-color:var(--ok);background:var(--ok)}
-.timer{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
-@keyframes spin{to{transform:rotate(360deg)}}
 .status{font-size:12.5px;color:var(--ink-2);min-height:1.2em}
 .status.err{color:var(--warn)}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
@@ -187,11 +177,6 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
 .area:focus-visible{outline:2px solid var(--brand);outline-offset:0}
 .pill{border:0;border-radius:999px;background:#1C1C1C;color:#EDEDED;font-size:15px;font-weight:500;padding:12px 20px;cursor:pointer;box-shadow:2px 4px 10px rgba(0,0,0,.18);align-self:flex-start}
 .pill:disabled{opacity:.5;cursor:default}
-.progress{display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:0}
-.progress[hidden]{display:none}
-.ps:not(.on){display:none}
-.ps{flex:1;font-size:13.5px}
-.progress .timer{font-family:inherit}
 .ask{display:flex;align-items:flex-end;gap:6px;background:var(--paper);border-radius:18px;padding:6px 6px 6px 14px}
 .ask textarea{flex:1;border:0;background:transparent;resize:none;font-size:14.5px;line-height:1.4;padding:6px 0;outline:none;min-height:42px}
 .send{flex:none;width:38px;height:38px;border-radius:50%;border:0;background:#1C1C1C;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
@@ -199,6 +184,21 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
 .chips button{background:var(--paper);border:0;padding:5px 11px;font-size:12.5px}
 .chips button:hover{color:var(--brand);background:var(--cobalt-soft)}
 .stage{background-image:none;background-color:var(--paper)}
+.stage[data-generating] :is(#stageTop,#out){display:none}
+.generation-screen{position:relative;max-width:768px;margin-inline:auto;overflow:hidden;border-radius:18px;background:var(--brand);color:#f7fbff}
+.generation-screen[hidden],.generation-progress[hidden],.generation-done[hidden]{display:none}
+.generation-screen canvas{display:block;width:100%;height:auto}
+.generation-progress{display:grid;justify-items:center;gap:8px;padding:0 18px 20px}
+.generation-screen[data-state="done"] .generation-progress{visibility:hidden}
+.generation-status{font-size:clamp(17px,2.8vw,22px);font-weight:700}
+.generation-actions{display:flex;align-items:center;gap:14px;font-size:13px}
+.generation-actions .link{color:inherit;text-decoration:underline;padding:5px;min-height:36px}
+.generation-actions .link:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.generation-done{position:absolute;inset:0;display:grid;place-items:center;background:#102c4e66}
+.generation-confirmation{display:flex;align-items:center;gap:12px;padding:13px 23px;border-radius:12px;background:#f7fbff;color:#123a66;font-size:clamp(21px,4vw,26px);font-weight:700;box-shadow:6px 9px #102c4e}
+.generation-confirmation i{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--brand);color:white;font-size:18px;font-style:normal}
+.generation-screen[data-state="done"] .generation-confirmation{animation:generation-enter .2s ease-out both}
+@keyframes generation-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .check{font-size:12.5px;border-radius:12px}
 @media (max-width:760px){ header.bar{padding:8px 14px} .wordmark{font-size:18px} .main{grid-template-columns:minmax(0,1fr)} }
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
@@ -455,12 +455,6 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
         <div class="work-actions" id="workActions">
           <button class="pill go" id="goBtn" type="button">Generate</button>
         </div>
-        <div class="progress" id="progress" hidden>
-          <div class="ps" data-s="read"><i></i>Reading your sources</div>
-          <div class="ps" data-s="compose"><i></i>Drawing it</div>
-          <div class="ps" data-s="check"><i></i>Checking the numbers</div>
-          <span class="timer" id="timer"></span><button class="link" id="stopBtn" type="button">Stop</button>
-        </div>
         <div class="status" id="goStatus" role="status"></div>
       </section>
       <section class="rsec" id="refineStep" hidden>
@@ -475,6 +469,19 @@ header.bar{background:var(--brand);color:#fff;border-bottom:0;padding:10px 18px}
       </section>
     </aside>
     <section class="stage" id="stage">
+      <div class="generation-screen" id="generationScreen" hidden>
+        <canvas id="generationCanvas" width="1536" height="736" aria-hidden="true"></canvas>
+        <div class="generation-progress" id="generationProgress">
+          <div class="generation-status" role="status">Generating…</div>
+          <div class="generation-actions">
+            <span id="timer" aria-hidden="true"></span>
+            <button class="link" id="stopBtn" type="button">Stop</button>
+          </div>
+        </div>
+        <div class="generation-done" id="generationDone" role="status" hidden>
+          <span class="generation-confirmation"><i aria-hidden="true">✓</i>Done</span>
+        </div>
+      </div>
       <div class="stage-top" id="stageTop"></div>
       <div id="out" class="ig-output"></div>
     </section>
@@ -1891,19 +1898,154 @@ function errCopy(e){
 }
 let ctl = null, t0 = 0, tick = null;
 let lastCut = false; // set by ask(): the runtime said the answer was truncated, or a partial answer was kept
-function stage(name){
-  const order = ['read', 'compose', 'check'], at = order.indexOf(name);
-  document.querySelectorAll('.ps').forEach(el => { const i = order.indexOf(el.dataset.s); el.className = 'ps' + (i < at ? ' done' : i === at ? ' on' : ''); });
+const generationScreen = $('#generationScreen');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const loaderLight = '#F7FBFF', loaderGold = '#EDBE66', loaderCream = '#FAEFDC', loaderSage = '#AFC9A9';
+let loaderFrame = 0, revealTimer = 0;
+function loaderArc(x, y, r, start, end){
+  return Array.from({length:25}, (_, i) => {
+    const angle = (start + (end - start) * i / 24) * Math.PI / 180;
+    return [x + r * Math.cos(angle), y + r * Math.sin(angle)];
+  });
+}
+const loaderStrokes = [
+  [0,1.52,[...loaderArc(507,102,13,-90,0),...loaderArc(507,322,13,0,90),
+    ...loaderArc(261,322,13,90,180),...loaderArc(261,102,13,180,270),[507,89]],loaderLight,3.3],
+  [1.65,1.95,[[278,123],[444,123]],loaderLight,11.5],
+  [2.01,2.21,[[278,144],[365,144]],'#C3D9F2',4.6],
+  [2.32,3.13,loaderArc(327,226,47,-90,270),loaderLight,3.5],
+  [3.22,3.49,[[327,179],[327,273]],'#1F5796',2.3],
+  [3.55,3.72,[[327,226],[374,226]],'#1F5796',2.3],
+  [3.83,4.06,[[399,204],[482,204]],loaderCream,6.6],
+  [4.12,4.31,[[399,227],[460,227]],loaderGold,6.6],
+  [4.37,4.55,[[399,250],[475,250]],loaderSage,6.6],
+  [4.61,4.84,[[278,304],[486,304]],'#C3D9F2',2.8]
+].map(([start,end,points,color,width]) => {
+  const lengths = points.slice(1).map(([x,y],i) => Math.hypot(x - points[i][0], y - points[i][1]));
+  return {start,end,points,color,width,lengths,total:lengths.reduce((sum,length) => sum + length,0)};
+});
+function loaderEase(t){
+  const v = Math.min(1, Math.max(0,t));
+  return v * v * (3 - 2*v);
+}
+function paintGeneration(t, complete = false){
+  const ctx = $('#generationCanvas').getContext('2d');
+  if (!ctx) return;
+  ctx.setTransform(2,0,0,2,0,0);
+  ctx.clearRect(0,0,768,368);
+  ctx.save();
+  ctx.translate(0,-18);
+  ctx.globalAlpha = complete ? 1 : 1 - loaderEase((t - 5.02) / .31);
+  const polygon = (color, points) => {
+    ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(...points[0]);
+    for (const point of points.slice(1)) ctx.lineTo(...point);
+    ctx.closePath(); ctx.fill();
+  };
+  if (t >= 1.42){
+    ctx.save(); ctx.globalAlpha *= loaderEase((t - 1.42) / .26);
+    polygon('#123A66',[[259,324],[519,103],[570,137],[570,364],[313,364]]);
+    ctx.fillStyle = '#2862A0';
+    ctx.beginPath(); ctx.roundRect(248,89,272,246,13); ctx.fill();
+    ctx.restore();
+  }
+  if (t >= 3.12){
+    ctx.save(); ctx.globalAlpha *= loaderEase((t - 3.12) / .26);
+    for (const [start,end,color] of [[90,270,loaderGold],[270,360,loaderCream],[0,90,loaderSage]]){
+      ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(327,226);
+      ctx.arc(327,226,46,start*Math.PI/180,end*Math.PI/180); ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+  }
+  let tip = loaderStrokes[0].points[0];
+  for (const [i,{start,end,points,color,width,lengths,total}] of loaderStrokes.entries()){
+    if (t < start){
+      if (i){
+        const prior = loaderStrokes[i-1], from = prior.points.at(-1), to = points[0];
+        const p = loaderEase((t - prior.end) / (start - prior.end));
+        tip = [from[0] + (to[0]-from[0])*p, from[1] + (to[1]-from[1])*p - 7*Math.sin(Math.PI*p)];
+      }
+      break;
+    }
+    let distance = loaderEase((t - start) / (end - start)) * total;
+    ctx.beginPath(); ctx.moveTo(...points[0]); tip = points[0];
+    for (const [j,length] of lengths.entries()){
+      const [x,y] = points[j], [nextX,nextY] = points[j+1];
+      const p = Math.min(1, distance / length);
+      tip = [x + (nextX-x)*p,y + (nextY-y)*p];
+      ctx.lineTo(...tip); distance -= length;
+      if (distance <= 0) break;
+    }
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+    if (t < end) break;
+  }
+  if (!complete && t < 5.09){
+    const lift = loaderEase((t - 4.84) / .25);
+    ctx.save(); ctx.globalAlpha *= 1-lift; ctx.translate(tip[0]+24*lift,tip[1]-24*lift);
+    ctx.rotate(-Math.min(Math.PI*.27, Math.asin(Math.min(1,Math.max(0,(tip[1]-32)/154)))));
+    polygon('#123A6699',[[18,11],[146,4],[156,14],[28,20]]);
+    polygon('#C4852A',[[27,-9],[128,-10],[131,11],[27,9]]);
+    polygon('#FFE39B',[[27,-9],[129,-10],[130,-4],[27,-2]]);
+    polygon('#F4C152',[[27,-2],[130,-4],[131,4],[27,4]]);
+    polygon('#FBE2B9',[[0,0],[27,-9],[27,-2]]);
+    polygon('#E6BA81',[[0,0],[27,-2],[27,4]]);
+    polygon('#BE8E59',[[0,0],[27,4],[27,9]]);
+    polygon('#293034',[[0,0],[9,-2.5],[11,0],[9,2.7]]);
+    polygon('#AAB0B2',[[128,-10],[142,-10],[142,10],[130,11]]);
+    polygon('#E4E7E9',[[128,-9],[142,-9],[142,-4],[128,-4]]);
+    polygon('#D48879',[[142,-10],[150,-9],[155,-4],[155,4],[150,9],[142,10]]);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+function hideGeneration(){
+  cancelAnimationFrame(loaderFrame); clearTimeout(revealTimer);
+  generationScreen.hidden = true;
+  delete generationScreen.dataset.state;
+  $('#generationDone').hidden = true;
+  delete $('#stage').dataset.generating;
+  $('#exportBtn').disabled = false;
+  $('#exportHtmlBtn').disabled = false;
+  const ig = $('#out .ig');
+  if (ig && !homeOpen()) fitSoon(ig);
+}
+function showGeneration(){
+  cancelAnimationFrame(loaderFrame); clearTimeout(revealTimer);
+  generationScreen.hidden = false; generationScreen.dataset.state = 'waiting';
+  $('#stage').dataset.generating = '';
+  $('#stage').scrollTop = 0;
+  $('#generationDone').hidden = true;
+  $('#exportBtn').disabled = true; $('#exportHtmlBtn').disabled = true;
+  setTab('out');
+  const begin = performance.now();
+  if (reducedMotion.matches) paintGeneration(5, true);
+  else {
+    const draw = now => {
+      paintGeneration(((now - begin) / 1000) % 5.35);
+      loaderFrame = requestAnimationFrame(draw);
+    };
+    paintGeneration(0);
+    loaderFrame = requestAnimationFrame(draw);
+  }
 }
 function startRun(){
   ctl = new AbortController(); t0 = Date.now(); $('#goStatus').textContent = ''; $('#goStatus').className = 'status';
   $('#goBtn').disabled = true; $('#refineBtn').disabled = true; $('#againBtn').disabled = true;
   setFormatMenuOpen(false);
   formatButton.disabled = true;
-  clearInterval(tick); tick = setInterval(() => { $('#timer').textContent = Math.round((Date.now() - t0) / 1000) + ' s'; }, 1000);
+  $('#timer').textContent = '0 s';
+  tick = setInterval(() => { $('#timer').textContent = Math.floor((Date.now() - t0) / 1000) + ' s'; }, 1000);
+  showGeneration();
 }
-function endRun(){ clearInterval(tick); ctl = null; $('#goBtn').disabled = false; $('#refineBtn').disabled = false; $('#againBtn').disabled = false; formatButton.disabled = false; }
-$('#stopBtn').addEventListener('click', () => ctl?.abort());
+function endRun(completed){
+  clearInterval(tick); ctl = null; $('#goBtn').disabled = false; $('#refineBtn').disabled = false; $('#againBtn').disabled = false; formatButton.disabled = false;
+  if (!completed || homeOpen()){ hideGeneration(); return; }
+  cancelAnimationFrame(loaderFrame);
+  paintGeneration(5, true);
+  $('#generationDone').hidden = false;
+  generationScreen.dataset.state = 'done';
+  revealTimer = setTimeout(hideGeneration, 950);
+}
+$('#stopBtn').addEventListener('click', () => ctl?.abort({code:'cancelled'}));
 /* An answer that stops early loses whatever Claude drew last. Count it as cut when the runtime says so,
    or when the drawing or the figure was never closed. */
 function wasCut(html){
@@ -1911,7 +2053,7 @@ function wasCut(html){
   return lastCut || !/<\/figure>/i.test(html) || n(/<svg\b/gi) > n(/<\/svg>/gi);
 }
 const POSTER_ARTWORK = 'svg, .ig-illo, .ig-picto, .ig-bars, .ig-stats';
-/* Apply the poster structure to streamed and saved results. Saved older pages keep their original layout. */
+/* Apply the poster structure to generated results. Saved older pages keep their original layout. */
 function visualPoster(html, format){
   const doc = new DOMParser().parseFromString('<body>' + svgSafe(html) + '</body>', 'text/html');
   const allowed = '.ig-symdefs, header.ig-head, figure.ig-hero, footer.ig-foot';
@@ -1951,12 +2093,18 @@ const EXPORT_A4_CSS = `
 /* One Claude call with one fallback: if the first tier fails (other than a stop or a refusal),
    try once more on the other tier. A rejected call that already wrote a usable answer keeps it. */
 const NO_RETRY = new Set(['cancelled', 'not_granted', 'sampling_disabled', 'refused', 'session_expired', 'prompt_too_large']);
-async function ask(sample, prompt, {signal, tier = 'default', onText, usable = () => true, failCode = 'empty_page'} = {}){
+async function ask(sample, prompt, {signal, tier = 'default', usable = () => true, failCode = 'empty_page'} = {}){
   const tiers = tier === 'default' ? ['default', 'complex'] : [tier, 'default'];
   let last;
   for (const modelTier of tiers){
+    const cleanup = new AbortController();
     try{
-      const r = await sample(prompt, {cache:false, signal, modelTier, onText});
+      signal.throwIfAborted();
+      const stopped = new Promise((_, reject) => {
+        signal.addEventListener('abort', () => reject(signal.reason), {once:true, signal:cleanup.signal});
+      });
+      const r = await Promise.race([sample(prompt, {cache:false, signal, modelTier}), stopped]);
+      signal.throwIfAborted();
       if (usable(r.text)){ lastCut = !!r.truncated; return r.text; }
       last = {code:failCode};
     }catch(e){
@@ -1964,32 +2112,10 @@ async function ask(sample, prompt, {signal, tier = 'default', onText, usable = (
       if (e?.text && usable(e.text)){ lastCut = true; return e.text; }
       if (NO_RETRY.has(e?.code)) throw e;
       last = e;
-    }
+    }finally{ cleanup.abort(); }
   }
   throw last;
 }
-/* Show the page as it is written, so the wait is visible. */
-function livePreview(project, target){
-  let last = 0, shown = 0;
-  return ({text}) => {
-    if (proj !== target || homeOpen()) return;
-    const now = Date.now();
-    if (now - last < 700 || !text || text.length === shown) return;
-    const raw = stripFences(text);
-    if (!raw.includes('ig-head')) return;
-    last = now; shown = text.length;
-    try{
-      const html = visualPoster(raw, project.format);
-      const sy = posterSymbols(html);
-      const view = sy ? {...project, entities: sy.entities, accent: sy.accent || project.accent} : project;
-      const ig = renderIG(html, view, {composition: screenComposition(project.format)});
-      $('#out').replaceChildren(artboard(ig));
-      fitArtboard(ig.closest('.ig-frame'));
-      fitSoon(ig); // labels stay readable while the poster is still being written
-    }catch{}
-  };
-}
-
 function validPage(html){
   const doc = new DOMParser().parseFromString('<body>' + svgSafe(html) + '</body>', 'text/html');
   const figure = doc.body.querySelector(':scope > figure.ig-hero');
@@ -2024,26 +2150,24 @@ $('#goBtn').addEventListener('click', async () => {
   const sample = await samplerOrNull();
   if (ctl || proj !== target || homeOpen() || currentVersion(target) !== version) return;
   if (!sample){ st.className = 'status err'; st.textContent = 'Claude is not available in this view. Open Info to Graphics on claude.ai to make infographics.'; return; }
-  startRun(); $('#progress').hidden = false; stage('read');
-  try{
-    stage('compose');
-    $('#stageTop').replaceChildren();
+  startRun();
+  let completed = false;
+  try {
     const prompt = adaptFormat
       ? refinePrompt(draft, version.html, 'Recompose the illustration and layout for the requested output format.', {keepFacts:true, formatChanged})
       : posterPrompt(draft);
     const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier: 'complex',
-      onText: livePreview(draft, target), usable: t => validPage(stripFences(t))}));
+      usable: t => validPage(stripFences(t))}));
     const sy = posterSymbols(html) || {entities: [], accent: null};
     Object.assign(draft, {entities: sy.entities, accent: sy.accent || draft.accent || '#A3203A'});
     if (proj !== target || homeOpen()) return;
-    stage('check');
     if (!target.title || target.title === 'Untitled infographic') target.title = (new DOMParser().parseFromString(html, 'text/html').querySelector('.ig-h1')?.textContent || target.title).trim().slice(0, 60);
     addVersion(html, adaptFormat ? 'New format' : version ? 'New result' : 'First version', draft);
     renderAll(); setTab('out');
-    { const n = Math.round((Date.now() - t0) / 1000); st.textContent = `Done in ${n} second${n === 1 ? "" : "s"}.`; }
+    completed = !currentVersion(target).cut;
     $('#stage').scrollTop = 0;
-  }catch(e){ st.className = 'status err'; st.textContent = errCopy(e); if (proj === target) renderStage(); }
-  finally{ endRun(); $('#progress').hidden = true; }
+  }catch(e){ st.className = 'status err'; st.textContent = errCopy(e); if (proj === target && !homeOpen()) { renderStage(); setTab('make'); } }
+  finally{ endRun(completed); }
 });
 
 async function revise(kind){
@@ -2061,7 +2185,8 @@ async function revise(kind){
   const sample = await samplerOrNull();
   if (ctl || proj !== target || homeOpen() || currentVersion(target) !== version) return;
   if (!sample){ st.className = 'status err'; st.textContent = 'Claude is not available in this view. Open Info to Graphics on claude.ai to use it.'; return; }
-  startRun(); st.className = 'status'; st.textContent = kind === 'change' ? 'Applying your change…' : 'Laying out the page again…';
+  startRun(); st.className = 'status'; st.textContent = '';
+  let completed = false;
   try{
     let prompt;
     if (kind === 'change'){
@@ -2078,7 +2203,7 @@ async function revise(kind){
       prompt = posterPrompt(draft);
     }
     const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier:'complex',
-      onText:livePreview(draft, target), usable:t => validPage(stripFences(t))}));
+      usable:t => validPage(stripFences(t))}));
     if (proj !== target || homeOpen()) return;
     const sy = posterSymbols(html);
     if (sy){ draft.entities = sy.entities; if (sy.accent) draft.accent = sy.accent; }
@@ -2087,8 +2212,9 @@ async function revise(kind){
     if (kind === 'change') $('#refineIn').value = '';
     renderAll(); setTab('out');
     $('#refineStatus').textContent = `Version ${proj.versions.length} ready.`;
-  }catch(e){ st.className = 'status err'; st.textContent = errCopy(e); if (proj === target) renderStage(); }
-  finally{ endRun(); }
+    completed = !currentVersion(target).cut;
+  }catch(e){ st.className = 'status err'; st.textContent = errCopy(e); if (proj === target && !homeOpen()) { renderStage(); setTab('make'); } }
+  finally{ endRun(completed); }
 }
 $('#refineBtn').addEventListener('click', () => revise('change'));
 $('#againBtn').addEventListener('click', () => revise('again'));
@@ -2231,6 +2357,7 @@ function showHome(){
   // a draft for the start page: reuse an untouched one, otherwise start fresh
   if (!(proj && !proj.example && !(proj.versions || []).length)){ const p = freshProject(); store.projects.unshift(p); store.current = p.id; proj = p; save(); }
   $('#home').hidden = false; $('#app').hidden = true;
+  hideGeneration();
   $('#homeBriefIn').value = proj.brief || ''; $('#homeStatus').textContent = '';
   if (!Object.hasOwn(OUTPUT_FORMATS, proj.format)) proj.format = DEFAULT_FORMAT;
   $('#homeSourceRow').append(formatPicker);

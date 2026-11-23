@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: keep label blocks attached to the right artwork).
+Last updated 2026-11-23 (Codex: add the pencil animation and completion confirmation).
 
 ## Current task
+
+**Owner decision (2026-11-23):** use the selected pencil sketch. The natural yellow pencil draws the chart on the app's blue field in a loop while generation runs. Show a centered **Done** confirmation once, after a complete result is ready, then reveal it.
 
 **Owner report (2026-11-23):** the healthy-plate portrait has an oil bottle on top of the vegetable qualification. In both formats cream leaders lose contrast over the plate and the portrait vegetable label appears detached from its mark. Keep the primary quantities and their labels together, with their own reserved space ahead of any secondary labels.
 
@@ -36,6 +38,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- The pencil loader update is in [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). GitHub rollback point: `eadd6c8`. Publication to the existing Claude Artifact is pending.
+
 - The callout update belongs to [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). GitHub rollback point: `66c75d0`. The last recorded Artifact is version 38 (`1795455746-6776`, from `9252904`). Publication of this update is pending.
 
 - The visual-only output update is in [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). GitHub rollback point: `d1a3bd5`. Artifact version 37 (`1795449004-e33e`, from `1b9b004`) is the last recorded publication. The visual-only update is live in version 38 (`1795455746-6776`).
@@ -62,6 +66,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Pencil generation screen (Codex, 2026-11-23)
+
+- Added a responsive pencil animation with the chosen blue palette and natural pencil. It runs for Generate, Change it and Try a different picture. The waiting screen provides Stop and a still illustration for reduced-motion settings.
+- A complete result stops the loop and opens the centered Done confirmation once before the infographic is revealed. Cancellation, errors and truncated results bypass the confirmation. Export controls return when the result is visible.
 
 ### Label hierarchy and leaders (Codex, 2026-11-23)
 
@@ -541,6 +550,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Pencil generation screen (2026-11-23)
+
+- Chromium with a stand-in sampler held a generation open across a complete drawing loop. Done appeared exactly once after the reply was accepted, and the infographic became visible afterward. Cancelled a revision and verified that its late answer could not replace the displayed infographic. Refusal and a truncated answer both skipped Done.
+- Tested the result and confirmation on a 390 px mobile viewport and verified that reduced-motion mode leaves the drawing still. The live Claude Artifact has not yet been updated or verified.
+
 ### Label hierarchy and leaders (2026-11-23)
 
 - Chromium rendered an annotated plate fixture in Presentation, Instagram and A4. A label initially overlapping the plate cleared it by 6 SVG units. The oil icon and its text moved together below the primary label with the same clearance. The evidence anchors stayed fixed, the other endpoints followed their label edges, and the two-tone lines and their endpoints survived in the export clone. Repeated fitting was stable at the final size.
@@ -884,6 +898,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish this branch to the existing Claude Artifact. Run one real generation and one revision; check that the pencil runs through the wait, Done appears once, and the result then opens. Test Stop on a real generation.
 
 Publish the label hierarchy and leader update to the existing Claude Artifact. Regenerate the healthy-plate brief in Presentation and Instagram. Check the vegetable qualification is clear of the bottle, the main quantities keep their order, and the lines remain readable at the rim of the plate and visibly reach the correct label.
 
