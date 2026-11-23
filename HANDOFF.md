@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-23 (Claude Code: illustrated comparison examples and illustration safeguards restored; published).
+Last updated 2026-11-23 (Codex: keep all content in the visual, with the citation in the footer).
 
 ## Current task
+
+**Owner decision (2026-11-23):** all necessary information belongs in the infographic itself, either drawn or directly labelled. Omit supplemental prose in Presentation, Instagram and A4. The healthy-plate A4 and Instagram examples added unrelated drinking and daily intake advice after the figure. Keep only the citation below the visual.
 
 **Owner decision (2026-11-23):** one question leads to one takeaway and can require several essential facts. Keep each part of the answer in the visual or directly attached to its evidence. Use the same order in the guide and prompts: determine the complete answer, choose its visual encoding, compose for the format, and check with optional prose covered.
 
@@ -32,6 +34,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- The visual-only output update is in [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). GitHub rollback point: `d1a3bd5`. Artifact version 37 (`1795449004-e33e`, from `1b9b004`) is the last recorded publication. The visual-only update is pending publication.
+
 - The complete-answer update is on `feature/four-elements` ([PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2)). The GitHub rollback point is `32843b6`, the parent of this update. Revert this update's commit to restore it while preserving branch history.
 - Published as version 37 (`1795449004-e33e`) from `1b9b004`. The previous version is 36 (`1795442960-ce11`), published from `0c1def5`. To restore that published version after a later release, republish `index.html` from `0c1def5` with its existing capabilities.
 
@@ -54,6 +58,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Visual-only output (Codex, 2026-11-23)
+
+- Prompts, the guide and the three format examples keep all facts, qualifications and keys in the main visual. The footer contains the citation. A4 uses available space to improve the drawing and labels.
+- New results are structurally pruned during streaming and before saving. The filter retains the theme, takeaway, visual and citation, removing independent notes, captions and closing blocks. Essential labels remain in the visual. Older saved versions keep their original layout.
 
 ### Illustrated examples and safeguards restored (Claude Code, 2026-11-23, owner-approved)
 
@@ -523,6 +532,10 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Visual-only output (2026-11-23)
+
+- The inline script parsed and ran in a DOM test with a stand-in sampler. Tested the three format prompts and examples, the output filter, preservation of direct qualifiers and citations, the editor's Generate button, same-question format adaptation and all three locked canvas sizes.
+
 ### Restored examples and safeguards (2026-11-23)
 
 - Built-in Chromium pane, standalone page, stand-in `window.claude` returning each illustrated example. The test used Codex's own flow: Generate as 16:9, then switch the editor picker to 4:5 and Generate, then to A4 and Generate (3 versions).
@@ -848,6 +861,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the visual-only update from this branch to the existing Claude Artifact. Retest the healthy-plate brief in Presentation, Instagram and A4 with the same sources. Confirm that the plate and labels contain the complete answer and the source citation follows the figure.
 
 Published as version 37 (`1795449004-e33e`). From the four-milestone presentation, switch to A4 with the same question and sources and run Generate. Repeat from the presentation with Change it. Cover the notes below the illustration and locate head and chest lift, babbling, smiling back, and reaching and grasping in the illustration or its direct labels. Compare with the version recorded above if the new result is weaker.
 

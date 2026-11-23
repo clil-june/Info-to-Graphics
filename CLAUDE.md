@@ -33,8 +33,8 @@ When designing, changing, or reviewing infographic generation, consult [the visu
 
 **Default (owner's standing preference): prefer visual representation over text.** Apply this to every source you turn into an infographic:
 
-- Give each essential part of the answer a place in the main visual. Use direct labels where they identify the evidence or make it easier to read.
-- When a recurring object is useful as a mark, give it a recognizable symbol with a consistent meaning and colour. Use a nearby key if the repeated marks need decoding. A repeated symbol can represent a count when its unit is clear.
+- Put each essential part of the answer in the main visual or in direct labels attached to its evidence. Omit supplemental prose and reserve the footer for the citation.
+- When a recurring object is useful as a mark, give it a recognizable symbol with a consistent meaning and colour. Place any key inside the visual. A repeated symbol can represent a count when its unit is clear.
 - Keep words where they carry meaning: headlines and the takeaway, units and denominators, and qualifiers such as "reported", "estimated" or "about".
 - Give every symbol an accessible name, so the piece still reads without the pictures.
 - Reference example: the Harvard period-products infographic, where a tampon, pad, liner, cup and period underwear replace the product names.

@@ -151,7 +151,7 @@ Use the subject itself as the data mark when its shape or surface makes the rela
 
 ### Compose for the output format
 
-Identify the complete answer from the sources before planning its composition. Choose the visual that shows all the evidence the answer needs. Allocate space and position labels for the target format, then choose optional supporting facts for that audience. Keep the units, qualifiers and source accurate in every format.
+Identify the complete answer from the sources before planning its composition. Choose the visual that shows all the evidence the answer needs. Allocate space and position direct labels for the target format. Preserve essential units and qualifiers next to their marks, and keep the citation in the footer.
 
 Plan the illustration or chart at the target aspect ratio. Choose the subject's pose, viewpoint or crop and place the labels alongside the relevant features. Use the grid for alignment. If space is tight, move a label with its anchor, redirect the object into open space or choose a different view. Keep recognisable proportions by using the same scale factor on both axes when resizing.
 
@@ -159,26 +159,26 @@ Plan the illustration or chart at the target aspect ratio. Choose the subject's 
 
 For a chart, select the encoding and reading direction for the available space at the outset. In a wide comparison, horizontal bars on a common scale can leave room for direct labels. Check that the layout preserves the units, baseline, quantities and spatial relationships that give the marks meaning.
 
-| Format | First thing to see | Arrangement and supporting information |
+| Format | First thing to see | Arrangement of the visual answer |
 | --- | --- | --- |
 | Presentation, 16:9 | A short takeaway in large type and the complete visual answer, legible across a room | A single short number and its unit can sit in an answer block beside a compact visual. Give a comparison or scene the whole width under the headline when that makes the evidence clearer. Label each essential part near its mark. Aim for a 3–6 word headline in at most two whole-word lines. Reserve the footer for the citation. |
-| Instagram, 4:5 | A short takeaway followed by a close-framed, directly labelled visual | Compose for a vertical eye path. Stack aligned comparisons on a common scale or place sequence steps top to bottom. Place the values close to their marks. A brief secondary detail can sit below the drawing. Test on an actual phone. |
-| Print, A4 | A takeaway and complete visual evidence at page size | Include a separate question line only if it clarifies the scope. Give every essential fact a place in or beside the drawing. Use remaining space for an optional method or context note. Put the source on the page and check print preview at actual size. |
+| Instagram, 4:5 | A short takeaway followed by a close-framed, directly labelled visual | Compose for a vertical eye path. Stack aligned comparisons on a common scale or place sequence steps top to bottom. Place values and qualifications close to their marks. Test on an actual phone. |
+| Print, A4 | A takeaway and complete visual evidence at page size | Use the available space to enlarge the drawing, clarify the labels or improve spacing. End with the citation and check print preview at actual size. |
 
 **Worked example.** The same coffee question runs through all three examples in the app prompt. A serving of brewed coffee contains about 95 mg of caffeine per 8 fl oz, and a serving of espresso contains 63 mg per 1 fl oz. The slide uses a wide comparison under the headline. The phone post stacks the two servings. The A4 example places them side by side with a shared baseline. All three keep the serving sizes and quantities directly attached to the two marks.
 
-**When only the format changes,** use the open version as a starting point and verify that the answer is complete against the same sources. Redraw or rearrange the evidence and keep all essential facts in the main illustration or directly attached to their marks. Shorten labels and remove optional details as needed. Use notes below the drawing for supplementary context. If the question or sources change, establish the answer again from the current request and sources.
+**When only the format changes,** use the open version as a starting point and verify that the answer is complete against the same sources. Redraw or rearrange the evidence and keep all essential facts in the main illustration or directly attached to their marks. Move any essential fact stranded in older prose into the visual and omit the rest. If the question or sources change, establish the answer again from the current request and sources.
 
-For a format check, use the same brief and sources. For the four-milestone example, cover the notes below the visual and check that head and chest lift, babbling, smiling back and reaching and grasping are all visible in the illustration or its direct labels on both the slide and the A4 page.
+For a format check, use the same brief and sources. In the four-milestone example, find head and chest lift, babbling, smiling back and reaching and grasping in the illustration or its direct labels on both the slide and the A4 page. In the healthy-plate example, the plate proportions and their qualifications belong with the drawing. Unrelated daily intake advice is omitted in every format.
 
 ### Generation instruction for the app
 
 The app sends a compact version of these instructions with generation and revision requests. Keep `POSTER_RULES`, `ANSWER_PRESERVATION_RULES`, `OUTPUT_FORMATS` and `VISUAL_ANSWER_CHECK` in `index.html` aligned with this section.
 
 1. **Identify the complete answer.** One reader question gives the infographic one takeaway. List every source-supported fact needed for that answer, including each requested part, relevant units, baselines and qualifications. Indicate what the sources cannot establish.
-2. **Choose how to show it.** Give each essential fact a place in the main drawing or a direct label attached to its evidence. Choose a diagram, comparison, map, sequence or illustration that makes the relationship clear. Use an adjacent key when repeated symbols need decoding.
-3. **Compose at the target size.** Redraw the evidence, place the labels and give the takeaway a clear visual hierarchy. Keep object proportions and data scales faithful. Use the format's word targets for optional context and cut that context first when space is tight.
-4. **Check the visual answer.** Mentally cover explanatory prose and the source footer at the intended display size. The takeaway and main visual should still give the full answer. Check the facts against the sources, and review contrast, clipping and overlapping labels. The app's numeric lookup is a separate check.
+2. **Choose how to show it.** Give every necessary fact a place in the main drawing or a direct label attached to its evidence. Choose a diagram, comparison, map, sequence or illustration that makes the relationship clear. Place any key for repeated marks inside the graphic.
+3. **Compose at the target size.** Redraw the evidence, place the labels and give the takeaway a clear visual hierarchy. Keep object proportions and data scales faithful. Use extra space to improve the layout.
+4. **Check the visual answer.** At the intended size, locate every necessary fact in the graphic or its direct labels. Omit standalone captions, explanatory paragraphs, method notes, source summaries and closing lines. If a qualification is necessary, place it directly with its evidence. The footer holds only the citation. Check the facts against the sources and review contrast, clipping and overlapping labels.
 
 ### Examples to study
 
