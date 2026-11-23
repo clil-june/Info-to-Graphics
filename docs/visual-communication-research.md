@@ -322,13 +322,19 @@ Aim for 4.5:1 even for large titles where the palette allows. The enhanced AAA t
 
 Check the weakest part of the background under the lettering. Account for composited opacity, gradients, shadows and overlapping map fills. If a label is weak, try a quiet area with a clear leader, change the ink or add a small solid backing. Check the repaired pair and leader. Cream `#F6F4EA` on coral `#EF4D52` gives 3.25:1 for large text. Indigo `#17183F` on the same coral gives 4.72:1 and also passes for ordinary text. [W3C Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) · [WCAG contrast ratio](https://www.w3.org/TR/WCAG22/#dfn-contrast-ratio)
 
+### Keep the label and its evidence together
+
+Reserve space for each whole label, including the heading, number, qualifications and any icon that belongs to it. Place the main answer and its labels before secondary illustrations such as a drink or oil icon. Give every label at least 6 SVG units of clearance from unrelated artwork, shadows, labels and lines. If the format is tight, shorten the wording or recompose. Move the whole label block as a unit, including its icon and the label end of its leader.
+
+Anchor a leader to the exact feature it describes, preferably on the edge nearest the label. Route it through clear space and end it just outside the matching label. Check the contrast along the whole route, including where it crosses the artwork. Use a light stroke with a narrow dark casing over mixed light and dark surfaces. Trace the line in the finished composition and check that nearby illustrations cannot be mistaken for its destination.
+
 ### Check the rendered text
 
 - Start at 14–16 CSS px for important short labels and around 16 CSS px for explanatory text at phone size. These are project defaults to adjust for the chosen font and script. Use a readable weight and keep numbers, units and qualifiers together.
-- Measure inside the rendered SVG. At 340 CSS px wide, a 400-wide viewBox scales a 12-unit label to about 10.2 CSS px. Around 17 units gives about 14.5 CSS px before additional transforms. Shorten, wrap or move labels into adjacent HTML if the drawing is too crowded.
+- Measure inside the rendered SVG. At 340 CSS px wide, a 400-wide viewBox scales a 12-unit label to about 10.2 CSS px. Around 17 units gives about 14.5 CSS px before additional transforms. Shorten, wrap or reposition the whole label beside the feature if the drawing is too crowded.
 - Inspect the finished page at 360–390 CSS px viewport widths and on desktop. Check overlap, clipping, glyphs, numeric punctuation and right-to-left text after fonts load. Check the HTML export with fallback fonts if it will be read offline. Keep labels as text and check HTML text enlargement up to 200% and user spacing overrides. [W3C Resize Text](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html) · [W3C Text Spacing](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html)
 - Inspect the design in greyscale to see whether categories, routes and the takeaway remain clear. Measure the essential text and graphic pairs separately. Use a contrast checker for solid pairs and inspect the weakest local pair for layered areas.
 
 ### Generator rule
 
-`READABILITY_AND_PALETTE_V3` in `index.html` supplies the condensed rule to Generate, Change it and Try a different picture. During revisions, apply the checks to affected elements and preserve unrelated design decisions. Verify colour and label size in the composed result, including the website's theme styles and the HTML export.
+`READABILITY_AND_PALETTE_V3` and the drawing instructions in `index.html` supply the rules to Generate, Change it and Try a different picture. For a callout, the generated SVG provides a fixed evidence anchor and a separate label group. The renderer moves this group together and redraws the leader's label end. During revisions, apply the checks to affected elements and preserve unrelated design decisions. Verify colour, label size and connections in the composed result, including the HTML export.

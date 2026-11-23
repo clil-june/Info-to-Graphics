@@ -547,7 +547,7 @@ const SVG_TAGS = new Set('svg g path rect circle ellipse line polyline polygon t
 const GRAD_TAGS = new Set(['linearGradient', 'radialGradient']);
 const PAINT_URL = /^url\(#[A-Za-z][\w-]{0,40}\)$/;
 const HTML_ATTR = new Set('class style role aria-label aria-hidden scope colspan rowspan href title data-sym data-size data-n data-unit data-section open'.split(' '));
-const SVG_ATTR = new Set('viewBox d x y dx dy x1 y1 x2 y2 cx cy r rx ry width height points transform fill stroke stroke-width stroke-linecap stroke-linejoin stroke-dasharray opacity fill-opacity stroke-opacity fill-rule text-anchor dominant-baseline font-size font-weight font-style font-family letter-spacing preserveAspectRatio role aria-label aria-hidden id offset stop-color stop-opacity gradientUnits gradientTransform fx fy spreadMethod data-map data-view data-box data-land data-sea data-stroke data-fill data-graticule data-lon data-lat data-route data-curve data-rim data-rotate data-sym data-size'.split(' '));
+const SVG_ATTR = new Set('viewBox d x y dx dy x1 y1 x2 y2 cx cy r rx ry width height points transform fill stroke stroke-width stroke-linecap stroke-linejoin stroke-dasharray opacity fill-opacity stroke-opacity fill-rule text-anchor dominant-baseline font-size font-weight font-style font-family letter-spacing preserveAspectRatio role aria-label aria-hidden id offset stop-color stop-opacity gradientUnits gradientTransform fx fy spreadMethod data-map data-view data-box data-land data-sea data-stroke data-fill data-graticule data-lon data-lat data-route data-curve data-rim data-rotate data-sym data-size data-artwork data-callout data-label data-leader'.split(' '));
 /* Guard: these geometry attributes must always survive sanitizing (a typo in the list once dropped cx and y2). */
 ['d', 'x', 'y', 'dx', 'dy', 'x1', 'y1', 'x2', 'y2', 'cx', 'cy', 'r', 'rx', 'ry', 'width', 'height', 'points', 'transform', 'viewBox', 'fill', 'stroke'].forEach(a => { if (!SVG_ATTR.has(a)) console.error('Info to Graphics: SVG_ATTR is missing ' + a); });
 const BAD = /url\s*\(|expression\s*\(|javascript:|@import|behavio(u)?r\s*:|-moz-binding|[<>]/i;
@@ -1091,7 +1091,7 @@ function fitLabels(root){
         if (q.top < p.bottom - 1 && p.top < q.bottom - 1){ lines[i].removeAttribute('y'); lines[i].setAttribute('dy', '1.25em'); }
       }
     });
-    const texts = [...svg.querySelectorAll('text')].filter(t => t.textContent.trim() && !t.closest('defs, clipPath'));
+    const texts = [...svg.querySelectorAll('text')].filter(t => t.textContent.trim() && !t.closest('defs, clipPath, [data-callout]'));
     if (!texts.length) return;
     const size = t => parseFloat(getComputedStyle(t).fontSize) || 16;
     texts.forEach(t => { if (!t.dataset.fs0) t.dataset.fs0 = String(size(t)); });
@@ -1099,7 +1099,7 @@ function fitLabels(root){
     // thin marks that belong with labels (bars, rules, underlines) and small symbols: they move with the labels
     const u0 = unit();
     const marks = [...svg.children].filter(el => {
-      if (el.localName === 'text' || el.localName === 'defs' || el.matches('g[data-map]')) return false;
+      if (el.localName === 'text' || el.localName === 'defs' || el.matches('g[data-map], g[data-artwork], g[data-callout]')) return false;
       if (el.matches('g[data-sym]')) return true;
       const r = el.getBoundingClientRect();
       return r.width > 0 && r.height * u0 <= 14 && r.width > r.height * 3;
@@ -1171,6 +1171,73 @@ function fitLabels(root){
     if (addTop || addBottom) svg.setAttribute('viewBox', [vb[0], vb[1] - addTop, vb[2], vb[3] + addTop + addBottom].map(n => Math.round(n * 10) / 10).join(' '));
   });
 }
+
+const calloutTransforms = new WeakMap();
+function fitCallouts(root){
+  for (const svg of root.querySelectorAll('figure.ig-hero > svg')){
+    const labels = [...svg.querySelectorAll(':scope > g[data-callout] > g[data-label]')];
+    if (!labels.length) continue;
+    const matrix = svg.getScreenCTM?.();
+    const [x, y, w, h] = (svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+    if (!matrix || ![x,y,w,h].every(Number.isFinite) || w <= 0 || h <= 0 || matrix.a <= 0 || matrix.d <= 0) continue;
+    const gap = 6;
+    const round = value => Math.round(value * 100) / 100;
+    const box = node => {
+      const r = node.getBoundingClientRect();
+      return {x:(r.left - matrix.e) / matrix.a, y:(r.top - matrix.f) / matrix.d, w:r.width / matrix.a, h:r.height / matrix.d};
+    };
+    const obstacles = [...svg.querySelectorAll(':scope > g[data-artwork], text')]
+      .filter(node => !node.closest('[data-callout], defs')).map(box).filter(b => b.w && b.h);
+    const blocks = labels.map(label => {
+      if (!calloutTransforms.has(label)) calloutTransforms.set(label, label.getAttribute('transform') || '');
+      const transform = calloutTransforms.get(label);
+      label.setAttribute('transform', transform);
+      const secondary = label.parentElement.getAttribute('data-callout') === 'secondary';
+      return {label, transform, at:box(label), secondary};
+    }).filter(({at}) => at.w && at.h).sort((a,b) => Number(a.secondary) - Number(b.secondary) || a.at.y - b.at.y);
+    const width = Math.max(w, ...blocks.map(({at}) => Math.ceil(at.w + gap * 2)));
+    let bottom = y + h;
+    for (const {label, transform, at, secondary} of blocks){
+      const left = Math.max(x + gap, Math.min(at.x, x + width - at.w - gap));
+      const sameColumn = b => left < b.x + b.w + gap && left + at.w > b.x - gap;
+      const primaryBottoms = secondary ? obstacles.filter(b => b.primary && sameColumn(b)).map(b => b.y + b.h + gap) : [];
+      let top = Math.max(y + gap, at.y, ...primaryBottoms);
+      for (const b of obstacles.sort((a,b) => a.y - b.y)){
+        if (sameColumn(b) && top < b.y + b.h + gap && top + at.h > b.y - gap){
+          top = b.y + b.h + gap;
+        }
+      }
+      label.setAttribute('transform', `translate(${round(left - at.x)} ${round(top - at.y)}) ${transform}`.trim());
+      obstacles.push({x:left,y:top,w:at.w,h:at.h,primary:!secondary});
+      bottom = Math.max(bottom, top + at.h + gap);
+      const leader = label.parentElement.querySelector(':scope > line[data-leader]');
+      if (!leader?.hasAttribute('x1') || !leader.hasAttribute('y1')) continue;
+      const ax = Number(leader.getAttribute('x1')), ay = Number(leader.getAttribute('y1'));
+      if (![ax,ay].every(Number.isFinite)) continue;
+      // The anchor stays at the evidence. Only the label end follows the relocated block.
+      const x2 = Math.max(left - 3, Math.min(ax, left + at.w + 3));
+      const y2 = Math.max(top - 3, Math.min(ay, top + at.h + 3));
+      leader.setAttribute('x2', round(x2));
+      leader.setAttribute('y2', round(y2));
+      leader.setAttribute('stroke', '#FBF7EC');
+      leader.setAttribute('stroke-width', '1.5');
+      leader.setAttribute('stroke-linecap', 'round');
+      leader.removeAttribute('stroke-dasharray');
+      leader.removeAttribute('opacity');
+      leader.removeAttribute('stroke-opacity');
+      const halo = leader.cloneNode();
+      halo.removeAttribute('data-leader');
+      halo.setAttribute('data-leader-halo', '');
+      halo.setAttribute('stroke', '#17212A');
+      halo.setAttribute('stroke-width', '3.5');
+      const previousHalo = leader.previousElementSibling;
+      if (previousHalo?.hasAttribute('data-leader-halo')) previousHalo.replaceWith(halo);
+      else leader.before(halo);
+    }
+    if (width > w || bottom > y + h) svg.setAttribute('viewBox', [x,y,width,Math.ceil(bottom - y)].join(' '));
+  }
+}
+
 function artboard(ig){
   const size = outputSize(ig.dataset.format);
   if (!size) return ig;
@@ -1267,6 +1334,7 @@ function fitSoon(ig){
     const drawing = ig.dataset.format === 'presentation' ? ig.querySelector('.ig-hero > svg') : null;
     const viewBox = drawing?.getAttribute('viewBox');
     try{ fitLabels(ig); }catch(e){}
+    fitCallouts(ig);
     if (drawing?.getAttribute('viewBox') !== viewBox) fitPresentation(ig);
     fitArtboard(frame);
   };
@@ -1321,8 +1389,8 @@ Build the palette as a Material Design colour theme from the 2014 Material palet
 - Surface: cream or a hue-50 tone for light objects and labels on dark fields. Real things keep their real colours: water is blue or clear, soil brown, leaves green, wood, metal and skin true to life. The accent colour goes on the key label, number or a highlight mark, never on a real object if that gives it a wrong colour (no yellow water, no blue leaves). Real data colours stay real (a red car stays red), and categories are told apart by shape, label or pattern as well as colour.
 - 3 to 5 colours in total; every other shade is a tone of these.
 - "On" colours (text and essential marks on a colour): white text is readable at small sizes on these tones and darker: ${Object.keys(MATERIAL).map(h => { const t = MATERIAL_TONES.slice(0, 10).find(x => { const hx = MATERIAL_HEX[h + '-' + x.toLowerCase()]; return hx && (1.05 / (luminance(hx) + 0.05)) >= 4.5; }); return h + ' ' + (t || 'none'); }).join(', ')}. On lighter tones choose a dark ink that passes the contrast threshold. Use white, cream or the accent as text only where the actual surface passes the applicable contrast threshold.
-Use WCAG contrast ratios against the actual background under each label, after transparency and layering. Minimum 4.5:1 for ordinary text, captions, units and sources. Minimum 3:1 for text rendered at 18pt regular or 14pt bold (24 or about 18.67 CSS px), with 4.5:1 preferred for large headings. Use 3:1 against adjacent colours for the lines, arrows and markers needed to understand the graphic. Use a contrast checker when available. If exact checking is unavailable, choose colours with a clear margin and avoid borderline pairs. Choose data-ink and data-muted that pass on the page field. Choose data-accent that passes wherever it is used as text. For text on mixed fills, gradients or shadows, consider the weakest local contrast and move the label to a quiet area or give it a solid backing.
-Keep annotations as SVG or HTML text. Plan for 14–16 rendered CSS px for key labels and around 16 CSS px for explanatory text on a phone. A 400-wide SVG displayed at 340 CSS px needs about 17 SVG units for a 14 CSS px label. Adjust for the actual drawing width, keep labels and values legible without overlap or clipping, and move cramped labels to HTML where needed. Before returning HTML, review emphasis, label clearance and whether the meaning survives in greyscale.`;
+Use WCAG contrast ratios against the actual background under each label, after transparency and layering. Minimum 4.5:1 for ordinary text, captions, units and sources. Minimum 3:1 for text rendered at 18pt regular or 14pt bold (24 or about 18.67 CSS px), with 4.5:1 preferred for large headings. Use 3:1 against every adjacent local surface along essential leaders, arrows and markers, including the object and page field. Route a leader along the quiet field and anchor it to the near edge of its feature. If it crosses light and dark fills, use a light stroke with a slim dark casing so the route stays visible. Use a contrast checker when available. If exact checking is unavailable, choose colours with a clear margin and avoid borderline pairs. Choose data-ink and data-muted that pass on the page field. Choose data-accent that passes wherever it is used as text. For text on mixed fills, gradients or shadows, consider the weakest local contrast and move the label to a quiet area or give it a solid backing.
+Keep annotations as SVG or HTML text. Plan for 14–16 rendered CSS px for key labels and around 16 CSS px for explanatory text on a phone. A 400-wide SVG displayed at 340 CSS px needs about 17 SVG units for a 14 CSS px label. Adjust for the actual drawing width. Reserve space for the full label block including its number, heading, qualifiers, and attached icon. Wrap or rearrange the block if needed, keeping it apart from unrelated artwork, leaders and labels. Before returning HTML, review emphasis, label clearance and whether the meaning survives in greyscale.`;
 
 const DRAWING_RULES = `7. Plan for the chosen format before drawing:
    - use the available width and height to choose a pose, viewpoint or chart orientation. Sketch the visual evidence and the label positions together. Use the grid to align elements and let their placement follow the subject and the evidence.
@@ -1333,11 +1401,11 @@ const DRAWING_RULES = `7. Plan for the chosen format before drawing:
    - leave a quiet colour field around the focal point and use open space deliberately for the subject and its labels
    - a bold viewpoint: straight top-down, a three-quarter tabletop view, a clean side view, or a close-up
    - the accent colour in only one or two places
-   - keep labels clear of the hero and each other. Label important features directly. If repeated symbols need decoding, draw a key within the graphic near the marks. Name each symbol there once and label individual marks with their values, qualifications or identifying text when needed.
+   - plan the hierarchy before drawing. Put the answer and its primary labels first, then any secondary illustration and its own label. Keep each heading, value, qualifier, and its optional icon together as one block. Give each block its own space with at least 6 SVG units of clearance from unrelated lines, text and artwork. Move the whole block with its leader when composing again. A leader starts on the exact feature it labels and ends just before its own label block. It must never look as though it points to a neighbouring object. Label important features directly. If repeated symbols need decoding, draw a key within the graphic near the marks. Name each symbol there once and label individual marks with their values, qualifications or identifying text when needed.
    - the picture must illustrate the answer itself, never a generic scene
 8. House style (always use it, unless the user asks for a different look): flat mid-century poster illustration.
    - Colour: ONE bold colour field from the subject and mood. Use 3 to 5 colours, with a dark shadow tone, cream or white and one small context-appropriate accent as described in READABILITY_AND_PALETTE_V3.
-   - Shapes: flat fills with crisp hard edges. No outlines, no gradients, no glows, no blur, no drop-shadow effects, no 3D shading.
+   - Shapes: flat fills with crisp hard edges. No decorative outlines, gradients, glows, blur, drop-shadow effects or 3D shading. A contrasting casing around a leader is a legibility aid.
    - Light: one strong light. Split each object into a lit plane and a shade plane along a clean straight or curved edge; show shine as one or two crisp cream slivers.
    - Shadows: hard flat shapes in the shadow tone, often long diagonal cast shadows across the ground or the wall; a shadow may be the darker tone laid over the field with fill-opacity 0.35 to 0.6.
    - Simplify: each object is a few big planes and only the details that make it recognisable (a handle, a rim stripe, a label, a leaf). Iconic and witty, never fussy.
@@ -1360,7 +1428,7 @@ const DRAWING_RULES = `7. Plan for the chosen format before drawing:
    - a second focal point competing with the main answer
    - a fact stranded in a paragraph, caption or closing line outside the main visual
    - a supporting item as big, bold or bright as the answer, or a comparison with no heading saying what it is
-   - labels crossing the hero, each other or a busy coastline, or falling below a readable size after scaling. Estimate each label's width before placing it (about 0.55 × font-size per character, 0.62 for bold or wide fonts), keep at least 4 units between labels and inside the drawing's edges, and break a long label into two tspans (same x, dy="1.25em") instead of letting it run into another
+   - a label or its qualifier crossing any unrelated illustration (even a small icon or shadow), another label, a leader, or a busy coastline, or falling below a readable size after scaling. Verify that each leader starts on, and can be followed all the way from, the correct feature to just outside its own label. Estimate each label's width before placing it (about 0.55 × font-size per character, 0.62 for bold or wide fonts), keep at least 4 units between labels and inside the drawing's edges, and break a long label into two tspans (same x, dy="1.25em") instead of letting it run into another
    - mechanical spacing where a scatter would look natural, or a messy scatter where a count must be read
    - a silhouette that looks squeezed or stretched to fit, a chart distorted by resizing, floating objects, or light coming from two directions. If the fit distorts the shape or data, recompose and draw again`;
 
@@ -1419,6 +1487,7 @@ ${TYPOGRAPHY_RULES}
 3. ONE central graphic: <figure class="ig-hero">the drawing with its direct labels and any necessary key</figure>. Place all text for the graphic beside the marks it explains. Prefer one drawing:
    <svg viewBox="0 0 400 H" role="img" aria-label="what the picture shows, with the numbers"> (choose H for the output format and drawing; when there is no format-specific guidance, start with 260 to 560 units).
    Allowed SVG elements: g, path, rect, circle, ellipse, line, polyline, polygon, text, tspan, and gradients: <defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#HEX"/><stop offset="1" stop-color="#HEX" stop-opacity="0"/></linearGradient></defs> (radialGradient with cx, cy, r, fx, fy too), used as fill="url(#a)". Attributes: geometry, transform, fill, stroke, stroke-width, stroke-linecap, stroke-linejoin, stroke-dasharray, opacity, fill-opacity, stroke-opacity, text-anchor, font-size, font-weight, font-style. Hex colours. Use flat fills for the house style. Use gradients only if the user requests a different look. No use, filters, masks, clip paths, images or foreignObject: they are removed, so write repeated shapes out (group them with transform="translate(x y)"). Up to about 400 elements. Spend the detail on the hero illustration and keep repeated marks cheap (one path, or a symbol), so the answer stays under about 30,000 characters; a much longer answer can be cut off and lose whatever comes last. Never put HTML tags (i, b, span, p, div, br) inside the svg; use tspan for bold or italic words. Size text using READABILITY_AND_PALETTE_V3 at the intended display width. The drawing sits on the theme's colour field, so leave its own background transparent: the field IS the background. Add flat planes (a wall, a table, a road, a sea) only where the scene needs them.
+   For callouts, put each main illustration silhouette in its own top-level <g data-artwork> so labels keep clear of it. For each external label, use a top-level <g data-callout="primary"> or <g data-callout="secondary"> with no transform on this wrapper, containing a <g data-label> with that label's heading, value, qualifier and any icon that belongs to it. For connections, add <line data-leader x1="..." y1="..." x2="..." y2="..."/> as the first child of the callout. Set x1/y1 at the exact evidence and place the label near it with a clear route. The app holds that anchor in place, adjusts the other end to the whole label block and draws a two-tone stroke. Use the same label group without a line when an accompanying icon makes the relationship clear. Use plain SVG text for ticks or short labels intentionally inside a data mark.
    MAPS. When WHERE is the answer (where things are, countries, regions, oceans, routes, spread), use a map, never a list. Let the map carry the answer. Add a recognizable subject or illustrated markers when that clarifies what its locations or routes show. The map is the stage, not the whole picture: the subject itself still appears, drawn on or beside it (the animal on its ice, the ship on its route), and markers are small drawings of the subject rather than plain dots wherever possible. When the fact is about size, amount, time or comparison, draw the subject itself instead of a map. Do NOT draw coastlines yourself: place the built-in world map, with accurate coastlines and borders, inside your svg:
    <g data-map="world" data-view="lonWest latSouth lonEast latNorth" data-box="x y width height" data-land="#HEX or token" data-sea="#HEX or token" data-stroke="#HEX or token, border colour, optional" data-graticule="30 (optional grid every N degrees)" data-fill="Country:#HEX;Other country:#HEX (optional, common English names)"></g>
    For the Arctic or Antarctica (polar animals, sea ice, polar routes) use a round polar map instead, looking down on the pole: <g data-map="arctic" data-rim="50" data-box="x y size size" data-land data-sea data-stroke data-graticule data-fill></g> ("antarctic" with data-rim="-50" for the south); data-rim is the latitude at the edge of the circle (50 to 70), data-rotate="lon" turns that longitude to the bottom. Never show polar regions on the flat world map.
@@ -1438,7 +1507,7 @@ function comparisonExample(format){
 }
 
 const DEFAULT_BRIEF = 'Choose a focused question the sources can answer and show its complete answer.';
-const VISUAL_ANSWER_CHECK = `Before returning the HTML, check at the intended display size that every fact needed to answer the question is visible in the main drawing or a direct label. Keep a single answer value next to its evidence as specified for Presentation. Remove any other facts, loose text and below-figure blocks. Leave only the citation in the footer. Check the remaining facts against the sources, check contrast and label clearance, and keep scales and object proportions faithful.`;
+const VISUAL_ANSWER_CHECK = `Before returning the HTML, check at the intended display size that every fact needed to answer the question is visible in the main drawing or a direct label. Keep a single answer value next to its evidence as specified for Presentation. Remove any other facts, loose text and below-figure blocks. Leave only the citation in the footer. Check the remaining facts against the sources. Trace each leader from the specific mark to its own label and confirm it stays visible on every fill. Look for unrelated icons, shadows, and lines touching text anywhere in the finished composition. Keep scales and object proportions faithful.`;
 
 function formatExample(format){
   return `Example for the question "Which serving has more caffeine, brewed coffee or espresso?" Both servings and quantities belong in the visual answer. Use this example for format and structure. Choose the composition, artwork, palette and facts for the actual brief.
@@ -2047,6 +2116,7 @@ async function saveFile(name, data){
 }
 function exportNode(ig){
   const frame = ig.closest('.ig-frame');
+  fitCallouts(ig);
   fitPresentation(ig);
   fitArtboard(frame);
   const copy = (frame || ig).cloneNode(true);

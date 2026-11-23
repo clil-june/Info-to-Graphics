@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-23 (Claude Code: browser-checked Codex's visual-only output).
+Last updated 2026-11-23 (Codex: keep label blocks attached to the right artwork).
 
 ## Current task
+
+**Owner report (2026-11-23):** the healthy-plate portrait has an oil bottle on top of the vegetable qualification. In both formats cream leaders lose contrast over the plate and the portrait vegetable label appears detached from its mark. Keep the primary quantities and their labels together, with their own reserved space ahead of any secondary labels.
 
 **Owner decision (2026-11-23):** all necessary information belongs in the infographic itself, either drawn or directly labelled. Omit supplemental prose in Presentation, Instagram and A4. The healthy-plate A4 and Instagram examples added unrelated drinking and daily intake advice after the figure. Keep only the citation below the visual.
 
@@ -34,6 +36,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- The callout update belongs to [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). GitHub rollback point: `66c75d0`. The last recorded Artifact is version 38 (`1795455746-6776`, from `9252904`). Publication of this update is pending.
+
 - The visual-only output update is in [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). GitHub rollback point: `d1a3bd5`. Artifact version 37 (`1795449004-e33e`, from `1b9b004`) is the last recorded publication. The visual-only update is live in version 38 (`1795455746-6776`).
 
 - The complete-answer update is on `feature/four-elements` ([PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2)). The GitHub rollback point is `32843b6`, the parent of this update. Revert this update's commit to restore it while preserving branch history.
@@ -58,6 +62,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Label hierarchy and leaders (Codex, 2026-11-23)
+
+- Restated local line contrast, spacing and evidence hierarchy in the guide, generation prompt and revision prompt. Introduced SVG artwork and callout groups. Each grouped callout keeps its heading, value, qualifications and its own icon together.
+- The renderer reserves space for marked artwork and shifts overlapping callout groups. Primary labels keep priority over secondary labels in the same column. A leader stays fixed at its evidence and follows the label edge at its other end. The light line and dark casing remain visible across light and dark fills, including in export.
 
 ### Visual-only output (Codex, 2026-11-23)
 
@@ -532,6 +541,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Label hierarchy and leaders (2026-11-23)
+
+- Chromium rendered an annotated plate fixture in Presentation, Instagram and A4. A label initially overlapping the plate cleared it by 6 SVG units. The oil icon and its text moved together below the primary label with the same clearance. The evidence anchors stayed fixed, the other endpoints followed their label edges, and the two-tone lines and their endpoints survived in the export clone. Repeated fitting was stable at the final size.
+- Confirmed both generation and adaptation prompts include priority groups and local contrast along the full leader. Production Claude generation remains unverified.
+
 ### Visual-only output, browser check (Claude Code, 2026-11-23)
 
 - Built-in Chromium pane, standalone page, stand-in `window.claude`:
@@ -870,6 +884,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the label hierarchy and leader update to the existing Claude Artifact. Regenerate the healthy-plate brief in Presentation and Instagram. Check the vegetable qualification is clear of the bottle, the main quantities keep their order, and the lines remain readable at the rim of the plate and visibly reach the correct label.
 
 Published as version 38 (`1795455746-6776`). Retest the healthy-plate brief in Presentation, Instagram and A4 with the same sources. Confirm that the plate and labels contain the complete answer and the source citation follows the figure.
 
