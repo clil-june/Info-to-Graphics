@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: removed stray prompt text).
+Last updated 2026-11-23 (Codex: compact format picker on the start page).
 
 ## Current task
+
+**Owner request (2026-11-23):** Replace the format cards with a single button beside the link and file field. The button shows the selected format and opens a list with icons and the symbols 4:5, A4 and 16:9.
 
 **Owner feedback on version 33:** the Monstera slide is much improved, but the leaf looks flattened to fit the grid and clear the text. Plan the illustration or chart for the selected aspect ratio before drawing. On the wide slide the stem can extend diagonally into the open space, with a leaf at its natural proportions and soil labels aligned on the other side of the cutaway.
 
@@ -24,6 +26,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- The compact format picker is on `feature/four-elements`. Publication to the existing Claude Artifact is pending.
+
 - The instructions for drawing at the chosen aspect ratio are live in version 34 (`1795343842-b59c`). Watch for the Monstera-specific example being copied onto unrelated subjects.
 
 - The slide layout corrections are live in version 33 (`1795343050-594e`).
@@ -39,6 +43,10 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Compact format picker (Codex, 2026-11-23)
+
+- A button to the right of the source form displays the current format. The list opens below it and shows three proportion icons and their symbols. Screen readers have a name for each option. Choosing an option closes the list and saves the format with the project.
 
 ### Prompt cleanup (Codex, 2026-11-23)
 
@@ -462,6 +470,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Compact format picker (2026-11-23)
+
+- The script parses. A Node harness with stubbed DOM controls verified opening, choosing a format, saving and restoring the selection, arrow-key movement, focus return, and dismissal via Escape, outside clicks and focus leaving the picker. The HTML structure check confirmed the source form and its attachment button, the format control beside it, and the three visible symbols.
+- Browser appearance and interaction in the published Claude Artifact are unverified.
+
 ### Monstera lessons (2026-11-22)
 
 - Built-in browser pane, stand-in `window.claude`:
@@ -746,6 +759,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the start-page format picker to the existing Claude Artifact and check it in a browser at phone and desktop widths. Choose each format and confirm its symbol is reflected in the button.
 
 Published as version 34 (`1795343842-b59c`). Regenerate the Monstera on the same brief in Presentation and check that the leaf uses open space with its natural silhouette. Review a wide chart for intact scales, alignment and readable labels.
 

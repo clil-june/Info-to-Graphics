@@ -6,7 +6,7 @@ Drop in sources, say in a sentence or two what the infographic should show, and 
 
 1. **Drop your sources** on the start page: PDF, Word (.docx), text, CSV, JSON or image files, a link, or pasted text.
 2. **Name the information you're after**, for example "Where do blue whales feed?"
-3. **Choose an output format** on the start page.
+3. **Choose an output format** with the button beside the source field. It shows the selected format and opens a list with three options.
    - **Presentation (1920 × 1080 px, 16:9)** for projection. Show the shortest accurate answer in large type and one dominant visual. Use a side-by-side composition or a wide figure where the subject calls for it.
    - **Instagram (1080 × 1350 px, 4:5)** for reading top to bottom on a phone. Place values directly on the artwork, then add a short comparison or explanation if it helps. This is the default.
    - **Print (3508 × 4961 px)** for one portrait page, with room for a short explanation or method note.
