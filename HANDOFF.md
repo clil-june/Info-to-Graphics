@@ -1,11 +1,16 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: restore the GitHub code to the pre-change snapshot).
+Last updated 2026-11-23 (Claude Code: Artifact rolled back to the version 36 code, published as 1795459555-c7fa).
 
 ## Rollback status
 
 - GitHub's working branch restores the code and design guides from `32843b6d4f039f6629edf5a20df1093a571e81d1`. The full pre-rollback state `9bae9c95e311f9ece9aec54760ef8411b1d7694f` is preserved on [`backup/before-callout-rework-2026-11-23`](https://github.com/clil-june/Info-to-Graphics/tree/backup/before-callout-rework-2026-11-23).
 - Claude's separate restore point is Artifact version 36 (`1795442960-ce11`). To restore it, republish the exact `index.html` from `0c1def5e0faf1dbee1656a548ab8c5cd14977107` to the existing Artifact and verify the published version. The last publication recorded before this rollback is version 39 (`1795458342-d2f8`).
+- **Done 2026-11-23 by Claude Code:**
+  - **Published:** the exact `index.html` blob from `0c1def5e0faf1dbee1656a548ab8c5cd14977107` (Git blob `2166fffb918f8f416b525d814986a96f0585d26c`, 295,216 bytes, SHA-256 starting `79f3a982f6acc8cd`) went to the existing Artifact as **version 40, publication ID `1795459555-c7fa`**, labelled "Rollback to v36 code (0c1def5)".
+  - **Capabilities:** carried forward unchanged (`sample` with images, `downloads`, `mcp` `host:claude_browser` with `preview_start` and `get_page_text`).
+  - **Verified:** a read-back of the live Artifact contains that file byte for byte (the same SHA-256), plus only the host's standard 531-character wrapper before and `</body></html>` after.
+  - **Note:** the live Artifact now runs the version 36 code, while GitHub's working branch holds the restored code from `32843b6`. These are different snapshots: `0c1def5` predates `32843b6`'s format adaptation.
 - The entries below record earlier work and publications.
 
 ## Current task
