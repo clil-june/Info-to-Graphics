@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-22 (Claude Code: lessons from the Monstera slides; published).
+Last updated 2026-11-23 (Codex: removed stray prompt text).
 
 ## Current task
 
@@ -39,6 +39,10 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Prompt cleanup (Codex, 2026-11-23)
+
+- Removed the stray `$1` line from `DRAWING_RULES`. The hero rule remains in place. Inline JavaScript syntax and the one-line deletion were checked. The published Claude Artifact remains on version 35 pending a refresh.
 
 ### Lessons from three Monstera slides (Claude Code, 2026-11-22)
 
