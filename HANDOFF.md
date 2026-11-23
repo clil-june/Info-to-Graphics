@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-23 (Codex: keep all content in the visual, with the citation in the footer).
+Last updated 2026-11-23 (Claude Code: browser-checked Codex's visual-only output).
 
 ## Current task
 
@@ -531,6 +531,15 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - Kept named bar labels visible on phones. The exported HTML opens offline with fallback fonts and closed disclosures.
 
 ## What was verified
+
+### Visual-only output, browser check (Claude Code, 2026-11-23)
+
+- Built-in Chromium pane, standalone page, stand-in `window.claude`:
+  - **A deliberately cluttered poster** (an `ig-q` question, an `ig-deck` paragraph, a figcaption, an aside inside the figure and another after it, and an `ig-take-t` closing line) came out with all of these removed. The headline, the SVG and the citation were kept, and no blocks were left outside the head, hero and footer.
+  - **The updated `COMPARISON_EXAMPLES`,** run through the editor picker in Presentation, Instagram and Print: 0 label overlaps each. The Instagram version was inspected by eye: still the illustrated cups and beans, with the "1 bean = 5 mg of caffeine" key inside the drawing.
+  - Earlier safeguards are still present in the prompt code: the hero rule, real colours, eye-holes, no-recognisable-subject, map-as-stage, chart-from-real-subject, the bold field, `fitLabels`, the repetition check and the `SVG_ATTR` guard.
+  - No console errors.
+
 
 ### Visual-only output (2026-11-23)
 
