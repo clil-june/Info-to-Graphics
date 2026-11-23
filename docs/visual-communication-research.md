@@ -165,6 +165,8 @@ For a chart, select the encoding and reading direction for the available space a
 
 **Worked example.** If the question is how common grayscale cars are today, a slide can show the current share in large type beside one silhouette that encodes that share. A feed post can show the current and earlier shares on two aligned silhouettes, with the current result first. Each value is printed once. If the question is how much the share changed, keep both years wherever they are needed to support the answer.
 
+**When changing format with the same question,** use the open version as the starting point. Keep each source-supported key fact in the main illustration or in a direct label attached to its mark. A single question can have several equally important parts. Redraw or rearrange the visual evidence, shorten labels and remove secondary detail as needed. Use notes below the drawing for supplementary context. Before finishing, check that the main visual still gives the same answer.
+
 For a format check, use the same brief and source. Inspect what the viewer notices first, where the main graphic and labels sit, and which secondary facts earn room. The intended viewing conditions should be apparent in the composition.
 
 ### Generation instruction for the app

@@ -11,7 +11,7 @@ Drop in sources, say in a sentence or two what the infographic should show, and 
    - **Instagram (1080 × 1350 px, 4:5)** for reading top to bottom on a phone. Place values directly on the artwork, then add a short comparison or explanation if it helps. This is the default.
    - **Print (3508 × 4961 px)** for one portrait page, with room for a short explanation or method note.
 4. **Generate.** The infographic builds on screen as Claude draws it.
-5. **Keep working with the same sources.** The editor opens with the displayed version’s question and format. Change either or both and press **Generate**. Use **Change it** to add a specific edit, or **Try a different picture** for another composition. Up to eight versions are kept, each with its own question and format.
+5. **Keep working with the same sources.** The editor opens with the displayed version’s question and format. Change either or both and press **Generate**. With the same question, changing the format uses the open version and asks Claude to keep its key facts in the illustration. Use **Change it** to add a specific edit, or **Try a different picture** for another composition. Up to eight versions are kept, each with its own question and format.
 6. **PNG** saves an image at the exact selected dimensions. **HTML** saves a standalone page with the same canvas proportions. For Print, open the HTML in a browser and print or save it as a PDF on A4.
 
 ## How it makes an infographic

@@ -1496,7 +1496,10 @@ function sourcesBlock(proj, budget){
   const per = Math.floor(budget / Math.max(ready.length, 1));
   return ready.map((x, i) => `<source id="S${i + 1}" name="${String(x.name).replace(/"/g, "'")}"${x.url ? ` url="${x.url}"` : ''}>\n${x.text.slice(0, per)}\n</source>`).join('\n\n');
 }
-function refinePrompt(proj, html, instr){
+const FORMAT_ADAPTATION_RULES = `Preserve the answer when changing format. Identify every key fact that the current infographic uses to answer the same question, including facts conveyed by the drawing or its labels. Keep each fact in the main illustration or in a direct label attached to its visual mark. A single question can have a multi-part answer. Preserve the ordering, units and qualifications that affect its meaning. Keep facts supported by the sources and follow any explicit change the user requests.
+Redraw and rearrange the visual evidence for the new aspect ratio. If space is tight, shorten labels or remove secondary detail. Use the block below the drawing for supplementary context only. The format's suggested word count and space for notes are guidance for supporting detail. Before finishing, check that a reader can recover the same key facts from the main visual.`;
+
+function refinePrompt(proj, html, instr, keepFacts = false){
   // A poster already carries its symbol drawings in div.ig-symdefs; only pages without them need the list spelled out.
   const ents = (proj.entities || []).filter(e => e.svg);
   const symbolNote = ents.length && !html.includes('data-def') ? ' Define these symbols in it: ' + JSON.stringify(ents.map(e => ({id: e.id, name: e.name, color: e.color, svg: e.svg}))) + '.' : '';
@@ -1519,7 +1522,7 @@ ${html}
 </page>
 
 The user's change: ${instr}
-
+${keepFacts ? '\n' + FORMAT_ADAPTATION_RULES + '\n' : ''}
 Output the whole revised infographic as HTML only, starting with <div class="ig-symdefs"> (keep the theme unless the revision affects it, and retain the symbol definitions you still use).${symbolNote} No markdown fences, no commentary.`;
 }
 function stripFences(t){
@@ -1879,6 +1882,13 @@ function validPage(html){
 function generationDraft(view){
   return structuredClone({sources:view.sources, brief:$('#briefIn').value, format:formatButton.dataset.format, entities:view.entities, accent:view.accent});
 }
+function requestChanges(view, draft){
+  const question = brief => (brief || '').trim().replace(/\s+/g, ' ');
+  return {
+    formatChanged: draft.format !== (outputSize(view.format) ? view.format : DEFAULT_FORMAT),
+    briefChanged: question(draft.brief) !== question(view.brief)
+  };
+}
 
 $('#goBtn').addEventListener('click', async () => {
   if (ctl) return;
@@ -1886,22 +1896,29 @@ $('#goBtn').addEventListener('click', async () => {
   const target = proj;
   const ready = target.sources.filter(x => x.status === 'ready' && x.text?.trim());
   if (!ready.length){ st.className = 'status err'; st.textContent = 'Add at least one source with readable text first.'; return; }
-  const draft = generationDraft(versionView(target, currentVersion(target)));
+  const version = currentVersion(target);
+  const view = versionView(target, version);
+  const draft = generationDraft(view);
+  const {formatChanged, briefChanged} = requestChanges(view, draft);
+  const adaptFormat = version && formatChanged && !briefChanged;
   const sample = await samplerOrNull();
-  if (ctl || proj !== target || homeOpen()) return;
+  if (ctl || proj !== target || homeOpen() || currentVersion(target) !== version) return;
   if (!sample){ st.className = 'status err'; st.textContent = 'Claude is not available in this view. Open Info to Graphics on claude.ai to make infographics.'; return; }
   startRun(); $('#progress').hidden = false; stage('read');
   try{
     stage('compose');
     $('#stageTop').replaceChildren();
-    const html = stripFences(await ask(sample, posterPrompt(draft), {signal: ctl.signal, tier: 'complex',
+    const prompt = adaptFormat
+      ? refinePrompt(draft, version.html, 'Recompose the illustration and layout for the requested output format.', true)
+      : posterPrompt(draft);
+    const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier: 'complex',
       onText: livePreview(draft, target), usable: t => validPage(stripFences(t))}));
     const sy = posterSymbols(html) || {entities: [], accent: null};
     Object.assign(draft, {entities: sy.entities, accent: sy.accent || draft.accent || '#A3203A'});
     if (proj !== target || homeOpen()) return;
     stage('check');
     if (!target.title || target.title === 'Untitled infographic') target.title = (new DOMParser().parseFromString(html, 'text/html').querySelector('.ig-h1')?.textContent || target.title).trim().slice(0, 60);
-    addVersion(html, target.versions?.length ? 'New result' : 'First version', draft);
+    addVersion(html, adaptFormat ? 'New format' : version ? 'New result' : 'First version', draft);
     renderAll(); setTab('out');
     { const n = Math.round((Date.now() - t0) / 1000); st.textContent = `Done in ${n} second${n === 1 ? "" : "s"}.`; }
     $('#stage').scrollTop = 0;
@@ -1917,8 +1934,8 @@ async function revise(kind){
   const view = versionView(target, version);
   const draft = generationDraft(view);
   const instr = $('#refineIn').value.trim();
-  const formatChanged = draft.format !== (outputSize(view.format) ? view.format : DEFAULT_FORMAT);
-  const briefChanged = draft.brief.trim() !== (view.brief || '').trim();
+  const {formatChanged, briefChanged} = requestChanges(view, draft);
+  const adaptFormat = formatChanged && !briefChanged;
   if (kind === 'change' && !instr && !formatChanged && !briefChanged){ $('#refineIn').focus(); return; }
   const sample = await samplerOrNull();
   if (ctl || proj !== target || homeOpen() || currentVersion(target) !== version) return;
@@ -1932,7 +1949,9 @@ async function revise(kind){
         formatChanged && 'Recompose the illustration and layout for the requested output format.',
         instr
       ].filter(Boolean).join('\n');
-      prompt = refinePrompt(draft, version.html, edits);
+      prompt = refinePrompt(draft, version.html, edits, adaptFormat);
+    } else if (adaptFormat){
+      prompt = refinePrompt(draft, version.html, 'Use a different illustration and composition for the requested format.', true);
     } else {
       const previous = new DOMParser().parseFromString(version.html, 'text/html').querySelector('figure.ig-hero svg[aria-label]')?.getAttribute('aria-label') || 'the current version';
       prompt = posterPrompt(draft, 'Answer the question with a different picture idea and composition from this earlier attempt: ' + previous + '.');

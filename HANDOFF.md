@@ -1,8 +1,10 @@
 # Handoff
 
-Last updated 2026-11-23 (Claude Code: restored the hero line lost with the stray $1; browser-checked the format picker and per-version settings).
+Last updated 2026-11-23 (Codex: preserve the illustrated answer when adapting formats).
 
 ## Current task
+
+**Owner report (2026-11-23):** the developmental milestones presentation illustrated all four key skills. After changing only the format to A4, the response to a smile moved into a text block and the emphasis changed. Keep the visual answer when recomposing for a new format.
 
 **Owner request (2026-11-23):** keep the question and format available in the editor after generation. Put the same picker beside Generate. Users can change the question, the format or both with the same sources. Revisions use the selected format. Opening a version restores its question and format.
 
@@ -28,6 +30,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Branch / PR
 
+- Format adaptation is on `feature/four-elements` ([PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2)). Publication to the existing Claude Artifact is pending.
+
 - The editor format picker and version settings are live in version 36 (`1795442960-ce11`).
 
 - The compact format picker is on `feature/four-elements`. Live in version 36 (`1795442960-ce11`).
@@ -47,6 +51,11 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The Harvard visual reference remains in `references/harvard-period-products-visual/`.
 
 ## What changed
+
+### Format adaptation (Codex, 2026-11-23)
+
+- With an open version and the same question, switching format sends the previous artwork and current sources through the revision prompt. Generate, Change it and Try a different picture all use the visual-preservation instructions for this case. A new question can select different facts from the sources.
+- The prompt and guide require each source-supported key fact to stay in the main illustration or in a direct label attached to its mark. The model can redraw, rearrange and shorten the labels. Notes below the visual are available for supplementary context.
 
 ### Restored hero line (Claude Code, 2026-11-23)
 
@@ -486,6 +495,10 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## What was verified
 
+### Format adaptation (2026-11-23)
+
+- Inline JavaScript parses. A Node harness with simulated DOM and sampler checked format-only Generate and Change it, alternate composition, whitespace-only question edits, question-only and combined changes, initial generation, legacy versions and retries. A prompt check confirmed that the previous illustration with all four milestones reaches Claude with the visual-preservation rule. Output dimensions and export handlers match the previous implementation.
+
 ### Format picker and per-version settings (2026-11-23)
 
 - Built-in Chromium pane, standalone page, stand-in `window.claude`:
@@ -780,6 +793,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 
 ## Still open
 
+- **Unverified (needs a Claude artifact test):** the generated A4 result after a format-only change. Check that all four core milestones are visible in the illustration or direct labels.
+
 - **Unverified (needs a Claude artifact test):** generation with the new composition instructions. Review a fresh Monstera slide for its leaf silhouette and label alignment, and a wide chart for faithful comparisons.
 
 - Readability and palette update published (`1795111960-fcd8`). The prompt does not measure rendered contrast. Inspect the actual rendered text colours and local SVG backgrounds during validation, including any colours adjusted by the theme code.
@@ -791,6 +806,8 @@ Earlier task: Apply the full-page visual approach developed in the Apollo 11 and
 - The number check matches values, not their units, populations or source locations. Add evidence-linked validation for those claims and keep regression inputs for Apollo 11, the car color study and a new topic.
 
 ## Next step
+
+Publish the format-adaptation update to the existing Claude Artifact. From the four-milestone presentation, switch to A4 with the same question and run Generate. Repeat from the presentation with Change it. Check that the main illustration in each result still includes the response to a smile along with the three other skills.
 
 Publish the editor picker to the existing Artifact. Generate 4:5, then generate 16:9 from the same question. Switch between versions and check that the editor shows the right question and format and that the resulting export has the selected version’s dimensions.
 
