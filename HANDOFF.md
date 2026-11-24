@@ -1,6 +1,39 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: nothing is ever cut off at the drawing edge; Artifact version 46).
+Last updated 2026-11-24 (Claude Code: no stray lines, no text on objects, nothing redundant, at most three options).
+
+## No stray lines, no text on objects, nothing redundant, at most three options (Claude Code, 2026-11-24, sixth change)
+
+**Owner report** (fish and chips, 16:9, version 46): a cream line ran from the "Haddock" label straight across the cod. The bottom-right sentence "Sources name no single best" was unnecessary.
+**Owner rules going forward:**
+1. No weird elements floating around.
+2. All the information is in the infographic, with nothing the picture already shows; five fish drawn already say there is no single best.
+3. If there is no definitive top one, give at most three options.
+
+**Cause of the line:** my version-45 fallback. When a label had no clean spot nearby, `clearArtwork` took the nearest clean spot anywhere and drew a pointer back. "Haddock" was moved above the cod and its pointer crossed the cod.
+
+**What changed:**
+- **Pointers:** new `pointerClear()` and `maskColour()`. A pointer is drawn, and a far spot accepted, only if walking from the label it crosses empty field and then enters one object and stays in it. It must never cross another object first and must be at most 30% of the drawing's smaller side (minimum 60 px). Otherwise that spot is rejected. In the grow-at-the-bottom fallback a pointer is drawn only if its path is clean.
+- **Text on objects counts as an overlap.** Before, a label wholly on one solid colour was accepted, so text sitting inside a fish passed. Now a label may sit on a shape only if it is its backing:
+  - marked `data-backing` (added to `SVG_ATTR`);
+  - or a plain panel, at least 90% of its box filled (a rectangle or rounded rectangle), that holds the whole label. The radio's dial qualifies; a fish, plate or leaf does not.
+  Candidate spots must also not be on an object.
+- **Prompt:**
+  - Rule 0 says text never sits on a drawn object; the only exception is a rectangular panel marked `data-backing`.
+  - New 4d, no stray elements: every line belongs to an object or is a pointer to its own object by the shortest clear route, never crossing another object, label or pointer.
+  - New 4e, nothing the picture already says.
+  - New 4f: without a single definitive answer, at most three options in total, including "also used" or runners-up.
+
+**What was verified** (built-in Chromium pane, standalone `index.html`, stand-in `window.claude` at `?stub=1`, 16:9 unless noted):
+- `node --check` on the inline script.
+- **Rebuilt fish slide 2** ("Haddock" written on the haddock under the cod): it moved 96 units down to just under the haddock. No pointer, no text on any object.
+- **Fish slide 1, Birkin, philodendron, Monstera:** nothing cut off and no text on objects. The philodendron's names sit on the shelf panel, which is allowed.
+- **Plate:** the label moved off the plate; its pointer crosses one object, the plate.
+- **Owner's good radio:** nothing moved; its dial labels sit on the dial panel.
+- **4:5 regression** (Queen 4, fly agaric, lines without dy, messy poster): 0 overlaps, 0 cut off. The messy poster got one pointer, which runs from field into a single object and is 31 units long.
+- No console errors.
+
+**Unverified:** real Claude output in the live Artifact, including whether Claude follows 4d–4f and marks `data-backing`.
 
 ## Nothing cut off at the edge (Claude Code, 2026-11-24, fifth change)
 

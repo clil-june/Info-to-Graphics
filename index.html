@@ -570,7 +570,7 @@ const SVG_TAGS = new Set('svg g path rect circle ellipse line polyline polygon t
 const GRAD_TAGS = new Set(['linearGradient', 'radialGradient']);
 const PAINT_URL = /^url\(#[A-Za-z][\w-]{0,40}\)$/;
 const HTML_ATTR = new Set('class style role aria-label aria-hidden scope colspan rowspan href title data-sym data-size data-n data-unit data-section open'.split(' '));
-const SVG_ATTR = new Set('viewBox d x y dx dy x1 y1 x2 y2 cx cy r rx ry width height points transform fill stroke stroke-width stroke-linecap stroke-linejoin stroke-dasharray opacity fill-opacity stroke-opacity fill-rule text-anchor dominant-baseline font-size font-weight font-style font-family letter-spacing preserveAspectRatio role aria-label aria-hidden id offset stop-color stop-opacity gradientUnits gradientTransform fx fy spreadMethod data-map data-view data-box data-land data-sea data-stroke data-fill data-graticule data-lon data-lat data-route data-curve data-rim data-rotate data-sym data-size data-artwork data-callout data-label data-leader'.split(' '));
+const SVG_ATTR = new Set('data-backing viewBox d x y dx dy x1 y1 x2 y2 cx cy r rx ry width height points transform fill stroke stroke-width stroke-linecap stroke-linejoin stroke-dasharray opacity fill-opacity stroke-opacity fill-rule text-anchor dominant-baseline font-size font-weight font-style font-family letter-spacing preserveAspectRatio role aria-label aria-hidden id offset stop-color stop-opacity gradientUnits gradientTransform fx fy spreadMethod data-map data-view data-box data-land data-sea data-stroke data-fill data-graticule data-lon data-lat data-route data-curve data-rim data-rotate data-sym data-size data-artwork data-callout data-label data-leader'.split(' '));
 /* Guard: these geometry attributes must always survive sanitizing (a typo in the list once dropped cx and y2). */
 ['d', 'x', 'y', 'dx', 'dy', 'x1', 'y1', 'x2', 'y2', 'cx', 'cy', 'r', 'rx', 'ry', 'width', 'height', 'points', 'transform', 'viewBox', 'fill', 'stroke'].forEach(a => { if (!SVG_ATTR.has(a)) console.error('Info to Graphics: SVG_ATTR is missing ' + a); });
 const BAD = /url\s*\(|expression\s*\(|javascript:|@import|behavio(u)?r\s*:|-moz-binding|[<>]/i;
@@ -1304,6 +1304,26 @@ function geomMask(svg, field){
   };
   return {left: sv.left, top: sv.top, W: Math.ceil(sv.width), H: Math.ceil(sv.height), colourAt, field};
 }
+// the colour a reader sees at one point of the drawing (open field past its edges)
+function maskColour(mask, x, y){
+  if (mask.colourAt) return mask.colourAt(Math.round(x), Math.round(y));
+  const px = Math.round(x - mask.left), py = Math.round(y - mask.top);
+  if (px < 0 || py < 0 || px >= mask.W || py >= mask.H) return mask.field;
+  const i = (py * mask.W + px) * 4; return [mask.data[i], mask.data[i + 1], mask.data[i + 2]];
+}
+// A pointer from a moved label back to its object is allowed only if, walking from the label, it crosses empty field
+// and then enters ONE object and stays in it: it never crosses another object first, and it is short.
+function pointerClear(mask, from, to, maxLen){
+  const len = Math.hypot(to.x - from.x, to.y - from.y); if (len > maxLen) return false;
+  const same = (a, b) => Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]) <= 30;
+  let entered = false, left = false;
+  for (let i = 1, n = Math.max(2, Math.ceil(len / 2)); i <= n; i++){
+    const c = maskColour(mask, from.x + (to.x - from.x) * i / n, from.y + (to.y - from.y) * i / n), onField = same(c, mask.field);
+    if (!onField && left) return false;      // a second object after leaving the first
+    if (!onField) entered = true; else if (entered) left = true;
+  }
+  return entered && !left;
+}
 // true when the pixels under box b (screen coordinates) are not all one colour
 function maskMixed(mask, b){
   if (mask.colourAt){
@@ -1360,6 +1380,29 @@ async function clearArtwork(root){
     if (!mask) mask = geomMask(svg, field);
     const sv = svg.getBoundingClientRect();
     const svgM = svg.getScreenCTM(); if (!svgM) continue;
+    // A label may sit on a drawn shape only if that shape is its backing: marked data-backing, or a plain panel (a
+    // rectangle or rounded rectangle, at least 90% of its box filled) that holds the whole label with room to spare.
+    // A fish, a plate, a leaf or a person is never a backing: text on them is an overlap.
+    const drawn = [...svg.querySelectorAll('path, circle, ellipse, rect, polygon')]
+      .filter(el => !el.closest('defs, clipPath, mask, text, g[data-label]') && !el.hasAttribute('data-pointer') && getComputedStyle(el).fill !== 'none');
+    const panelCache = new Map(), probe = svg.createSVGPoint();
+    const inFillAt = (el, x, y) => { const m = el.getScreenCTM(); if (!m) return false; probe.x = x; probe.y = y; try { return el.isPointInFill(probe.matrixTransform(m.inverse())); } catch { return false; } };
+    const isPanel = el => {
+      if (el.closest('[data-backing]')) return true;
+      if (panelCache.has(el)) return panelCache.get(el);
+      const b = el.getBoundingClientRect(); let n = 0, hit = 0;
+      for (let i = 0; i < 12; i++) for (let j = 0; j < 12; j++){ n++; if (inFillAt(el, b.left + b.width * (i + 0.5) / 12, b.top + b.height * (j + 0.5) / 12)) hit++; }
+      const ok = hit / n >= 0.9; panelCache.set(el, ok); return ok;
+    };
+    const sameColour = (a, b) => Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]) <= 30;
+    const onObject = r => { // r: a label box that is one colour underneath
+      const cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2;
+      if (sameColour(maskColour(mask, cx, cy), mask.field)) return false;
+      const top = [...drawn].reverse().find(el => inFillAt(el, cx, cy));
+      if (!top) return false;
+      const b = top.getBoundingClientRect();
+      return !(isPanel(top) && b.left <= r.left - 1 && b.right >= r.right + 1 && b.top <= r.top - 1 && b.bottom >= r.bottom + 1); // the whole label inside the panel
+    };
     const toUser = (x, y) => { const p = svg.createSVGPoint(); p.x = x; p.y = y; return p.matrixTransform(svgM.inverse()); };
     // label against label: a text box includes empty line spacing above and below the letters, so trim it first
     const trim = r => { const t = (r.bottom - r.top) * 0.12; return {left: r.left, right: r.right, top: r.top + t, bottom: r.bottom - t}; };
@@ -1416,20 +1459,23 @@ async function clearArtwork(root){
       const b0 = grow(r0, pad);
       const others = units.filter(o => o !== unit).map(o => o.getBoundingClientRect());
       const cutOff = r0.left < sv.left + 2 || r0.right > sv.right - 2; // past the left or right edge: it would be clipped
-      const onArt = maskMixed(mask, b0);
+      const onArt = maskMixed(mask, b0) || onObject(r0);
       if (!cutOff && !onArt && !overlapsAny(r0, others)) continue;
       const near = Math.max(24, Math.min(r0.height, 90) * 2), far = Math.hypot(sv.width, sv.height);
+      const centre = {x: (r0.left + r0.right) / 2, y: (r0.top + r0.bottom) / 2}, maxPointer = Math.max(60, Math.min(sv.width, sv.height) * 0.3);
+      const nearestPt = (pt, b) => ({x: Math.max(b.left, Math.min(pt.x, b.right)), y: Math.max(b.top, Math.min(pt.y, b.bottom))});
       let best = null;
       for (let d = 2; d <= far && !best; d += d < near ? 2 : 4){
         for (const [dx, dy] of [[0, -d], [0, d], [-d, 0], [d, 0], [-d, -d], [d, -d], [-d, d], [d, d]]){
           const r = {left: r0.left + dx, right: r0.right + dx, top: r0.top + dy, bottom: r0.bottom + dy};
           // a label may step just past the top or bottom edge (the drawing then grows to hold it), never past the sides
           if (r.left < sv.left + 2 || r.right > sv.right - 2 || r.top < sv.top - r0.height - 4 || r.bottom > sv.bottom + r0.height + 4) continue;
-          if (overlapsAny(r, others) || maskMixed(mask, grow(r, pad))) continue;
+          if (overlapsAny(r, others) || maskMixed(mask, grow(r, pad)) || onObject(r)) continue;
+          // beyond the near reach, a label that came off a drawn object needs a clean, short pointer back to it
+          if (d > near && onArt && !pointerClear(mask, nearestPt(centre, r), centre, maxPointer)) continue;
           best = [dx, dy, d]; break;
         }
       }
-      const centre = {x: (r0.left + r0.right) / 2, y: (r0.top + r0.bottom) / 2};
       if (best){
         moveUnit(unit, r0, best[0], best[1]);
         if (best[2] > near && onArt){ const r = unit.getBoundingClientRect(); pointer(nearest(centre, r), centre); } // a pointer only leads back to a drawn object
@@ -1444,7 +1490,8 @@ async function clearArtwork(root){
       const r = unit.getBoundingClientRect();
       const need = (r.bottom + 6 - sv.bottom) / svgM.d;
       if (need > 0) svg.setAttribute('viewBox', [vb[0], vb[1], vb[2], vb[3] + need].map(n => Math.round(n * 10) / 10).join(' '));
-      if (onArt) pointer(nearest(centre, unit.getBoundingClientRect()), centre);
+      // a pointer only if it runs cleanly into the label's own object; never a line across other objects
+      { const r = unit.getBoundingClientRect(), from = nearest(centre, r); if (onArt && pointerClear(mask, from, centre, Infinity)) pointer(from, centre); }
     }
     // grow the drawing if a label moved above or below it
     const vb = String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
@@ -1740,7 +1787,7 @@ function formatInstructions(format){
 const POSTER_RULES = `How to make it:
 0. THE FIRST RULE, ABOVE ALL OTHERS: nothing overlaps and nothing is cut off. Text never touches or sits on an illustration, a leaf, a stem, a line, a bar or other text, and illustrations never cover text. This holds in every format and after every change.
    - Plan the label areas BEFORE drawing: decide where each label goes, in empty field, and keep the drawing out of those areas.
-   - Leave at least 8 units of empty space around every label block. A label may sit on one flat shape only when that shape was drawn as its backing (a dial, a sign, a soil band) and the whole label fits inside it.
+   - Leave at least 8 units of empty space around every label block. Text never sits on a drawn object (a fish, a plate, a plant, a person, a building). The only exception is a plain rectangular panel drawn as the label's backing (a dial, a sign, a band): mark it data-backing, and make it hold the whole label with room to spare.
    - Never place text across leaves, plants, people, objects or shadows, even "just a little", even for a short word.
    - When a format changes, every label is placed again from scratch; positions from the old canvas never carry over.
    - Nothing is ever cut off. Every word of every label sits fully inside the drawing's viewBox, at least 16 units from each edge. Estimate each line's width before placing it (about 0.55 × font-size per character, 0.62 for bold, italic or wide fonts); if a line would run past an edge, break it onto two lines (tspans with the same x and dy="1.2em") or shorten the words. Never let a sentence trail off the canvas.
@@ -1757,6 +1804,9 @@ const POSTER_RULES = `How to make it:
    - Scientific names, care tips and descriptions are extras: include one only if the question asks for it.
 4b. Every label sits next to what it names: beside it, above it or under it, within about one label height, or joined to it by a short straight pointer line. Never collect names in a row far from their objects (for example under a shelf), and never put a label where it could belong to two objects.
 4c. Pointer lines: straight, short, 1.5–2.5 units wide, one solid colour with at least 3:1 contrast against everything they cross (usually the ink colour). No outline, casing, dashes or arrowheads.
+4d. No stray elements. Every shape and line is either part of a drawn object or a pointer that joins a label to its own object by the shortest clear route. A pointer never crosses another object, another label or another pointer; if it would, move the label beside its object instead. No loose lines, rules, swooshes, arrows or marks that belong to nothing.
+4e. Nothing the picture already says. Leave out any sentence the drawing makes obvious (for example "no single best" next to several fish drawn as options, or "sizes vary" next to drawings of different sizes). Every word must add a fact the reader cannot see.
+4f. When the sources give no single, definitive answer, show at most THREE options in total, including any "also used" or runners-up: the three the sources name most or rank highest. Leave the rest out. When there is one clear answer, it stays number one, with at most three supporting items.
 5. Report source values with units and denominators. If you derive a value, use a supported calculation and explain it when the reader needs the basis. Flag rounding and estimates. Never invent data or proportions.
 6. Art direction from the subject. Choose the main visual and follow the house drawing style (rule 8). Choose colours from the subject and mood. Use TYPOGRAPHY_BY_SUBJECT_V1. If the user writes in Hebrew, write in Hebrew and follow the script-capable pairs and RTL rule in TYPOGRAPHY_BY_SUBJECT_V1.
 
