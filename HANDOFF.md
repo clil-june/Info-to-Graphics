@@ -1,6 +1,13 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: project workspace, source library and batch export; published by Claude Code as Artifact version 48).
+Last updated 2026-11-24 (Codex: light workspace palette).
+
+## Light workspace palette (Codex, 2026-11-24)
+
+- **Branch / PR:** `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). Based on `5d6320c`.
+- **Change:** The workspace has a light gray canvas (`#F2F3F3`), white panels, and pale gray fields. Primary actions use the welcome button's dark teal (`#00383D`) with white text. Secondary controls use dark teal text on white. Menus, tile selection, keyboard focus, and status colours use the light palette.
+- **Verified:** In standalone Chromium, the welcome and workspace primary buttons match, the canvas and panels render in the specified colours, the format menu opens and closes from the keyboard, and selecting a gallery tile highlights it and enables Export. The change is limited to application CSS.
+- **Next step:** The currently published Claude Artifact is version 48 (`1795545659-523b`). Publish the updated branch's `index.html` to that Artifact when the owner requests it, retaining the existing capabilities.
 
 ## Project workspace and export (Codex, 2026-11-24)
 
@@ -10,7 +17,7 @@ Last updated 2026-11-24 (Codex: project workspace, source library and batch expo
 - **Export:** One selection downloads as PDF, PNG, or JPEG. Several selections create a multi-page PDF or a ZIP of full-size images in gallery order. A4 PDF pages use the physical A4 size. The three canvas sizes and generation prompts are unchanged.
 - **Verified in the standalone browser:** welcome and workspace, creation and switching of named projects, saved results after reload, paste of multiple source links, generation and the final Done state with a sampler stub, responsive preview and gallery at 390 px, single JPEG plus batch PNG, JPEG, and PDF. Downloaded files were decoded and checked as 1920 × 1080 and 3508 × 4961 images and a two-page PDF with landscape and A4 pages.
 - **Published (Claude Code, 2026-11-24):** on the owner's go-ahead, `index.html` from `450ff76` (Git blob `a2802a1`, 400,637 bytes, SHA-256 starting `0af04c41bae9c1b7`) went to the existing Artifact as **version 48, publication ID `1795545659-523b`**. Capabilities were carried forward unchanged: `sample` with images, `downloads`, and `mcp` `host:claude_browser` with `preview_start` and `get_page_text`. **Verified:** a read-back of the live Artifact contains the file byte for byte, plus only the host's standard 531-character wrapper before it and `</body></html>` after it. **Unverified:** real generation, link reading, project history (IndexedDB inside the claude.ai sandbox, with the localStorage fallback) and single or batch downloads in the live Artifact.
-- **Still open / next step:** Push this commit to the shared branch after the owner confirms the destination. Then publish the branch's `index.html` to the existing Claude Artifact with its `sample`, `downloads`, and `host:claude_browser` capabilities. Then check real generation, link reading, local project history, and downloading in Claude. Record the published version here.
+- **Still open:** Check real generation, link reading, local project history, and downloading in Claude.
 
 ## No stray lines, no text on objects, nothing redundant, at most three options (Claude Code, 2026-11-24, sixth change)
 
