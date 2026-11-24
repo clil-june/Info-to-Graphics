@@ -8,6 +8,11 @@ Last updated 2026-11-24 (Codex: white welcome and inline project list).
 - **Welcome:** The background is white. A grayscale and brightness adjustment applies to the existing engineering artwork, keeping the headline and button in teal.
 - **Workspace:** The project list unfolds inline under the project name without a surrounding border. While open, the source field, brief, format picker, and Generate contract into four 3 px lines in their corresponding row positions. Input values are preserved when the same project's list closes, and Source Library remains available.
 - **Verified:** Inline JavaScript parses. Fixture checks cover opening and closing the project list, closing the format menu on project-list open, and independent Source Library disclosure. The infographic stylesheet, drawing asset, and loading animation are unchanged.
+- **Browser check (Claude Code, 2026-11-24):** run in the built-in Chromium pane on the standalone `index.html` with the stand-in `window.claude` (`?stub=1`), at 1280 × 800 and 375 × 812.
+  - **Welcome:** white background, grey engineering artwork, teal headline and button. The headline fits; checked at 384 × 288 too.
+  - **Project list:** opens inline under the project name (three entries). The source field, brief, format picker and Generate fold into thin lines, with Source Library still below. Closing the list kept the half-typed source and the brief.
+  - **At 375 px:** the same behaviour, with no horizontal scroll.
+  - **Console:** no errors.
 - **Still open:** Browser validation of the white artwork and desktop and phone transitions. The latest recorded published Claude Artifact is version 51 (`1795548777-28c6`). The new changes are in the source branch and await publication.
 
 ## Source input and loading animation (Codex, 2026-11-24)
