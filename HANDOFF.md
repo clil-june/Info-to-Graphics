@@ -1,6 +1,14 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: light workspace palette; published by Claude Code as Artifact version 49).
+Last updated 2026-11-24 (Codex: simplified source list and removed the refinement panel).
+
+## Simplified left panel (Codex, 2026-11-24)
+
+- **Branch / PR:** `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). Based on `ac47ce2`.
+- **Change:** Source Library shows a simple list. Long names truncate at the last whole word that fits, with CSS ellipsis for a filename or URL that starts with an unbroken word wider than the row. Full names remain in tooltips and accessible text. Source removal, links, and notices that require action are available.
+- **Removed:** The “Say what to change” field, quick suggestions, “Try a different picture,” and their event handlers. The main question and Generate controls still support new requests and canvas changes.
+- **Verified:** In standalone Chromium, checked title truncation at desktop and 390 px widths, a short title and a long filename, and the full title in each tooltip. With a local sampler fixture, verified first generation and the format-only recomposition path from 16:9 to 4:5. The removed panel stays absent after generating.
+- **Next step:** The latest recorded Claude Artifact is version 49 (`1795547407-0dba`). Publish the updated branch when requested and check it in the live Artifact.
 
 ## Light workspace palette (Codex, 2026-11-24)
 

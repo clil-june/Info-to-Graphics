@@ -28,7 +28,7 @@ button:disabled,select:disabled{opacity:.45;cursor:default}
 .btn,.format-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;border:1px solid var(--control-border);border-radius:999px;padding:0 14px;background:var(--sheet);color:var(--teal);font-size:13px;font-weight:600;white-space:nowrap}
 .btn:not(:disabled):hover,.format-button:not(:disabled):hover,.format-button[aria-expanded="true"]{background:var(--hover)}
 .btn.primary{background:var(--teal);border-color:var(--teal);color:var(--on-teal)}
-.btn.primary:not(:disabled):hover,.send:not(:disabled):hover{background:var(--teal-hover);border-color:var(--teal-hover)}
+.btn.primary:not(:disabled):hover{background:var(--teal-hover);border-color:var(--teal-hover)}
 .link{border:0;background:transparent;color:var(--ink-2);padding:5px 0;text-align:left;font-size:12px}
 .link:not(:disabled):hover{color:var(--ink);text-decoration:underline}
 
@@ -68,29 +68,26 @@ button:disabled,select:disabled{opacity:.45;cursor:default}
 .src-text{justify-self:start}
 .source-library{border-top:1px solid var(--rule);padding-top:9px}
 .source-library > div{margin-top:7px}
-.src-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.src{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:start;padding:9px 10px;border-radius:9px;background:var(--field)}
-.src .name{font-size:13px;font-weight:600;overflow-wrap:anywhere;color:var(--ink)}
-a.name:hover{color:var(--teal)}
+.src-list{list-style:none;margin:0;padding:0 0 0 17px;display:grid;gap:2px}
+.src{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:4px;align-items:start}
+.src .name{display:block;min-width:0;padding:4px 0;color:var(--ink-2);line-height:1.4;text-decoration:none}
+.src .name-text{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.src .name-full{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.src a.name:hover{color:var(--teal);text-decoration:underline}
 .src .meta{font-size:11px;color:var(--ink-3)}
-.src .meta.warn{color:var(--warn)} .src .meta.ok{color:var(--ok)}
-.src textarea{grid-column:1/-1;width:100%;min-height:80px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);padding:6px 8px;font-size:12px;resize:vertical}
-.src .x{border:0;background:transparent;color:var(--ink-2);padding:0 4px;font-size:17px;line-height:1}
-.src .x:hover{color:var(--ink)}
+.src .meta.warn{color:var(--warn)}
+.src textarea{grid-column:1/-1;width:100%;min-height:80px;margin:4px 0;border:1px solid var(--rule);border-radius:6px;background:var(--paper);padding:6px 8px;font-size:12px;resize:vertical}
+.src .x{width:24px;height:24px;border:0;border-radius:6px;background:transparent;color:var(--ink-2);padding:0;font-size:17px;line-height:1}
+.src .x:hover{background:var(--field);color:var(--ink)}
+@media(hover:hover) and (pointer:fine){
+  .src .x{opacity:0}
+  .src:hover .x,.src:focus-within .x{opacity:1}
+}
 .area{width:100%;min-height:126px;border:1px solid var(--rule);background:var(--field);border-radius:12px;padding:11px 13px;resize:vertical}
 .work-actions{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px}
 .status,.note{font-size:12px;color:var(--ink-2);margin:0}
 .status:empty{display:none}
 .status.err{color:var(--warn)}
-.ask{display:flex;align-items:flex-end;gap:6px;background:var(--field);border-radius:12px;padding:6px 6px 6px 12px}
-.ask textarea{flex:1;min-width:0;border:0;background:transparent;resize:vertical;padding:6px 0}
-.send{flex:none;width:36px;height:36px;border:0;border-radius:50%;background:var(--teal);color:var(--on-teal);display:grid;place-items:center}
-.chips{display:flex;flex-wrap:wrap;gap:5px}
-.chips button{border:1px solid var(--rule);background:transparent;border-radius:999px;padding:4px 8px;font-size:11px;color:var(--ink-2)}
-.chips button:hover{border-color:var(--ink-2);color:var(--ink)}
-#refineStep{border-top:1px solid var(--rule);padding-top:14px}
-#refineStep .link{justify-self:start}
-
 .format-picker{position:relative}
 .format-options{position:absolute;z-index:3;inset:calc(100% + 6px) auto auto 0;width:100%;min-width:88px;padding:4px;border:1px solid var(--rule);border-radius:12px;background:var(--sheet);box-shadow:0 8px 20px #18262624}
 .format-options button{display:flex;align-items:center;gap:8px;width:100%;min-height:36px;border:0;border-radius:8px;padding:0 7px;background:none;text-align:left;font-size:13px;font-weight:600}
@@ -433,15 +430,6 @@ a.name:hover{color:var(--teal)}
           <p class="note" id="sourceEmpty">No sources yet.</p>
           <ul class="src-list" id="srcList"></ul>
         </div>
-      </section>
-      <section class="rsec" id="refineStep" hidden>
-        <div class="ask">
-          <textarea id="refineIn" rows="2" placeholder="Say what to change" aria-label="Say what to change"></textarea>
-          <button class="send" id="refineBtn" type="button" aria-label="Apply the change"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        </div>
-        <div class="chips" id="refineChips"></div>
-        <button class="link" id="againBtn" type="button" title="Show the answer with a different picture">↻ Try a different picture</button>
-        <div class="status" id="refineStatus" role="status"></div>
       </section>
     </aside>
     <section class="stage" id="stage">
@@ -2077,9 +2065,7 @@ function activateProject(project){
   proj = project;
   store.current = project.id;
   $('#linkIn').value = '';
-  $('#refineIn').value = '';
   $('#goStatus').textContent = '';
-  $('#refineStatus').textContent = '';
   setDisclosure($('#projectBtn'), false);
   setDisclosure($('#sourceBtn'), false);
   setFormatMenuOpen(false);
@@ -2104,9 +2090,33 @@ function renderAll(){
   renderSources();
   renderStage();
   renderGallery();
-  $('#refineStep').hidden = !(proj.versions || []).length;
-  $('#refineChips').replaceChildren(...['Use fewer words', 'Make the picture bigger and bolder', 'Show it as a real object', 'Show a different fact'].map(q => h('button', {type: 'button', onclick: () => { $('#refineIn').value = q; $('#refineIn').focus(); }}, q)));
 }
+const sourceNameMeasure = document.createElement('canvas').getContext('2d');
+function fitSourceNames(){
+  if (!sourceNameMeasure) return;
+  for (const label of $('#srcList').querySelectorAll('.name-text')){
+    const width = label.clientWidth;
+    if (!width) continue;
+    const {fontWeight, fontSize, fontFamily} = getComputedStyle(label);
+    sourceNameMeasure.font = `${fontWeight} ${fontSize} ${fontFamily}`;
+    const full = label.parentElement.title.trim().replace(/\s+/g, ' ');
+    let visible = full;
+    if (sourceNameMeasure.measureText(full).width > width){
+      let prefix = '';
+      for (const word of full.split(' ')){
+        const next = prefix ? prefix + ' ' + word : word;
+        if (sourceNameMeasure.measureText(next + '…').width > width) break;
+        prefix = next;
+      }
+      // A filename or URL may begin with a single word wider than the entire row.
+      if (prefix) visible = prefix + '…';
+    }
+    label.textContent = visible;
+  }
+}
+if (typeof ResizeObserver === 'function') new ResizeObserver(fitSourceNames).observe($('#srcList'));
+document.fonts?.ready.then(fitSourceNames);
+
 function renderSources(){
   const list = $('#srcList');
   list.replaceChildren();
@@ -2117,11 +2127,15 @@ function renderSources(){
     else if (src.status === 'needs-text'){ meta = src.error || 'Paste the text below'; cls += ' warn'; }
     else if (src.status === 'error'){ meta = src.error || 'Could not read'; cls += ' warn'; }
     else if (src.status === 'draft') meta = 'Paste text below';
-    else { meta = src.kind === 'file' ? 'File' : src.kind === 'link' ? 'Link' : 'Pasted text'; cls += ' ok'; }
+    const nameAttrs = {class:'name', title:src.name, dir:'auto'};
+    const nameText = [
+      h('span', {class:'name-text', 'aria-hidden':'true'}, src.name),
+      h('span', {class:'name-full'}, src.name)
+    ];
     const name = /^https?:\/\//i.test(src.url || '')
-      ? h('a', {class:'name', href:src.url, target:'_blank', rel:'noopener noreferrer'}, src.name)
-      : h('div', {class:'name'}, src.name);
-    const li = h('li', {class:'src'}, h('div', {}, name, h('div', {class:cls}, meta)),
+      ? h('a', {...nameAttrs, href:src.url, target:'_blank', rel:'noopener noreferrer'}, nameText)
+      : h('div', nameAttrs, nameText);
+    const li = h('li', {class:'src'}, h('div', {}, name, meta ? h('div', {class:cls}, meta) : null),
       h('button', {class:'x', type:'button', title:'Remove source', 'aria-label':'Remove source ' + src.name, onclick: () => {
         proj.sources = proj.sources.filter(source => source !== src);
         updateSources(proj);
@@ -2139,6 +2153,7 @@ function renderSources(){
     }
     list.append(li);
   });
+  fitSourceNames();
 }
 const exportSelections = new WeakMap();
 function selectedResults(){
@@ -2570,7 +2585,7 @@ function showGeneration(){
 }
 function startRun(){
   ctl = new AbortController(); t0 = Date.now(); $('#goStatus').textContent = ''; $('#goStatus').className = 'status';
-  $('#goBtn').disabled = true; $('#refineBtn').disabled = true; $('#againBtn').disabled = true;
+  $('#goBtn').disabled = true;
   setFormatMenuOpen(false);
   formatButton.disabled = true;
   $('#timer').textContent = '0 s';
@@ -2578,7 +2593,7 @@ function startRun(){
   showGeneration();
 }
 function endRun(completed){
-  clearInterval(tick); ctl = null; $('#goBtn').disabled = false; $('#refineBtn').disabled = false; $('#againBtn').disabled = false; formatButton.disabled = false;
+  clearInterval(tick); ctl = null; $('#goBtn').disabled = false; formatButton.disabled = false;
   if (!completed || homeOpen()){ hideGeneration(); return; }
   cancelAnimationFrame(loaderFrame);
   paintGeneration(5, true);
@@ -2727,59 +2742,6 @@ $('#goBtn').addEventListener('click', async () => {
   }catch(e){ st.className = 'status err'; st.textContent = errCopy(e); if (proj === target && !homeOpen()) { renderStage(); setTab('make'); } }
   finally{ endRun(completed); }
 });
-
-async function revise(kind){
-  if (ctl) return;
-  const st = $('#refineStatus');
-  const target = proj;
-  const version = currentVersion(target); if (!version) return;
-  const view = versionView(target, version);
-  const draft = generationDraft(view);
-  const instr = $('#refineIn').value.trim();
-  const {formatChanged, briefChanged, sourcesChanged} = requestChanges(view, draft);
-  const sameAnswer = !briefChanged && !sourcesChanged;
-  if (kind === 'change' && !instr && !formatChanged && sameAnswer){ $('#refineIn').focus(); return; }
-  if (!draft.sources.length){ st.className = 'status err'; st.textContent = 'Add at least one source with readable text first.'; return; }
-  const sample = await samplerOrNull();
-  if (ctl || proj !== target || homeOpen() || currentVersion(target) !== version) return;
-  if (!sample){ st.className = 'status err'; st.textContent = 'Claude is not available in this view. Open Info to Graphics on claude.ai to use it.'; return; }
-  startRun(); st.className = 'status'; st.textContent = '';
-  let completed = false;
-  try{
-    let prompt;
-    if (kind === 'change'){
-      const edits = [
-        briefChanged && 'Answer the updated question using the supplied sources.',
-        sourcesChanged && 'The source material changed. Determine the complete answer from the current sources. Replace any old claims that these sources do not support.',
-        formatChanged && 'Recompose the illustration and layout for the requested output format.',
-        instr
-      ].filter(Boolean).join('\n');
-      prompt = refinePrompt(draft, version.html, edits, {keepFacts:sameAnswer, formatChanged, fromFormat:view.format});
-    } else if (sameAnswer){
-      prompt = refinePrompt(draft, version.html, 'Use a different illustration idea and compose it for the requested format.', {keepFacts:true, formatChanged, fromFormat:view.format});
-    } else {
-      prompt = posterPrompt(draft);
-    }
-    // "Change it" on the same question and sources (including a format switch) uses the quicker model; a new question,
-    // new sources or "Try a different picture" keep the strongest. If the quicker model's page fails, the strongest retries.
-    const quick = kind === 'change' && sameAnswer;
-    const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier: quick ? 'default' : 'complex',
-      usable:t => validPage(stripFences(t))}));
-    if (proj !== target || homeOpen()) return;
-    const sy = posterSymbols(html);
-    if (sy){ draft.entities = sy.entities; if (sy.accent) draft.accent = sy.accent; }
-    const label = kind === 'again' ? 'New picture' : (instr.slice(0,60) || (briefChanged ? 'New question' : sourcesChanged ? 'Updated sources' : 'New format'));
-    addVersion(html, label, draft);
-    if (kind === 'change') $('#refineIn').value = '';
-    renderAll(); setTab('out');
-    $('#refineStatus').textContent = `Version ${proj.versions.length} ready.`;
-    completed = !currentVersion(target).cut;
-  }catch(e){ st.className = 'status err'; st.textContent = errCopy(e); if (proj === target && !homeOpen()) { renderStage(); setTab('make'); } }
-  finally{ endRun(completed); }
-}
-$('#refineBtn').addEventListener('click', () => revise('change'));
-$('#againBtn').addEventListener('click', () => revise('again'));
-$('#refineIn').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) revise('change'); });
 
 /* ======================================================================
    Header, export
