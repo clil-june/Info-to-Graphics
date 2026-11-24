@@ -2335,7 +2335,8 @@ $('#goBtn').addEventListener('click', async () => {
     const prompt = adaptFormat
       ? refinePrompt(draft, version.html, 'Recompose the illustration and layout for the requested output format.', {keepFacts:true, formatChanged, fromFormat:view.format})
       : posterPrompt(draft);
-    const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier: 'complex',
+    // A format switch redraws an existing answer: the quicker model does it (the strongest steps in if its page fails).
+    const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier: adaptFormat ? 'default' : 'complex',
       usable: t => validPage(stripFences(t))}));
     const sy = posterSymbols(html) || {entities: [], accent: null};
     Object.assign(draft, {entities: sy.entities, accent: sy.accent || draft.accent || '#A3203A'});
@@ -2381,7 +2382,10 @@ async function revise(kind){
     } else {
       prompt = posterPrompt(draft);
     }
-    const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier:'complex',
+    // "Change it" on the same question and sources (including a format switch) uses the quicker model; a new question,
+    // new sources or "Try a different picture" keep the strongest. If the quicker model's page fails, the strongest retries.
+    const quick = kind === 'change' && sameAnswer;
+    const html = stripFences(await ask(sample, prompt, {signal: ctl.signal, tier: quick ? 'default' : 'complex',
       usable:t => validPage(stripFences(t))}));
     if (proj !== target || homeOpen()) return;
     const sy = posterSymbols(html);
