@@ -8,6 +8,12 @@ Last updated 2026-11-24 (Codex: simplified source input and full-stage loading a
 - **Changes:** The source field keeps a borderless paperclip for choosing files. Enter and Generate submit typed input. The field still accepts pasted links, source text, and dropped files or links. The Add and Paste text controls are removed.
 - **Loading and welcome:** The pencil animation uses the primary button's teal and fills the middle workspace panel. The animation keeps its proportions. The welcome button scales at roughly half its previous dimensions on desktop and has a 44 px minimum height for touch.
 - **Verified:** Parsed the inline JavaScript, checked the control markup and CSS, and exercised the source submission handlers and loading, completion, and cancellation states with JavaScript fixtures. The infographic CSS and Generate handler match the previous version.
+- **Browser check (Claude Code, 2026-11-24):** run in the built-in Chromium pane on the standalone `index.html` with the stand-in `window.claude` (`?stub=1`), slowed so the animation could be seen.
+  - **Source field:** Enter added typed text as a source and cleared the field. Generate also submitted text still in the field (two sources afterwards).
+  - **Generation:** the screen filled the middle panel (536 × 712 at that window size) in teal. The pencil drawing kept its proportions (the canvas uses `object-fit: contain`), and Generating…, the timer and Stop showed. The result appeared afterwards.
+  - **At 375 px:** the Edit, Infographic and Results tabs show, the source field fits (343 px wide) and there is no horizontal scroll.
+  - **Console:** no errors.
+  - **Not checked:** the welcome button's new size.
 - **Still open:** Visual checks at desktop and phone sizes need a browser. The latest recorded Claude Artifact is version 50 (`1795547882-a594`). The new changes are in the source branch and await publication to the existing Artifact.
 
 ## Simplified left panel (Codex, 2026-11-24)
