@@ -1389,11 +1389,35 @@ async function clearArtwork(root){
       svg.append(l);
     };
     const nearest = (pt, b) => ({x: Math.max(b.left, Math.min(pt.x, b.right)), y: Math.max(b.top, Math.min(pt.y, b.bottom))});
+    // NEVER CUT OFF: a label wider than the drawing is first broken onto two lines, then made smaller until it fits
+    const maxW = sv.width - 8;
+    const wrapText = t => {
+      if (t.querySelector('tspan') || t.dataset.wrapped) return false;
+      const words = t.textContent.trim().split(/\s+/); if (words.length < 2) return false;
+      const total = words.join(' ').length; let cut = 1, bestGap = Infinity;
+      for (let i = 1; i < words.length; i++){ const g = Math.abs(total / 2 - words.slice(0, i).join(' ').length); if (g < bestGap){ bestGap = g; cut = i; } }
+      const x = (t.getAttribute('x') || '0').trim().split(/[\s,]+/)[0];
+      t.textContent = '';
+      [words.slice(0, cut).join(' '), words.slice(cut).join(' ')].forEach((line, i) => {
+        const sp = document.createElementNS(SVGNS, 'tspan'); sp.setAttribute('x', x); if (i) sp.setAttribute('dy', '1.2em'); sp.textContent = line; t.append(sp);
+      });
+      t.dataset.wrapped = '1'; return true;
+    };
+    for (const unit of units){
+      const parts = unit.matches('text') ? [unit] : [...unit.querySelectorAll('text')];
+      if (unit.getBoundingClientRect().width > maxW){
+        parts.filter(t => t.getBoundingClientRect().width > maxW * 0.6).forEach(wrapText);
+        for (let k = 0; k < 8 && unit.getBoundingClientRect().width > maxW; k++)
+          parts.forEach(t => t.setAttribute('font-size', String(Math.round(parseFloat(getComputedStyle(t).fontSize) * 0.9 * 10) / 10)));
+      }
+    }
     for (const unit of units){
       const r0 = unit.getBoundingClientRect(); if (!r0.width) continue;
       const b0 = grow(r0, pad);
       const others = units.filter(o => o !== unit).map(o => o.getBoundingClientRect());
-      if (!maskMixed(mask, b0) && !overlapsAny(r0, others)) continue;
+      const cutOff = r0.left < sv.left + 2 || r0.right > sv.right - 2; // past the left or right edge: it would be clipped
+      const onArt = maskMixed(mask, b0);
+      if (!cutOff && !onArt && !overlapsAny(r0, others)) continue;
       const near = Math.max(24, Math.min(r0.height, 90) * 2), far = Math.hypot(sv.width, sv.height);
       let best = null;
       for (let d = 2; d <= far && !best; d += d < near ? 2 : 4){
@@ -1408,7 +1432,7 @@ async function clearArtwork(root){
       const centre = {x: (r0.left + r0.right) / 2, y: (r0.top + r0.bottom) / 2};
       if (best){
         moveUnit(unit, r0, best[0], best[1]);
-        if (best[2] > near){ const r = unit.getBoundingClientRect(); pointer(nearest(centre, r), centre); }
+        if (best[2] > near && onArt){ const r = unit.getBoundingClientRect(); pointer(nearest(centre, r), centre); } // a pointer only leads back to a drawn object
         continue;
       }
       // no clean spot anywhere: grow the drawing at the bottom and put the label there
@@ -1420,7 +1444,7 @@ async function clearArtwork(root){
       const r = unit.getBoundingClientRect();
       const need = (r.bottom + 6 - sv.bottom) / svgM.d;
       if (need > 0) svg.setAttribute('viewBox', [vb[0], vb[1], vb[2], vb[3] + need].map(n => Math.round(n * 10) / 10).join(' '));
-      pointer(nearest(centre, unit.getBoundingClientRect()), centre);
+      if (onArt) pointer(nearest(centre, unit.getBoundingClientRect()), centre);
     }
     // grow the drawing if a label moved above or below it
     const vb = String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
@@ -1714,11 +1738,12 @@ function formatInstructions(format){
 
 /* Keep these answer rules aligned with the guide's Generation instruction for the app. */
 const POSTER_RULES = `How to make it:
-0. THE FIRST RULE, ABOVE ALL OTHERS: nothing overlaps. Text never touches or sits on an illustration, a leaf, a stem, a line, a bar or other text, and illustrations never cover text. This holds in every format and after every change.
+0. THE FIRST RULE, ABOVE ALL OTHERS: nothing overlaps and nothing is cut off. Text never touches or sits on an illustration, a leaf, a stem, a line, a bar or other text, and illustrations never cover text. This holds in every format and after every change.
    - Plan the label areas BEFORE drawing: decide where each label goes, in empty field, and keep the drawing out of those areas.
    - Leave at least 8 units of empty space around every label block. A label may sit on one flat shape only when that shape was drawn as its backing (a dial, a sign, a soil band) and the whole label fits inside it.
    - Never place text across leaves, plants, people, objects or shadows, even "just a little", even for a short word.
    - When a format changes, every label is placed again from scratch; positions from the old canvas never carry over.
+   - Nothing is ever cut off. Every word of every label sits fully inside the drawing's viewBox, at least 16 units from each edge. Estimate each line's width before placing it (about 0.55 × font-size per character, 0.62 for bold, italic or wide fonts); if a line would run past an edge, break it onto two lines (tspans with the same x and dy="1.2em") or shorten the words. Never let a sentence trail off the canvas.
    - Check it last: for every label, look at the full rectangle it covers. If any part of a drawn shape, line or other label is inside it, move the label or redraw until nothing is.
 1. Identify the question and its complete, source-supported answer before choosing a layout. One question leads to one takeaway and may need several essential facts, such as both values in a comparison or each milestone in a requested set. Identify every part whose absence would make the answer incomplete or misleading. Keep its units, dates, baseline, order and qualifications as needed. Say when the sources cannot establish a requested part. Omit any information that is unnecessary to answer the question, even if the source includes it.
 2. Choose how to make each essential fact visible in the main drawing or a short, direct label attached to what it describes. Use a shared scale for comparable marks and real proportions for depicted objects. Choose a scene, chart, comparison, sequence, cutaway or map that can carry the whole answer.

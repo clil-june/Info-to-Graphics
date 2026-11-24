@@ -1,6 +1,29 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: exact pixel no-overlap check; no-overlap is rule 0; Artifact version 45).
+Last updated 2026-11-24 (Claude Code: nothing is ever cut off at the drawing edge).
+
+## Nothing cut off at the edge (Claude Code, 2026-11-24, fifth change)
+
+**Owner report** (fish and chips, 16:9, version 45): the italic sentence at the bottom right ("Sources name no single b…") was cut off by the drawing's right edge. **Owner decision:** this must never happen again.
+
+**Cause:** the label sat in empty space but ran past the SVG's right edge, which clips it. `fitLabels` fixes edge overflow only for plain labels and skips `[data-callout]` text, while `clearArtwork` only checked overlaps with artwork and other labels. A callout label running off the edge was handled by neither.
+
+**What changed:**
+- **`clearArtwork`, for every label block (callout or plain):**
+  - A block wider than the drawing (less 8 px) is first broken onto two lines: its wide texts are split at the middle word into tspans with `dy="1.2em"`. If it is still too wide, all its text shrinks by 10% per step, up to 8 times.
+  - A block past the left or right edge then counts as failing, like an overlap, and moves to the nearest spot inside the edges that is also clear of artwork and labels. Vertical overflow is still handled by growing the viewBox.
+- **Pointer lines** are added only when a label is moved off a drawn object, not when it is moved in from an edge.
+- **Rule 0 in `POSTER_RULES`** is now "nothing overlaps and nothing is cut off". New bullet: every word sits inside the viewBox at least 16 units from each edge; estimate widths (0.55 × font-size per character, 0.62 for bold, italic or wide fonts); break a long line into two tspans or shorten it.
+
+**What was verified** (built-in Chromium pane, standalone `index.html`, stand-in `window.claude` at `?stub=1`, 16:9):
+- `node --check` on the inline script.
+- **Rebuilt fish slide:** the italic callout sentence that ran about 150 units past the right edge moved 110 units left and is fully visible. A plain label wider than the whole drawing was broken onto two lines and fits. No label cut off, on artwork or overlapping (checked independently at 1 px steps).
+- **Regression in 16:9:**
+  - Birkin, philodendron, plate and Monstera: 0 cut off, 0 on artwork, 0 overlaps. In the Birkin case "Super Atom", whose right edge was 2 px past the drawing, also moved inside.
+  - Owner's good radio: nothing moved. The only checker hit is the side panel hidden under the dial.
+  - No console errors.
+
+**Unverified:** real Claude output in the live Artifact. HTML text outside the SVG (headline, answer block) is not part of this check; `fitPresentation` and `fitArtboard` size it.
 
 ## No overlaps, ever: exact pixel check and rule 0 (Claude Code, 2026-11-24, fourth change)
 
