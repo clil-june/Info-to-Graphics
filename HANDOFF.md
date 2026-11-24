@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: labels stay beside their objects, one-colour pointers, short-text rules for every infographic).
+Last updated 2026-11-24 (Claude Code: labels stay beside their objects, one-colour pointers, short-text rules for every infographic; Artifact version 43).
 
 ## Labels beside their objects, one-colour pointers, short text (Claude Code, 2026-11-24, second change)
 
@@ -27,6 +27,8 @@ Last updated 2026-11-24 (Claude Code: labels stay beside their objects, one-colo
 - Earlier hard cases (Queen 4, fly agaric, lines without dy, messy poster): 0 overlaps, 0 labels outside.
 - The prompt sent contains 4a and 4b and no "two-tone" wording. The generation prompt without sources is about 33,600 characters. No console errors.
 - **Caught and fixed during the work:** the first scripted edit matched a line that exists in both `fitLabels` and `clearArtwork` and cut part of `fitLabels` out; it still passed `node --check`. The file was restored from `6f91a39` and the edit redone, anchored to `clearArtwork`, before any of the checks above.
+
+**Published** as Artifact version 43 (`1795509849-833d`) from `d36e42d`, capabilities carried forward (`sample` with images, `downloads`, `mcp` `host:claude_browser`).
 
 **Unverified:** real Claude output in the live Artifact: whether it keeps to the word budget and places labels beside their objects, and how a backing patch looks on a real drawing.
 
