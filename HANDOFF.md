@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: no stray lines, no text on objects, nothing redundant, at most three options).
+Last updated 2026-11-24 (Claude Code: no stray lines, no text on objects, nothing redundant, at most three options; Artifact version 47).
 
 ## No stray lines, no text on objects, nothing redundant, at most three options (Claude Code, 2026-11-24, sixth change)
 
@@ -32,6 +32,8 @@ Last updated 2026-11-24 (Claude Code: no stray lines, no text on objects, nothin
 - **Owner's good radio:** nothing moved; its dial labels sit on the dial panel.
 - **4:5 regression** (Queen 4, fly agaric, lines without dy, messy poster): 0 overlaps, 0 cut off. The messy poster got one pointer, which runs from field into a single object and is 31 units long.
 - No console errors.
+
+**Published** as Artifact version 47 (`1795533138-0f92`) from `66d9612`, capabilities carried forward (`sample` with images, `downloads`, `mcp` `host:claude_browser`).
 
 **Unverified:** real Claude output in the live Artifact, including whether Claude follows 4d–4f and marks `data-backing`.
 
