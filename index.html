@@ -33,8 +33,9 @@ button:disabled,select:disabled{opacity:.45;cursor:default}
 
 .home{
   position:fixed;inset:0;display:grid;place-items:center;overflow:auto;padding:28px;
-  color-scheme:light;color:var(--teal);background:#f5f1e8 var(--welcome-art, none) center/cover;
+  isolation:isolate;color-scheme:light;color:var(--teal);background:#fff;
 }
+.home::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--welcome-art, none) center/cover;filter:grayscale(1) brightness(1.06)}
 .home-col{display:flex;flex-direction:column;align-items:center;text-align:center;gap:clamp(22px,3vw,40px);transform:translateY(4vh)}
 .home-title{margin:0;font-family:Inter,"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:clamp(38px,5.35vw,96px);line-height:1.06;letter-spacing:-.058em;text-wrap:balance}
 .home-go{min-height:44px;border:0;border-radius:999px;background:var(--teal);color:var(--on-teal);padding:.39em 1.35em .45em;font-size:clamp(14px,1.425vw,25.5px);font-weight:600;letter-spacing:-.035em}
@@ -54,9 +55,18 @@ button:disabled,select:disabled{opacity:.45;cursor:default}
 .disclosure[aria-expanded="true"]::before{transform:translateY(-2px) rotate(45deg)}
 .project-switch{font-size:17px}
 .project-switch span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.project-list{display:grid;max-height:220px;overflow:auto;margin:5px 0 0;padding:4px;border:1px solid var(--rule);border-radius:12px}
-.project-list button{display:block;width:100%;border:0;border-radius:7px;background:transparent;padding:8px 10px;text-align:left;overflow-wrap:anywhere}
+.project-list{display:grid;max-height:220px;overflow:auto;margin:3px 0 0;padding:3px 4px 3px 16px}
+.project-list button{display:block;width:100%;min-height:30px;border:0;border-radius:6px;background:transparent;padding:4px 8px;text-align:left;overflow-wrap:anywhere}
 .project-list button:hover,.project-list button[aria-current="true"]{background:var(--field);color:var(--teal)}
+.project-fields{display:grid;grid-template-rows:minmax(0,1fr) minmax(0,0fr);transition:grid-template-rows .18s ease}
+.project-fields[data-collapsed]{grid-template-rows:minmax(0,0fr) minmax(0,1fr)}
+.project-fields > *{min-height:0}
+.project-fields[data-collapsed] > .rsec,.project-fields:not([data-collapsed]) > .project-lines{overflow:hidden}
+.project-lines{display:grid;grid-template-columns:min(38%,88px) minmax(0,1fr);grid-template-rows:repeat(3,3px);gap:5px 8px}
+.project-lines span{border-radius:999px;background:var(--rule)}
+.project-lines span:nth-child(-n+2){grid-column:1/-1}
+.project-lines span:nth-child(3){background:var(--control-border)}
+.project-lines span:last-child{background:var(--teal)}
 
 .source-form{display:flex;align-items:center;gap:4px;padding:4px;border:1px solid var(--rule);background:var(--field);border-radius:12px}
 .source-form.over{border-color:var(--teal)}
@@ -147,7 +157,7 @@ button:disabled,select:disabled{opacity:.45;cursor:default}
   .gallery{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
   .export-bar{grid-template-columns:auto minmax(0,160px);justify-content:end}
 }
-@media(max-width:600px){.home{background-position:center}.home-col{transform:none}}
+@media(max-width:600px){.home-col{transform:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 .stage[data-generating]{padding:0;overflow:hidden;background:var(--teal)}
 .stage[data-generating] :is(#stageTop,#out){display:none}
@@ -396,28 +406,31 @@ button:disabled,select:disabled{opacity:.45;cursor:default}
         <button type="button" id="projectBtn" class="disclosure project-switch" aria-expanded="false" aria-controls="projectList" title="Switch project"><span>Project Name</span></button>
         <div class="project-list" id="projectList" hidden></div>
       </div>
-      <section class="rsec">
-        <form class="source-form" id="linkForm">
-          <button class="attach" id="fileBtn" type="button" title="Choose files" aria-label="Choose files"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6l7.9-7.9"/></svg></button>
-          <input id="linkIn" type="text" autocomplete="off" placeholder="Drop file or link" aria-label="Drop files, enter links or paste source text">
-        </form>
-        <input type="file" id="fileIn" multiple hidden accept=".pdf,.docx,.txt,.md,.csv,.tsv,.json,.html,.htm,image/png,image/jpeg,image/webp,image/gif">
-        <textarea id="briefIn" class="area" placeholder="Name the information you’re after" aria-label="Name the information you’re after"></textarea>
-        <div class="work-actions">
-          <div class="format-picker" id="formatPicker">
-            <button class="format-button" id="formatButton" type="button" data-format="instagram" aria-label="Output format: Instagram, 4:5" aria-controls="formatMenu" aria-expanded="false">
-              <span class="format-icon" aria-hidden="true"></span><span id="formatRatio" aria-hidden="true">4:5</span>
-            </button>
-            <div class="format-options" id="formatMenu" role="group" aria-label="Output formats" hidden>
-              <button type="button" data-format="instagram" aria-label="Instagram, 4:5" aria-pressed="true"><span class="format-icon" aria-hidden="true"></span><span>4:5</span></button>
-              <button type="button" data-format="print" aria-label="Print, A4" aria-pressed="false"><span class="format-icon" aria-hidden="true"></span><span>A4</span></button>
-              <button type="button" data-format="presentation" aria-label="Presentation, 16:9" aria-pressed="false"><span class="format-icon" aria-hidden="true"></span><span>16:9</span></button>
+      <div class="project-fields" id="projectFields">
+        <section class="rsec" id="projectFormControls">
+          <form class="source-form" id="linkForm">
+            <button class="attach" id="fileBtn" type="button" title="Choose files" aria-label="Choose files"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6l7.9-7.9"/></svg></button>
+            <input id="linkIn" type="text" autocomplete="off" placeholder="Drop file or link" aria-label="Drop files, enter links or paste source text">
+          </form>
+          <input type="file" id="fileIn" multiple hidden accept=".pdf,.docx,.txt,.md,.csv,.tsv,.json,.html,.htm,image/png,image/jpeg,image/webp,image/gif">
+          <textarea id="briefIn" class="area" placeholder="Name the information you’re after" aria-label="Name the information you’re after"></textarea>
+          <div class="work-actions">
+            <div class="format-picker" id="formatPicker">
+              <button class="format-button" id="formatButton" type="button" data-format="instagram" aria-label="Output format: Instagram, 4:5" aria-controls="formatMenu" aria-expanded="false">
+                <span class="format-icon" aria-hidden="true"></span><span id="formatRatio" aria-hidden="true">4:5</span>
+              </button>
+              <div class="format-options" id="formatMenu" role="group" aria-label="Output formats" hidden>
+                <button type="button" data-format="instagram" aria-label="Instagram, 4:5" aria-pressed="true"><span class="format-icon" aria-hidden="true"></span><span>4:5</span></button>
+                <button type="button" data-format="print" aria-label="Print, A4" aria-pressed="false"><span class="format-icon" aria-hidden="true"></span><span>A4</span></button>
+                <button type="button" data-format="presentation" aria-label="Presentation, 16:9" aria-pressed="false"><span class="format-icon" aria-hidden="true"></span><span>16:9</span></button>
+              </div>
             </div>
+            <button class="btn primary" id="goBtn" type="button">Generate</button>
           </div>
-          <button class="btn primary" id="goBtn" type="button">Generate</button>
-        </div>
-        <div class="status" id="goStatus" role="status"></div>
-      </section>
+          <div class="status" id="goStatus" role="status"></div>
+        </section>
+        <div class="project-lines" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      </div>
       <section class="source-library">
         <button type="button" id="sourceBtn" class="disclosure" aria-expanded="false" aria-controls="sourceLibrary">Source Library</button>
         <div id="sourceLibrary" hidden>
@@ -2053,6 +2066,11 @@ function saveWorkRequest(){
 function setDisclosure(button, open){
   button.setAttribute('aria-expanded', String(open));
   document.getElementById(button.getAttribute('aria-controls')).hidden = !open;
+  if (button.id === 'projectBtn'){
+    if (open) setFormatMenuOpen(false);
+    $('#projectFields').toggleAttribute('data-collapsed', open);
+    $('#projectFormControls').inert = open;
+  }
 }
 function activateProject(project){
   pendingGenerate = null;

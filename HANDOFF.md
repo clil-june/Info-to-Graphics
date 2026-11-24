@@ -1,6 +1,14 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: simplified source input and full-stage loading animation; published by Claude Code as Artifact version 51).
+Last updated 2026-11-24 (Codex: white welcome and inline project list).
+
+## White welcome and inline project list (Codex, 2026-11-24)
+
+- **Branch / PR:** `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). Based on `305ea10`.
+- **Welcome:** The background is white. A grayscale and brightness adjustment applies to the existing engineering artwork, keeping the headline and button in teal.
+- **Workspace:** The project list unfolds inline under the project name without a surrounding border. While open, the source field, brief, format picker, and Generate contract into four 3 px lines in their corresponding row positions. Input values are preserved when the same project's list closes, and Source Library remains available.
+- **Verified:** Inline JavaScript parses. Fixture checks cover opening and closing the project list, closing the format menu on project-list open, and independent Source Library disclosure. The infographic stylesheet, drawing asset, and loading animation are unchanged.
+- **Still open:** Browser validation of the white artwork and desktop and phone transitions. The latest recorded published Claude Artifact is version 51 (`1795548777-28c6`). The new changes are in the source branch and await publication.
 
 ## Source input and loading animation (Codex, 2026-11-24)
 
