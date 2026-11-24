@@ -31,6 +31,8 @@ Last updated 2026-11-24 (Claude Code: exact pixel no-overlap check; no-overlap i
 - **4:5:** earlier hard cases (Queen 4, fly agaric, lines without dy, messy poster) had 0 overlaps and 0 labels outside.
 - No console errors. Export clones the already-fitted page, so it carries the moved labels.
 
+**Published** as Artifact version 45 (`1795511450-103d`) from `b1b610d`, capabilities carried forward (`sample` with images, `downloads`, `mcp` `host:claude_browser`).
+
 **Unverified:**
 - Real Claude output in the live Artifact, including a real 4:5 ↔ 16:9 switch.
 - Very busy drawings, where the nearest clean spot may be far away and need a pointer.
