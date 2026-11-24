@@ -5,7 +5,7 @@ Drop in sources, say in a sentence or two what the infographic should show, and 
 ## Using it
 
 1. Click **create infographic** to open the workspace. Use **New Project** to name a project. Click the current project name in the left panel to switch projects or rename the current one.
-2. **Add your sources.** Enter or paste one or more links, drop files, or paste text. Supported files include PDF, Word (.docx), text, CSV, JSON, and images. Open **Source Library** to see the sources for the current project. Long names fit on one line, with the full name available on hover.
+2. **Add your sources.** Drop files or choose them with the paperclip. Paste one or more links or source text into the same field, then press **Enter** or **Generate** to submit any text still in the field. Supported files include PDF, Word (.docx), text, CSV, JSON, and images. Open **Source Library** to see the sources for the current project. Long names fit on one line, with the full name available on hover.
 3. **Name the information you're after**, for example “Where do blue whales feed?”, and choose the canvas format next to **Generate**.
    - **Presentation (1920 × 1080 px, 16:9)** for projection. Show the shortest accurate answer in large type and one dominant visual. Use a side-by-side composition or a wide figure where the subject calls for it.
    - **Instagram (1080 × 1350 px, 4:5)** for reading top to bottom on a phone, with values placed directly on the artwork. This is the default.

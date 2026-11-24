@@ -1,6 +1,14 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: simplified source list and removed the refinement panel; published by Claude Code as Artifact version 50).
+Last updated 2026-11-24 (Codex: simplified source input and full-stage loading animation).
+
+## Source input and loading animation (Codex, 2026-11-24)
+
+- **Branch / PR:** `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). Based on `9af3a1a`.
+- **Changes:** The source field keeps a borderless paperclip for choosing files. Enter and Generate submit typed input. The field still accepts pasted links, source text, and dropped files or links. The Add and Paste text controls are removed.
+- **Loading and welcome:** The pencil animation uses the primary button's teal and fills the middle workspace panel. The animation keeps its proportions. The welcome button scales at roughly half its previous dimensions on desktop and has a 44 px minimum height for touch.
+- **Verified:** Parsed the inline JavaScript, checked the control markup and CSS, and exercised the source submission handlers and loading, completion, and cancellation states with JavaScript fixtures. The infographic CSS and Generate handler match the previous version.
+- **Still open:** Visual checks at desktop and phone sizes need a browser. The latest recorded Claude Artifact is version 50 (`1795547882-a594`). The new changes are in the source branch and await publication to the existing Artifact.
 
 ## Simplified left panel (Codex, 2026-11-24)
 
