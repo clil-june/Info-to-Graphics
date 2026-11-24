@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: exact pixel no-overlap check; no-overlap is rule 0).
+Last updated 2026-11-24 (Claude Code: exact pixel no-overlap check; no-overlap is rule 0; Artifact version 45).
 
 ## No overlaps, ever: exact pixel check and rule 0 (Claude Code, 2026-11-24, fourth change)
 
