@@ -4,15 +4,15 @@ Drop in sources, say in a sentence or two what the infographic should show, and 
 
 ## Using it
 
-1. **Drop your sources** on the start page: PDF, Word (.docx), text, CSV, JSON or image files, a link, or pasted text.
-2. **Name the information you're after**, for example "Where do blue whales feed?"
-3. **Choose an output format** with the button beside the source field. It shows the selected format and opens a list with three options.
+1. Click **create infographic** to open the workspace. Use **New Project** to name a project. Click the current project name in the left panel to switch projects or rename the current one.
+2. **Add your sources.** Enter or paste one or more links, drop files, or paste text. Supported files include PDF, Word (.docx), text, CSV, JSON, and images. Open **Source Library** to see the sources for the current project.
+3. **Name the information you're after**, for example “Where do blue whales feed?”, and choose the canvas format next to **Generate**.
    - **Presentation (1920 × 1080 px, 16:9)** for projection. Show the shortest accurate answer in large type and one dominant visual. Use a side-by-side composition or a wide figure where the subject calls for it.
    - **Instagram (1080 × 1350 px, 4:5)** for reading top to bottom on a phone, with values placed directly on the artwork. This is the default.
-   - **Print (3508 × 4961 px)** for one portrait page, with room for a larger illustration and clearer labels.
+   - **Print (3508 × 4961 px, A4)** for one portrait page, with room for a larger illustration and clearer labels.
 4. **Generate.** A pencil draws in a loop while Claude works. A successful generation briefly shows **Done** and then opens the infographic. Use **Stop** to cancel.
-5. **Keep working in the editor.** The editor opens with the displayed version’s question and format. When only the format changes, **Generate** uses the open version and asks Claude to keep the complete answer in the illustration and direct labels. When the question or sources change, Claude establishes the answer from the current inputs. Use **Change it** to add a specific edit or **Try a different picture** for another composition. Up to eight versions are kept, each with its own question and format.
-6. **PNG** saves an image at the exact selected dimensions. **HTML** saves a standalone page with the same canvas proportions. For Print, open the HTML in a browser and print or save it as a PDF on A4.
+5. **Keep working in the project.** Selecting a result in the right panel opens its preview and loads its question and canvas format. When only the format changes, **Generate** uses that version and asks Claude to keep the complete answer in the illustration and direct labels. Use the edit field for a specific change or **Try a different picture** for another composition. The browser saves projects, sources, drafts, and version history locally.
+6. **Export.** Click one or more results to select them. Pick **PDF**, **PNG**, or **JPEG** beside **Export**. PDF places each selected infographic on its own page. PNG and JPEG retain the original pixel dimensions. If you select multiple images, they are downloaded together in a ZIP.
 
 ## How it makes an infographic
 
@@ -29,7 +29,7 @@ The [visual communication guide](docs/visual-communication-research.md) describe
 
 Info to Graphics is a single `index.html` with no build step.
 
-Making and changing infographics, reading images and reading links all need Claude, so they only work when the page runs as an artifact on claude.ai (links also need the Claude desktop app). Opened anywhere else, the page shows the example and its saved infographics, reads PDF, Word and text files, and exports.
+Making and changing infographics, reading images and reading links all need Claude, so they only work when the page runs as an artifact on claude.ai (links also need the Claude desktop app). Opened anywhere else, the page can open the built-in example and its saved projects, reads PDF, Word and text files, and exports.
 
 ## Libraries
 

@@ -1,6 +1,15 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: no stray lines, no text on objects, nothing redundant, at most three options; Artifact version 47).
+Last updated 2026-11-24 (Codex: project workspace, source library, and batch export).
+
+## Project workspace and export (Codex, 2026-11-24)
+
+- **Branch / PR:** `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). GitHub rollback point `28af8ec`. The last recorded published Claude Artifact is version 47 (`1795533138-0f92`), built from `66d9612`.
+- **Welcome:** Use the supplied warm paper and engineering-sketch artwork with a live headline and **create infographic** button. The background is embedded in `index.html`. The owner will supply the logo later.
+- **Workspace:** Charcoal panels, pale cyan actions, projects and Source Library on the left, preview in the middle, and the current project's result gallery on the right. Mobile uses Edit, Infographic, and Results tabs. Each project retains its sources, question, canvas format, and generated history. Existing browser data is read from localStorage and carried into IndexedDB. Storage is local to the browser. The old fixed project and result limits are removed.
+- **Export:** One selection downloads as PDF, PNG, or JPEG. Several selections create a multi-page PDF or a ZIP of full-size images in gallery order. A4 PDF pages use the physical A4 size. The three canvas sizes and generation prompts are unchanged.
+- **Verified in the standalone browser:** welcome and workspace, creation and switching of named projects, saved results after reload, paste of multiple source links, generation and the final Done state with a sampler stub, responsive preview and gallery at 390 px, single JPEG plus batch PNG, JPEG, and PDF. Downloaded files were decoded and checked as 1920 × 1080 and 3508 × 4961 images and a two-page PDF with landscape and A4 pages.
+- **Still open / next step:** Push this commit to the shared branch after the owner confirms the destination. Then publish the branch's `index.html` to the existing Claude Artifact with its `sample`, `downloads`, and `host:claude_browser` capabilities. Then check real generation, link reading, local project history, and downloading in Claude. Record the published version here.
 
 ## No stray lines, no text on objects, nothing redundant, at most three options (Claude Code, 2026-11-24, sixth change)
 
