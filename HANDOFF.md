@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: simplified source list and removed the refinement panel).
+Last updated 2026-11-24 (Codex: simplified source list and removed the refinement panel; published by Claude Code as Artifact version 50).
 
 ## Simplified left panel (Codex, 2026-11-24)
 
@@ -8,7 +8,8 @@ Last updated 2026-11-24 (Codex: simplified source list and removed the refinemen
 - **Change:** Source Library shows a simple list. Long names truncate at the last whole word that fits, with CSS ellipsis for a filename or URL that starts with an unbroken word wider than the row. Full names remain in tooltips and accessible text. Source removal, links, and notices that require action are available.
 - **Removed:** The “Say what to change” field, quick suggestions, “Try a different picture,” and their event handlers. The main question and Generate controls still support new requests and canvas changes.
 - **Verified:** In standalone Chromium, checked title truncation at desktop and 390 px widths, a short title and a long filename, and the full title in each tooltip. With a local sampler fixture, verified first generation and the format-only recomposition path from 16:9 to 4:5. The removed panel stays absent after generating.
-- **Next step:** The latest recorded Claude Artifact is version 49 (`1795547407-0dba`). Publish the updated branch when requested and check it in the live Artifact.
+- **Published (Claude Code, 2026-11-24):** on the owner's go-ahead, `index.html` from `99682dd` (Git blob `063e887`, 396,979 bytes, SHA-256 starting `61a92c7f250b40d8`) went to the existing Artifact as **version 50, publication ID `1795547882-a594`**. Capabilities were carried forward unchanged: `sample` with images, `downloads`, and `mcp` `host:claude_browser` with `preview_start` and `get_page_text`. **Verified:** a read-back of the live page file contains the file byte for byte, plus only the host's standard 531-character wrapper before it and `</body></html>` after it. The owner approved publishing after being told the version removes "Change it" and "Try a different picture". **Unverified:** the simplified panel and real generation inside claude.ai.
+- **Earlier next step (done):** The previously recorded Claude Artifact was version 49 (`1795547407-0dba`). Publish the updated branch when requested and check it in the live Artifact.
 
 ## Light workspace palette (Codex, 2026-11-24)
 
