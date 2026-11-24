@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: quicker model for changes and format switches).
+Last updated 2026-11-24 (Claude Code: quicker model for changes and format switches; Artifact version 44).
 
 ## Faster changes (Claude Code, 2026-11-24, third change)
 
@@ -15,6 +15,8 @@ Last updated 2026-11-24 (Claude Code: quicker model for changes and format switc
 - `ask()` already falls back: if the quicker model's page fails `validPage`, the strongest model makes it.
 
 **What was verified** (built-in Chromium pane, standalone `index.html`, stand-in `window.claude` at `?stub=1`, which records the requested `modelTier`): `node --check` passes. The four requests asked for these tiers: new poster `complex`; "Use fewer words" change `default`; switch from 4:5 to 16:9 via Generate `default`; "Try a different picture" `complex`. No console errors.
+
+**Published** as Artifact version 44 (`1795510013-1657`) from `bbee240`, capabilities carried forward (`sample` with images, `downloads`, `mcp` `host:claude_browser`).
 
 **Unverified:** how much faster real changes are in the live Artifact, and whether the quicker model's redraws keep the quality bar. If they don't, move `quick` back to `complex`, or keep the quicker model only for wording changes.
 
