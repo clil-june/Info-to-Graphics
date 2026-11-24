@@ -1,6 +1,31 @@
 # Handoff
 
-Last updated 2026-11-23 (Claude Code: near-miss three-part answers fall back to the normal layout; Artifact version 41).
+Last updated 2026-11-24 (Claude Code: restored the quality rules lost in the rollback, added edge and pointer checks, fixed format switching).
+
+## Quality rules restored (Claude Code, 2026-11-24)
+
+**Owner report:** new outputs had text on illustrations and on other text, pointer lines the same colour as what they cross, lists of facts under the picture, and odd drawing (Monstera leaves with pale wedges sticking out). Switching between landscape and portrait often broke the layout. The owner's good references: the 1960s radio, the banana timeline and the landscape healthy plate.
+
+**Cause:** the 2026-11-23 rollback to `32843b6` dropped ten commits of quality work: the visual-answer check and the filter that removes text blocks below the figure, the illustrated examples, callout clearance and two-tone leaders, and the pencil screen. They were still on `backup/before-callout-rework-2026-11-23`.
+
+**What changed:**
+- `index.html`, `docs/visual-communication-research.md`, `README.md`, `AGENTS.md` and `CLAUDE.md` are back to the backup branch's state, with Codex's three-part Instagram layout (`53c86c5`) and the near-miss fallback (`e04ff08`) merged on top. Conflicts were resolved in favour of the backup's rules; the `ig-partition` template, `partitionOk()` and the docs paragraph were kept.
+- **New `clearArtwork()`** (runs in `fitSoon` after `fitLabels`): a label whose visible backing changes under it (it straddles a shape's edge, judged by the topmost shape at 21 points with `isPointInFill`) moves by the shortest step to a place with one backing and no other label nearby. A straight `<line>` ending at the label follows it, and the drawing grows if the label moves past its top or bottom. A label wholly on one flat shape (the radio's dial) stays put.
+- **New `leaderContrast()`** (runs after `fitCallouts`): a thin line (stroke 4 units or less) that ends at a label and has under 3:1 contrast with what lies under it along more than 20% of its length is re-coloured to the page ink, the field, white or near-black, whichever is most visible. If none reaches 3:1 everywhere, it also gets a contrasting casing underneath. Decorative strokes that don't end at a label keep their colour.
+- **Prompt failure modes added:** cut-outs painted as wedges or spikes (cuts must stay inside the outline and show what is behind); pointer lines in the colour of what they cross; labels across a shape's edge.
+- **Format proportions:** Instagram's drawing is about 400 × 300–340 (up to 420 with a one-line headline); A4 is about 400 × 420–460 (it was capped at a square, which left the empty band seen in the baby poster); the slide is about 400 × 360 beside an answer, or 800 × 320 when wide.
+- **Format switches:** `refinePrompt` gets `fromFormat`. On a format change the opening says to keep facts, subject, palette and fonts and recompose the layout, and new `formatSwitchRules()` names both canvases and the old viewBox. It says not to reuse old coordinates, gives the landscape↔portrait restacking, and requires uniform scaling and labels re-placed and re-checked.
+
+**What was verified** (built-in Chromium pane, the standalone `index.html` on the local static server with the stand-in `window.claude` at `?stub=1`, Instagram format):
+- The inline script passes `node --check` (Node 14, with newer operators rewritten for the check only).
+- The rebuilt plate problem: the label across the leaf edge moved 29 units up onto the plain plate; the pale pointer over the pale plate became near-black with a white casing; the "Beside the plate" note under the figure was removed. 0 label overlaps.
+- The rebuilt Monstera problem: the label across two leaves moved below them. 0 overlaps.
+- The owner's good radio (its SVG taken from `60's Music radio.html`): no label moved, no line re-coloured, viewBox unchanged.
+- The earlier hard cases (rebuilt Queen 4, fly agaric, lines without dy, the messy poster): 0 overlaps, 0 labels outside the drawing.
+- Switching an Instagram version to 16:9: the prompt sent had the new opening, the switch rules with the old viewBox `0 0 400 340`, and the landscape proportions.
+- No console errors.
+
+**Unverified:** real Claude output in the live Artifact, especially: a landscape↔portrait switch; the A4 baby poster filling the page; Monstera leaves drawn with proper cut-outs; whether the moved label positions read well on real drawings (a label is moved, not rewritten, so it can end up farther from its feature). Pointer lines drawn as `<path>` don't follow a moved label (only `<line>` does).
 
 ## Three-part Instagram layout
 
