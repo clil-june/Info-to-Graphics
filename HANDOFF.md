@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: simplified source input and full-stage loading animation).
+Last updated 2026-11-24 (Codex: simplified source input and full-stage loading animation; published by Claude Code as Artifact version 51).
 
 ## Source input and loading animation (Codex, 2026-11-24)
 
@@ -14,7 +14,8 @@ Last updated 2026-11-24 (Codex: simplified source input and full-stage loading a
   - **At 375 px:** the Edit, Infographic and Results tabs show, the source field fits (343 px wide) and there is no horizontal scroll.
   - **Console:** no errors.
   - **Not checked:** the welcome button's new size.
-- **Still open:** Visual checks at desktop and phone sizes need a browser. The latest recorded Claude Artifact is version 50 (`1795547882-a594`). The new changes are in the source branch and await publication to the existing Artifact.
+- **Published (Claude Code, 2026-11-24):** on the owner's go-ahead, `index.html` from `e545a5a` (Git blob `d9d3ad7`, 396,747 bytes, SHA-256 starting `b8e1d3d56bc7ae77`) went to the existing Artifact as **version 51, publication ID `1795548777-28c6`**. Capabilities were carried forward unchanged: `sample` with images, `downloads`, and `mcp` `host:claude_browser` with `preview_start` and `get_page_text`. **Verified:** a read-back of the live page file contains the file byte for byte, plus only the host's standard 531-character wrapper before it and `</body></html>` after it. **Unverified:** the source field, the animation and real generation inside claude.ai.
+- **Still open (Codex's note before the browser check above):** Visual checks at desktop and phone sizes need a browser. The latest recorded Claude Artifact is version 50 (`1795547882-a594`). The new changes are in the source branch and await publication to the existing Artifact.
 
 ## Simplified left panel (Codex, 2026-11-24)
 
