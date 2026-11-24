@@ -1,6 +1,36 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: restored the quality rules lost in the rollback, added edge and pointer checks, fixed format switching; Artifact version 42).
+Last updated 2026-11-24 (Claude Code: labels stay beside their objects, one-colour pointers, short-text rules for every infographic).
+
+## Labels beside their objects, one-colour pointers, short text (Claude Code, 2026-11-24, second change)
+
+**Owner report** (philodendron, Instagram, made with version 42): text was "all over the place": plant names collected under the shelf, far from their plants, and a note pushed into the shelf. The pointer had a white line with a dark outline. There was far too much text. **Owner decision:** these are rules for every infographic the model makes. A pointer line is one clear colour, never an outline. Text is short and concise.
+
+**Cause:** Codex's `fitCallouts()` (restored from the backup) pushed each callout label straight down until it cleared the bounding box of all the artwork in its column, so labels ended up below the whole scene. It also drew every callout leader as a cream line on a dark halo. The prompt had no word budget for Instagram or A4 and allowed descriptions per item.
+
+**What changed:**
+- `fitCallouts()` and its halo drawing are removed. `clearArtwork()` now places every label block, plain `<text>` and callout `<g data-label>` alike. A block that straddles a shape's edge or truly overlaps another label is nudged at most about two label heights (minimum 24 px) to the nearest clean spot. If no spot is that close, it stays beside its feature and gets a solid backing (`rect[data-backing]`) in the colour it mostly sits on, or the field colour if that reads better. Straight `<line>` pointers, including `line[data-leader]`, follow a moved label.
+- `leaderContrast()` covers callout leaders too. It uses one solid colour: the page ink when it has 3:1 everywhere along the line, otherwise the most visible of field, white or near-black. No casings or outlines.
+- `POSTER_RULES` (used for new posters, changes and format switches alike) gains 4a–4c:
+  - Labels are a name or value plus at most 4 words, never sentences, at most 2 lines and one qualifier.
+  - Word budget outside the headline and source: Presentation 18, Instagram 24, A4 36. Drop the least important fact rather than shrink type.
+  - A fact shared by all items is said once.
+  - Scientific names, care tips and descriptions are left out unless the question asks for them.
+  - Every label sits next to what it names: within about one label height, or joined by a short straight pointer. Never a row of names far from their objects.
+  - Pointers are straight, 1.5–2.5 units, one solid colour with 3:1 contrast, no outline, dashes or arrowheads.
+- The callout instructions no longer promise a two-tone stroke; the "casing is a legibility aid" sentence is replaced with "Pointer lines are one solid colour, with no outline or casing."
+
+**What was verified** (built-in Chromium pane, the standalone `index.html` on the local static server with the stand-in `window.claude` at `?stub=1`, Instagram format):
+- `node --check` on the inline script.
+- The rebuilt philodendron problem: the shelf rect, two plants as `g[data-artwork]`, and callout labels straddling the shelf edge. Birkin and Super Atom moved 12.9 units down onto the shelf, directly under their own plants. The note moved 11.3 units below the shelf. The pale Heartleaf leader became the ink colour (`#1b5e20`). No halos or casings, no overlaps.
+- Rebuilt plate: label nudged 29 units off the leaf; the pointer is one colour. Rebuilt Monstera: no clean spot within reach, so the label kept its place on a backing. Owner's good radio: nothing moved or re-coloured.
+- Earlier hard cases (Queen 4, fly agaric, lines without dy, messy poster): 0 overlaps, 0 labels outside.
+- The prompt sent contains 4a and 4b and no "two-tone" wording. The generation prompt without sources is about 33,600 characters. No console errors.
+- **Caught and fixed during the work:** the first scripted edit matched a line that exists in both `fitLabels` and `clearArtwork` and cut part of `fitLabels` out; it still passed `node --check`. The file was restored from `6f91a39` and the edit redone, anchored to `clearArtwork`, before any of the checks above.
+
+**Unverified:** real Claude output in the live Artifact: whether it keeps to the word budget and places labels beside their objects, and how a backing patch looks on a real drawing.
+
+**Generation time (owner asked to shorten it).** Nothing changed yet. The app asks the `complex` tier for new posters and changes. Speed levers: fewer words to write (the new budget helps a little), a quicker model tier for changes and format switches (possible quality cost), or a lower effort setting (the runtime allows it only when the owner names it). A failed page check runs a second full attempt, which doubles the wait. See Next step.
 
 ## Quality rules restored (Claude Code, 2026-11-24)
 
