@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: project workspace, source library, and batch export).
+Last updated 2026-11-24 (Codex: project workspace, source library and batch export; published by Claude Code as Artifact version 48).
 
 ## Project workspace and export (Codex, 2026-11-24)
 
@@ -9,6 +9,7 @@ Last updated 2026-11-24 (Codex: project workspace, source library, and batch exp
 - **Workspace:** Charcoal panels, pale cyan actions, projects and Source Library on the left, preview in the middle, and the current project's result gallery on the right. Mobile uses Edit, Infographic, and Results tabs. Each project retains its sources, question, canvas format, and generated history. Existing browser data is read from localStorage and carried into IndexedDB. Storage is local to the browser. The old fixed project and result limits are removed.
 - **Export:** One selection downloads as PDF, PNG, or JPEG. Several selections create a multi-page PDF or a ZIP of full-size images in gallery order. A4 PDF pages use the physical A4 size. The three canvas sizes and generation prompts are unchanged.
 - **Verified in the standalone browser:** welcome and workspace, creation and switching of named projects, saved results after reload, paste of multiple source links, generation and the final Done state with a sampler stub, responsive preview and gallery at 390 px, single JPEG plus batch PNG, JPEG, and PDF. Downloaded files were decoded and checked as 1920 × 1080 and 3508 × 4961 images and a two-page PDF with landscape and A4 pages.
+- **Published (Claude Code, 2026-11-24):** on the owner's go-ahead, `index.html` from `450ff76` (Git blob `a2802a1`, 400,637 bytes, SHA-256 starting `0af04c41bae9c1b7`) went to the existing Artifact as **version 48, publication ID `1795545659-523b`**. Capabilities were carried forward unchanged: `sample` with images, `downloads`, and `mcp` `host:claude_browser` with `preview_start` and `get_page_text`. **Verified:** a read-back of the live Artifact contains the file byte for byte, plus only the host's standard 531-character wrapper before it and `</body></html>` after it. **Unverified:** real generation, link reading, project history (IndexedDB inside the claude.ai sandbox, with the localStorage fallback) and single or batch downloads in the live Artifact.
 - **Still open / next step:** Push this commit to the shared branch after the owner confirms the destination. Then publish the branch's `index.html` to the existing Claude Artifact with its `sample`, `downloads`, and `host:claude_browser` capabilities. Then check real generation, link reading, local project history, and downloading in Claude. Record the published version here.
 
 ## No stray lines, no text on objects, nothing redundant, at most three options (Claude Code, 2026-11-24, sixth change)
