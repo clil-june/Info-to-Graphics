@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: restored the quality rules lost in the rollback, added edge and pointer checks, fixed format switching).
+Last updated 2026-11-24 (Claude Code: restored the quality rules lost in the rollback, added edge and pointer checks, fixed format switching; Artifact version 42).
 
 ## Quality rules restored (Claude Code, 2026-11-24)
 
@@ -24,6 +24,8 @@ Last updated 2026-11-24 (Claude Code: restored the quality rules lost in the rol
 - The earlier hard cases (rebuilt Queen 4, fly agaric, lines without dy, the messy poster): 0 overlaps, 0 labels outside the drawing.
 - Switching an Instagram version to 16:9: the prompt sent had the new opening, the switch rules with the old viewBox `0 0 400 340`, and the landscape proportions.
 - No console errors.
+
+**Published** as Artifact version 42 (`1795508655-1549`) from `6f91a39`, capabilities carried forward (`sample` with images, `downloads`, `mcp` `host:claude_browser`).
 
 **Unverified:** real Claude output in the live Artifact, especially: a landscape↔portrait switch; the A4 baby poster filling the page; Monstera leaves drawn with proper cut-outs; whether the moved label positions read well on real drawings (a label is moved, not rewritten, so it can end up farther from its feature). Pointer lines drawn as `<path>` don't follow a moved label (only `<line>` does).
 
