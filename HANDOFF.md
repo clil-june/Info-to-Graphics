@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: white welcome and inline project list).
+Last updated 2026-11-24 (Codex: white welcome and inline project list; published by Claude Code as Artifact version 52).
 
 ## White welcome and inline project list (Codex, 2026-11-24)
 
@@ -13,7 +13,8 @@ Last updated 2026-11-24 (Codex: white welcome and inline project list).
   - **Project list:** opens inline under the project name (three entries). The source field, brief, format picker and Generate fold into thin lines, with Source Library still below. Closing the list kept the half-typed source and the brief.
   - **At 375 px:** the same behaviour, with no horizontal scroll.
   - **Console:** no errors.
-- **Still open:** Browser validation of the white artwork and desktop and phone transitions. The latest recorded published Claude Artifact is version 51 (`1795548777-28c6`). The new changes are in the source branch and await publication.
+- **Published (Claude Code, 2026-11-24):** on the owner's go-ahead, `index.html` from `2fb880e` (Git blob `61cd661`, 398,002 bytes, SHA-256 starting `c4442885de2213f8`) went to the existing Artifact as **version 52, publication ID `1795549689-4a48`**. Capabilities were carried forward unchanged: `sample` with images, `downloads`, and `mcp` `host:claude_browser` with `preview_start` and `get_page_text`. **Verified:** a read-back of the live page file contains the file byte for byte, plus only the host's standard 531-character wrapper before it and `</body></html>` after it. **Unverified:** the welcome screen and project list inside claude.ai, and real generation.
+- **Still open (Codex's note before the browser check above):** Browser validation of the white artwork and desktop and phone transitions. The latest recorded published Claude Artifact is version 51 (`1795548777-28c6`). The new changes are in the source branch and await publication.
 
 ## Source input and loading animation (Codex, 2026-11-24)
 
