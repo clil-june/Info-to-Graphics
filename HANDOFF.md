@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: nothing is ever cut off at the drawing edge).
+Last updated 2026-11-24 (Claude Code: nothing is ever cut off at the drawing edge; Artifact version 46).
 
 ## Nothing cut off at the edge (Claude Code, 2026-11-24, fifth change)
 
@@ -22,6 +22,8 @@ Last updated 2026-11-24 (Claude Code: nothing is ever cut off at the drawing edg
   - Birkin, philodendron, plate and Monstera: 0 cut off, 0 on artwork, 0 overlaps. In the Birkin case "Super Atom", whose right edge was 2 px past the drawing, also moved inside.
   - Owner's good radio: nothing moved. The only checker hit is the side panel hidden under the dial.
   - No console errors.
+
+**Published** as Artifact version 46 (`1795531761-bf1d`) from `934b448`, capabilities carried forward (`sample` with images, `downloads`, `mcp` `host:claude_browser`).
 
 **Unverified:** real Claude output in the live Artifact. HTML text outside the SVG (headline, answer block) is not part of this check; `fitPresentation` and `fitArtboard` size it.
 
