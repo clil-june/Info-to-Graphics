@@ -1,13 +1,14 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: light workspace palette).
+Last updated 2026-11-24 (Codex: light workspace palette; published by Claude Code as Artifact version 49).
 
 ## Light workspace palette (Codex, 2026-11-24)
 
 - **Branch / PR:** `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2). Based on `5d6320c`.
 - **Change:** The workspace has a light gray canvas (`#F2F3F3`), white panels, and pale gray fields. Primary actions use the welcome button's dark teal (`#00383D`) with white text. Secondary controls use dark teal text on white. Menus, tile selection, keyboard focus, and status colours use the light palette.
 - **Verified:** In standalone Chromium, the welcome and workspace primary buttons match, the canvas and panels render in the specified colours, the format menu opens and closes from the keyboard, and selecting a gallery tile highlights it and enables Export. The change is limited to application CSS.
-- **Next step:** The currently published Claude Artifact is version 48 (`1795545659-523b`). Publish the updated branch's `index.html` to that Artifact when the owner requests it, retaining the existing capabilities.
+- **Published (Claude Code, 2026-11-24):** on the owner's go-ahead, `index.html` from `f9e633a` (Git blob `f989536`, 400,832 bytes, SHA-256 starting `563cfca3a7220382`) went to the existing Artifact as **version 49, publication ID `1795547407-0dba`**. Capabilities were carried forward unchanged: `sample` with images, `downloads`, and `mcp` `host:claude_browser` with `preview_start` and `get_page_text`. **Verified:** a read-back of the live page file contains the file byte for byte, plus only the host's standard 531-character wrapper before it and `</body></html>` after it. **Unverified:** the light workspace's appearance inside claude.ai, and the checks listed under Still open.
+- **Earlier next step (done):** The previously published Claude Artifact was version 48 (`1795545659-523b`). Publish the updated branch's `index.html` to that Artifact when the owner requests it, retaining the existing capabilities.
 
 ## Project workspace and export (Codex, 2026-11-24)
 
