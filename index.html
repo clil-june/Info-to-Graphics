@@ -1217,15 +1217,17 @@ function fitLabels(root){
   });
 }
 
-/* Labels stay readable and next to what they name; pointer lines stay visible. Runs for every format.
-   - A label block (a callout's <g data-label>, or a plain <text>) may sit wholly on one flat shape (a dial, a soil band)
-     or wholly on the empty field. If it straddles a shape's edge or touches another label, it is nudged a short way
-     (at most about two label heights) to the nearest clean spot, so it stays beside its feature. If no spot is that close,
-     it stays where it is and gets a solid backing in the colour it mostly sits on, so it reads as one clean patch.
+/* NO OVERLAPS, EVER: text never sits on an illustration, a line, or other text. Runs for every format, after fitLabels.
+   - The drawing is rendered once WITHOUT its labels (and without the pointer lines that end at them) into an off-screen
+     canvas, at the size it is shown. Every pixel under a label block (a callout's <g data-label>, or a plain <text>),
+     plus a 3 px margin, must be one single colour: the empty field, or one flat shape drawn as the label's backing (a
+     dial, a soil band). Thin leaves, stems, strokes and measuring bars all count, because they are real pixels.
+   - A label block that fails, or overlaps another label, moves to the nearest clean spot: first within about two
+     label heights; if there is none, anywhere in the drawing, joined back to where it was by a short pointer line; if
+     the drawing has no clean spot at all, the drawing grows at the bottom and the label goes there, with a pointer.
      A straight pointer <line> ending at a moved label follows it.
    - A thin pointer line (it ends at a label) with under 3:1 contrast against what it crosses is re-coloured with one
-     solid colour: the page ink if that works, otherwise the most visible of field, white or near-black. No outlines.
-   Paint order is read from the drawing itself (isPointInFill), so it works off-screen and in exports. */
+     solid colour: the page ink if that works, otherwise the most visible of field, white or near-black. No outlines. */
 const ART_SHAPES = 'path, circle, ellipse, rect, polygon, polyline';
 function rgbOf(c){
   const m = String(c || '').match(/rgba?\(([^)]+)\)/); if (!m) return null;
@@ -1252,86 +1254,182 @@ function pointTester(svg){
     try { return el.isPointInFill(pt.matrixTransform(m.inverse())); } catch { return false; }
   };
 }
-function clearArtwork(root){
-  root.querySelectorAll('figure.ig-hero > svg, .ig-illo svg').forEach(svg => {
-    const sv = svg.getBoundingClientRect(); if (!sv.width) return;
-    const shapes = artShapes(svg); if (!shapes.length) return;
-    const boxes = shapes.map(el => el.getBoundingClientRect());
-    const inFill = pointTester(svg);
+async function artMask(svg, field){
+  const sv = svg.getBoundingClientRect(), W = Math.ceil(sv.width), H = Math.ceil(sv.height);
+  if (!W || !H) return null;
+  const clone = svg.cloneNode(true);
+  // copy the resolved paint, so the drawing renders on its own exactly as it looks on the page
+  const live = [svg, ...svg.querySelectorAll('*')], copy = [clone, ...clone.querySelectorAll('*')];
+  live.forEach((el, i) => {
+    const c = copy[i]; if (!c) return;
+    const cs = getComputedStyle(el);
+    for (const k of ['fill', 'stroke', 'stroke-width', 'opacity', 'fill-opacity', 'stroke-opacity', 'display', 'visibility', 'fill-rule', 'stroke-linecap', 'stroke-linejoin', 'stroke-dasharray'])
+      c.setAttribute(k, cs.getPropertyValue(k));
+  });
+  clone.querySelectorAll('text, g[data-label], [data-pointer], line[data-leader]').forEach(n => n.remove());
+  clone.setAttribute('width', String(W)); clone.setAttribute('height', String(H)); clone.removeAttribute('style');
+  clone.setAttribute('xmlns', SVGNS);
+  const img = new Image();
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(clone));
+  await img.decode();
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const cx = cv.getContext('2d', {willReadFrequently: true});
+  cx.fillStyle = 'rgb(' + field.join(',') + ')'; cx.fillRect(0, 0, W, H); cx.drawImage(img, 0, 0, W, H);
+  return {left: sv.left, top: sv.top, W, H, data: cx.getImageData(0, 0, W, H).data, field};
+}
+// Fallback when the page may not render an image off-screen: the colour a reader sees at a point is the paint of the
+// topmost drawn shape there (fill or stroke, from the geometry itself), else the field. Checked every 2 px.
+function geomMask(svg, field){
+  const sv = svg.getBoundingClientRect(), pt = svg.createSVGPoint();
+  const els = [...svg.querySelectorAll('path, circle, ellipse, rect, polygon, polyline, line')]
+    .filter(el => !el.closest('defs, clipPath, mask, text, g[data-label]') && !el.hasAttribute('data-pointer') && !el.hasAttribute('data-leader'))
+    .map(el => { const cs = getComputedStyle(el); return {el, box: el.getBoundingClientRect(), m: el.getScreenCTM()?.inverse(),
+      fill: cs.fill !== 'none' && +cs.fillOpacity !== 0 ? rgbOf(cs.fill) : null, stroke: cs.stroke !== 'none' && +cs.strokeOpacity !== 0 ? rgbOf(cs.stroke) : null,
+      hidden: cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity === 0}; })
+    .filter(o => o.m && !o.hidden && (o.fill || o.stroke));
+  const cache = new Map();
+  const colourAt = (x, y) => {
+    const k = x + ',' + y; if (cache.has(k)) return cache.get(k);
+    let c = field;
+    for (let i = els.length - 1; i >= 0; i--){
+      const o = els[i], r = o.box;
+      if (x < r.left - 2 || x > r.right + 2 || y < r.top - 2 || y > r.bottom + 2) continue;
+      pt.x = x; pt.y = y; const p = pt.matrixTransform(o.m);
+      try {
+        if (o.stroke && o.el.isPointInStroke(p)){ c = o.stroke; break; }
+        if (o.fill && o.el.isPointInFill(p)){ c = o.fill; break; }
+      } catch {}
+    }
+    cache.set(k, c); return c;
+  };
+  return {left: sv.left, top: sv.top, W: Math.ceil(sv.width), H: Math.ceil(sv.height), colourAt, field};
+}
+// true when the pixels under box b (screen coordinates) are not all one colour
+function maskMixed(mask, b){
+  if (mask.colourAt){
+    // sampled every 2 px, so keep 2 px more margin than the pixel check
+    b = {left: b.left - 2, right: b.right + 2, top: b.top - 2, bottom: b.bottom + 2};
+    let ref = null;
+    const x0 = Math.max(mask.left, b.left), x1 = Math.min(mask.left + mask.W, b.right), y0 = Math.max(mask.top, b.top), y1 = Math.min(mask.top + mask.H, b.bottom);
+    if (x0 > b.left || x1 < b.right || y0 > b.top || y1 < b.bottom) ref = mask.field;
+    for (let y = Math.round(y0); y <= y1; y += 2) for (let x = Math.round(x0); x <= x1; x += 2){
+      const c = mask.colourAt(x, y);
+      if (!ref){ ref = c; continue; }
+      if (Math.abs(c[0] - ref[0]) + Math.abs(c[1] - ref[1]) + Math.abs(c[2] - ref[2]) > 30) return true;
+    }
+    return false;
+  }
+  const x0 = Math.floor(b.left - mask.left), x1 = Math.ceil(b.right - mask.left), y0 = Math.floor(b.top - mask.top), y1 = Math.ceil(b.bottom - mask.top);
+  const cx0 = Math.max(0, x0), cx1 = Math.min(mask.W - 1, x1), cy0 = Math.max(0, y0), cy1 = Math.min(mask.H - 1, y1);
+  let ref = (x0 < 0 || y0 < 0 || x1 > mask.W - 1 || y1 > mask.H - 1) ? mask.field : null; // past the drawing's edge is open field
+  const d = mask.data, W = mask.W;
+  for (let y = cy0; y <= cy1; y++) for (let x = cx0; x <= cx1; x++){
+    const i = (y * W + x) * 4;
+    if (!ref){ ref = [d[i], d[i + 1], d[i + 2]]; continue; }
+    if (Math.abs(d[i] - ref[0]) + Math.abs(d[i + 1] - ref[1]) + Math.abs(d[i + 2] - ref[2]) > 30) return true;
+  }
+  return false;
+}
+const fitRuns = new WeakMap();
+async function clearArtwork(root){
+  const run = (fitRuns.get(root) || 0) + 1; fitRuns.set(root, run);
+  let fieldEl = root, field = null;
+  while (fieldEl && !(field = rgbOf(getComputedStyle(fieldEl).backgroundColor))) fieldEl = fieldEl.parentElement;
+  field = field || [255, 255, 255];
+  const inkColour = (() => { const d = document.createElement('span'); d.style.color = getComputedStyle(root).getPropertyValue('--ink') || '#000'; root.append(d); const c = getComputedStyle(d).color; d.remove(); return c; })();
+  for (const svg of root.querySelectorAll('figure.ig-hero > svg, .ig-illo svg')){
+    if (!svg.getBoundingClientRect().width) continue;
     const texts = [...svg.querySelectorAll('text')].filter(t => t.textContent.trim() && !t.closest('defs, clipPath'));
-    // one unit per label block: a callout's whole label group, or a plain text
+    if (!texts.length) continue;
     const units = [...new Set(texts.map(t => t.closest('g[data-label]') || t))];
-    const samples = b => { const out = []; for (let i = 0; i < 7; i++) for (let j = 0; j < 3; j++) out.push([b.left + 1 + (b.width - 2) * i / 6, b.top + 1 + (b.height - 2) * j / 2]); return out; };
-    // what the reader sees under each point is the topmost shape there (later shapes paint over earlier ones)
-    const backingsUnder = b => {
-      const cand = [];
-      boxes.forEach((r, k) => { if (!(r.right <= b.left || r.left >= b.right || r.bottom <= b.top || r.top >= b.bottom)) cand.push(k); });
-      return samples(b).map(([x, y]) => { for (let c = cand.length - 1; c >= 0; c--) if (inFill(shapes[cand[c]], x, y)) return cand[c]; return -1; });
-    };
-    const crosses = b => new Set(backingsUnder(b)).size > 1;
-    const near = (b, list) => list.some(q => b.left < q.right + 3 && q.left < b.right + 3 && b.top < q.bottom + 3 && q.top < b.bottom + 3);
+    const pad = 1, grow = (r, p) => ({left: r.left - p, right: r.right + p, top: r.top - p, bottom: r.bottom + p, width: r.width + 2 * p, height: r.height + 2 * p});
     const lines = [...svg.querySelectorAll('line')].filter(l => !l.closest('defs'));
-    const parentCTM = el => el.parentNode.getScreenCTM?.();
-    for (const unit of units){
-      const b0 = unit.getBoundingClientRect(); if (!b0.width) continue;
-      const others = units.filter(o => o !== unit).map(o => o.getBoundingClientRect());
-      // act on a real overlap only; lines of one label set close together are fine
-      const crossing = crosses(b0), crowded = others.some(q => b0.left < q.right - 1 && q.left < b0.right - 1 && b0.top < q.bottom - 1 && q.top < b0.bottom - 1);
-      if (!crossing && !crowded) continue;
-      const reach = Math.max(24, Math.min(b0.height, 90) * 2);
-      let best = null;
-      for (let d = 2; d <= reach && !best; d += 2){
-        for (const [dx, dy] of [[0, -d], [0, d], [-d, 0], [d, 0], [-d, -d], [d, -d], [-d, d], [d, d]]){
-          const b = {left: b0.left + dx, right: b0.right + dx, top: b0.top + dy, bottom: b0.bottom + dy, width: b0.width, height: b0.height};
-          if (b.left < sv.left + 2 || b.right > sv.right - 2 || b.top < sv.top - b0.height || b.bottom > sv.bottom + b0.height) continue;
-          if (near(b, others) || crosses(b)) continue;
-          best = [dx, dy]; break;
-        }
-      }
-      const m = parentCTM(unit); if (!m) continue;
-      if (best){
-        unit.setAttribute('transform', ('translate(' + Math.round(best[0] / m.a * 10) / 10 + ' ' + Math.round(best[1] / m.d * 10) / 10 + ') ' + (unit.getAttribute('transform') || '')).trim());
-        // a straight pointer line ending at the label keeps touching it
-        for (const l of lines){
-          const lm = l.getScreenCTM(); if (!lm) continue;
-          for (const [ax, ay] of [['x1', 'y1'], ['x2', 'y2']]){
-            const p = svg.createSVGPoint(); p.x = +l.getAttribute(ax) || 0; p.y = +l.getAttribute(ay) || 0;
-            const q = p.matrixTransform(lm);
-            if (q.x > b0.left - 14 && q.x < b0.right + 14 && q.y > b0.top - 14 && q.y < b0.bottom + 14){
-              l.setAttribute(ax, String(Math.round((p.x + best[0] / lm.a) * 10) / 10));
-              l.setAttribute(ay, String(Math.round((p.y + best[1] / lm.d) * 10) / 10));
-            }
+    // pointer lines that end at a label are part of that label, not artwork
+    const unitBoxes = units.map(u => u.getBoundingClientRect());
+    for (const el of svg.querySelectorAll('line, polyline, path')){
+      const open = el.localName === 'line' || el.localName === 'polyline' || (el.localName === 'path' && !/z/i.test(el.getAttribute('d') || ''));
+      if (el.closest('defs') || getComputedStyle(el).stroke === 'none' || (getComputedStyle(el).fill !== 'none' && !open)) continue;
+      const m = el.getScreenCTM(); if (!m || typeof el.getTotalLength !== 'function') continue;
+      let len = 0; try { len = el.getTotalLength(); } catch { continue; }
+      if (len * m.a > 400) continue;
+      const ends = [0, len].map(at => el.getPointAtLength(at).matrixTransform(m));
+      if (ends.some(p => unitBoxes.some(r => p.x > r.left - 12 && p.x < r.right + 12 && p.y > r.top - 12 && p.y < r.bottom + 12))) el.setAttribute('data-pointer', '');
+    }
+    let mask; try { mask = await artMask(svg, field); } catch { mask = null; }
+    if (fitRuns.get(root) !== run) return;
+    if (!mask) mask = geomMask(svg, field);
+    const sv = svg.getBoundingClientRect();
+    const svgM = svg.getScreenCTM(); if (!svgM) continue;
+    const toUser = (x, y) => { const p = svg.createSVGPoint(); p.x = x; p.y = y; return p.matrixTransform(svgM.inverse()); };
+    // label against label: a text box includes empty line spacing above and below the letters, so trim it first
+    const trim = r => { const t = (r.bottom - r.top) * 0.12; return {left: r.left, right: r.right, top: r.top + t, bottom: r.bottom - t}; };
+    const overlapsAny = (b, list) => { const p = trim(b); return list.some(r => { const q = trim(r); return p.left < q.right && q.left < p.right && p.top < q.bottom && q.top < p.bottom; }); };
+    const moveUnit = (unit, b0, dx, dy) => {
+      const m = unit.parentNode.getScreenCTM(); if (!m) return;
+      unit.setAttribute('transform', ('translate(' + Math.round(dx / m.a * 10) / 10 + ' ' + Math.round(dy / m.d * 10) / 10 + ') ' + (unit.getAttribute('transform') || '')).trim());
+      for (const l of lines){
+        const lm = l.getScreenCTM(); if (!lm) continue;
+        for (const [ax, ay] of [['x1', 'y1'], ['x2', 'y2']]){
+          const p = svg.createSVGPoint(); p.x = +l.getAttribute(ax) || 0; p.y = +l.getAttribute(ay) || 0;
+          const q = p.matrixTransform(lm);
+          if (q.x > b0.left - 14 && q.x < b0.right + 14 && q.y > b0.top - 14 && q.y < b0.bottom + 14){
+            l.setAttribute(ax, String(Math.round((p.x + dx / lm.a) * 10) / 10));
+            l.setAttribute(ay, String(Math.round((p.y + dy / lm.d) * 10) / 10));
           }
         }
-      } else if (crossing && !unit.previousElementSibling?.hasAttribute('data-backing')){
-        // no clean spot close by: keep the label beside its feature on a solid patch of the colour it mostly sits on
-        const under = backingsUnder(b0), count = {};
-        under.forEach(k => { count[k] = (count[k] || 0) + 1; });
-        const main = +Object.keys(count).sort((a, b) => count[b] - count[a])[0];
-        const fieldEl = svg.closest('.ig'); let field = null, e = fieldEl;
-        while (e && !(field = rgbOf(getComputedStyle(e).backgroundColor))) e = e.parentElement;
-        let fill = main >= 0 ? rgbOf(getComputedStyle(shapes[main]).fill) : null; fill = fill || field || [255, 255, 255];
-        const ink = rgbOf(getComputedStyle(unit.matches('text') ? unit : unit.querySelector('text')).fill);
-        if (ink && contrastOf(ink, fill) < 4.5 && field && contrastOf(ink, field) >= contrastOf(ink, fill)) fill = field;
-        const pad = 4, inv = m.inverse(), p1 = svg.createSVGPoint(), p2 = svg.createSVGPoint();
-        p1.x = b0.left - pad; p1.y = b0.top - pad; p2.x = b0.right + pad; p2.y = b0.bottom + pad;
-        const a = p1.matrixTransform(inv), z = p2.matrixTransform(inv);
-        const r = document.createElementNS(SVGNS, 'rect');
-        r.setAttribute('x', String(Math.round(Math.min(a.x, z.x) * 10) / 10)); r.setAttribute('y', String(Math.round(Math.min(a.y, z.y) * 10) / 10));
-        r.setAttribute('width', String(Math.round(Math.abs(z.x - a.x) * 10) / 10)); r.setAttribute('height', String(Math.round(Math.abs(z.y - a.y) * 10) / 10));
-        r.setAttribute('rx', '3'); r.setAttribute('fill', '#' + fill.map(n => Math.round(n).toString(16).padStart(2, '0')).join(''));
-        r.setAttribute('data-backing', '');
-        unit.before(r);
       }
+    };
+    const pointer = (from, to) => { // a short straight line from the moved label back to where it was
+      const a = toUser(from.x, from.y), z = toUser(to.x, to.y);
+      const l = document.createElementNS(SVGNS, 'line');
+      [['x1', a.x], ['y1', a.y], ['x2', z.x], ['y2', z.y]].forEach(([k, v]) => l.setAttribute(k, String(Math.round(v * 10) / 10)));
+      const vbw = Number(String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/)[2]) || 400;
+      l.setAttribute('stroke', inkColour); l.setAttribute('stroke-width', String(Math.max(1.5, Math.round(2 * vbw / 400 * 10) / 10)));
+      l.setAttribute('stroke-linecap', 'round'); l.setAttribute('data-pointer', '');
+      svg.append(l);
+    };
+    const nearest = (pt, b) => ({x: Math.max(b.left, Math.min(pt.x, b.right)), y: Math.max(b.top, Math.min(pt.y, b.bottom))});
+    for (const unit of units){
+      const r0 = unit.getBoundingClientRect(); if (!r0.width) continue;
+      const b0 = grow(r0, pad);
+      const others = units.filter(o => o !== unit).map(o => o.getBoundingClientRect());
+      if (!maskMixed(mask, b0) && !overlapsAny(r0, others)) continue;
+      const near = Math.max(24, Math.min(r0.height, 90) * 2), far = Math.hypot(sv.width, sv.height);
+      let best = null;
+      for (let d = 2; d <= far && !best; d += d < near ? 2 : 4){
+        for (const [dx, dy] of [[0, -d], [0, d], [-d, 0], [d, 0], [-d, -d], [d, -d], [-d, d], [d, d]]){
+          const r = {left: r0.left + dx, right: r0.right + dx, top: r0.top + dy, bottom: r0.bottom + dy};
+          // a label may step just past the top or bottom edge (the drawing then grows to hold it), never past the sides
+          if (r.left < sv.left + 2 || r.right > sv.right - 2 || r.top < sv.top - r0.height - 4 || r.bottom > sv.bottom + r0.height + 4) continue;
+          if (overlapsAny(r, others) || maskMixed(mask, grow(r, pad))) continue;
+          best = [dx, dy, d]; break;
+        }
+      }
+      const centre = {x: (r0.left + r0.right) / 2, y: (r0.top + r0.bottom) / 2};
+      if (best){
+        moveUnit(unit, r0, best[0], best[1]);
+        if (best[2] > near){ const r = unit.getBoundingClientRect(); pointer(nearest(centre, r), centre); }
+        continue;
+      }
+      // no clean spot anywhere: grow the drawing at the bottom and put the label there
+      const vb = String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
+      if (vb.length !== 4 || !vb.every(isFinite)) continue;
+      const lowest = Math.max(sv.bottom, ...units.map(u => u.getBoundingClientRect().bottom));
+      const top = lowest + 10, left = Math.max(sv.left + 4, Math.min(r0.left, sv.right - r0.width - 4));
+      moveUnit(unit, r0, left - r0.left, top - r0.top);
+      const r = unit.getBoundingClientRect();
+      const need = (r.bottom + 6 - sv.bottom) / svgM.d;
+      if (need > 0) svg.setAttribute('viewBox', [vb[0], vb[1], vb[2], vb[3] + need].map(n => Math.round(n * 10) / 10).join(' '));
+      pointer(nearest(centre, unit.getBoundingClientRect()), centre);
     }
     // grow the drawing if a label moved above or below it
     const vb = String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/).map(Number);
-    if (vb.length !== 4 || !vb.every(isFinite)) return;
+    if (vb.length !== 4 || !vb.every(isFinite)) continue;
     const s2 = svg.getBoundingClientRect(), u = vb[2] / s2.width, all = units.map(t => t.getBoundingClientRect());
     const top = Math.min(...all.map(r => r.top)), bottom = Math.max(...all.map(r => r.bottom));
     const addTop = top < s2.top ? (s2.top - top) * u + 3 : 0, addBottom = bottom > s2.bottom ? (bottom - s2.bottom) * u + 3 : 0;
     if (addTop || addBottom) svg.setAttribute('viewBox', [vb[0], vb[1] - addTop, vb[2], vb[3] + addTop + addBottom].map(n => Math.round(n * 10) / 10).join(' '));
-  });
+  }
 }
 function leaderContrast(root){
   const ig = root.closest?.('.ig') || root;
@@ -1472,10 +1570,16 @@ function fitSoon(ig){
     const drawing = ig.dataset.format === 'presentation' ? ig.querySelector('.ig-hero > svg') : null;
     const viewBox = drawing?.getAttribute('viewBox');
     try{ fitLabels(ig); }catch(e){}
-    try{ clearArtwork(ig); }catch(e){}
-    try{ leaderContrast(ig); }catch(e){}
     if (drawing?.getAttribute('viewBox') !== viewBox) fitPresentation(ig);
     fitArtboard(frame);
+    // the exact overlap check renders the drawing off-screen, so it finishes a moment later
+    const before = drawing?.getAttribute('viewBox');
+    clearArtwork(ig).catch(() => {}).then(() => {
+      if (!ig.isConnected) return;
+      try{ leaderContrast(ig); }catch(e){}
+      if (drawing && drawing.getAttribute('viewBox') !== before) fitPresentation(ig);
+      fitArtboard(frame);
+    });
   };
   // the next frame, or a short timer when the tab is in the background (frames don't run there)
   const later = () => { let done = false; const go = () => { if (!done){ done = true; run(); } }; requestAnimationFrame(go); setTimeout(go, 150); };
@@ -1610,6 +1714,12 @@ function formatInstructions(format){
 
 /* Keep these answer rules aligned with the guide's Generation instruction for the app. */
 const POSTER_RULES = `How to make it:
+0. THE FIRST RULE, ABOVE ALL OTHERS: nothing overlaps. Text never touches or sits on an illustration, a leaf, a stem, a line, a bar or other text, and illustrations never cover text. This holds in every format and after every change.
+   - Plan the label areas BEFORE drawing: decide where each label goes, in empty field, and keep the drawing out of those areas.
+   - Leave at least 8 units of empty space around every label block. A label may sit on one flat shape only when that shape was drawn as its backing (a dial, a sign, a soil band) and the whole label fits inside it.
+   - Never place text across leaves, plants, people, objects or shadows, even "just a little", even for a short word.
+   - When a format changes, every label is placed again from scratch; positions from the old canvas never carry over.
+   - Check it last: for every label, look at the full rectangle it covers. If any part of a drawn shape, line or other label is inside it, move the label or redraw until nothing is.
 1. Identify the question and its complete, source-supported answer before choosing a layout. One question leads to one takeaway and may need several essential facts, such as both values in a comparison or each milestone in a requested set. Identify every part whose absence would make the answer incomplete or misleading. Keep its units, dates, baseline, order and qualifications as needed. Say when the sources cannot establish a requested part. Omit any information that is unnecessary to answer the question, even if the source includes it.
 2. Choose how to make each essential fact visible in the main drawing or a short, direct label attached to what it describes. Use a shared scale for comparable marks and real proportions for depicted objects. Choose a scene, chart, comparison, sequence, cutaway or map that can carry the whole answer.
 3. Compose at the target aspect ratio. Build one coherent composition with a clear reading order. It can contain several linked marks, moments or views of the same answer. Clear label space by rearranging or redrawing the visual. Use additional room to improve the illustration or its labels. If space is tight, give each required part a clearer visual or a shorter direct label.
@@ -1744,7 +1854,7 @@ function formatSwitchRules(from, to, html){
 - Redo: the viewBox and the position of every object, label and pointer line. Give the new viewBox the proportions the format rules above set for ${FORMAT_NAMES[to] || to}. Do not copy coordinates, transforms or translate() values from the old drawing.
 - Landscape to portrait: turn side-by-side parts into a top-to-bottom stack, put the answer's part at the top, and bring each label beside or under its own part. Portrait to landscape: spread stacked parts side by side and use the width; keep the answer's part the largest.
 - Resize an object only by the same factor on both axes; never stretch or squash it. Drop a context object before shrinking the answer's part.
-- Then place the labels from scratch for the new positions, and check each one against the failure modes: no label across a shape's edge or on another label, every pointer line running from its own feature to its own label with 3:1 contrast, and no empty band left on the canvas.`;
+- Then place the labels from scratch for the new positions, apply rule 0 (nothing overlaps), and check each one against the failure modes: no label across a shape's edge or on another label, every pointer line running from its own feature to its own label with 3:1 contrast, and no empty band left on the canvas.`;
 }
 function refinePrompt(proj, html, instr, {keepFacts = false, formatChanged = false, fromFormat = null} = {}){
   // A poster already carries its symbol drawings in div.ig-symdefs; only pages without them need the list spelled out.

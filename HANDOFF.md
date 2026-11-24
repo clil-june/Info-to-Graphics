@@ -1,6 +1,41 @@
 # Handoff
 
-Last updated 2026-11-24 (Claude Code: quicker model for changes and format switches; Artifact version 44).
+Last updated 2026-11-24 (Claude Code: exact pixel no-overlap check; no-overlap is rule 0).
+
+## No overlaps, ever: exact pixel check and rule 0 (Claude Code, 2026-11-24, fourth change)
+
+**Owner report** (philodendron after a 4:5 → 16:9 switch, made with version 44): "Birkin / no climbing" sat across thin Birkin leaves, and "3 ft" touched a leaf. **Owner decision:** main elements, illustrations and text, never overlap, in any format or transition. It is a fundamental rule.
+
+**Cause:** `clearArtwork()` judged a label by 21 sample points (a 7 × 3 grid). Thin leaves fell between the points, and stroked shapes (stems, measuring bars, outlines) were not tested at all.
+
+**What changed:**
+- **`clearArtwork()` is now async and exact.** New `artMask()` renders each drawing off-screen, at its shown size and with its resolved paint, but without its text, label groups and pointer lines. New `maskMixed()` then requires every pixel under a label block (1 px margin) to be one colour: the open field, or one flat backing shape. Anything that differs by more than 30 (summed RGB) counts as an overlap, whether it is a thin leaf, a stem, a stroke or a bar. Paint order is real, so a shape hidden under another doesn't count.
+- **Labels against labels:** boxes are trimmed by 12% top and bottom for empty line spacing, and only a real overlap counts.
+- **Where a failing or overlapping label goes:**
+  - the nearest clean spot within about two label heights; it may step just past the drawing's top or bottom, and the drawing grows to hold it;
+  - otherwise the nearest clean spot anywhere in the drawing, joined by a new straight pointer line (`line[data-pointer]`, ink colour) back to where it was;
+  - if the drawing has no clean spot at all, the drawing grows at the bottom and the label goes there with a pointer.
+  The old "backing patch" fallback is gone, because it covered the drawing.
+- **Pointer lines** (straight lines, polylines and open stroked paths that end at a label) are marked `data-pointer` and left out of the mask.
+- **`fitSoon`** runs `clearArtwork` after `fitLabels`, then `leaderContrast` and the re-fit. A newer run cancels an older one.
+- **Rule 0 in `POSTER_RULES`,** the first rule for new posters, changes and format switches: nothing overlaps. Plan label areas before drawing, keep 8 units of empty space around labels, never put text across leaves, objects or shadows, re-place labels from scratch on a format change, and check each label's rectangle last. The format-switch rules also point to rule 0.
+
+**What was verified** (built-in Chromium pane, standalone `index.html`, stand-in `window.claude` at `?stub=1`):
+- `node --check` on the inline script.
+- An independent checker, separate from the app's method, sampled every 2 px under each label block against every drawn element with `isPointInFill` and `isPointInStroke`.
+- **16:9:**
+  - Rebuilt Birkin case: before the fix the checker would have flagged it. "Birkin / no climbing" moved 39 units up, clear of the leaves; "3 ft" moved 15.6 up beside the bar. 0 labels on artwork, no pointer needed.
+  - Rebuilt philodendron: small moves of 11–16 units. 0 on artwork.
+  - Rebuilt plate and Monstera: labels moved to the nearest clean spot, with a pointer. 0 on artwork.
+  - Owner's good radio: nothing moved. The checker's only hit is the side panel hidden completely under the dial, not a visible overlap.
+- **4:5:** earlier hard cases (Queen 4, fly agaric, lines without dy, messy poster) had 0 overlaps and 0 labels outside.
+- No console errors. Export clones the already-fitted page, so it carries the moved labels.
+
+**Unverified:**
+- Real Claude output in the live Artifact, including a real 4:5 ↔ 16:9 switch.
+- Very busy drawings, where the nearest clean spot may be far away and need a pointer.
+- Whether the claude.ai sandbox allows drawing an SVG data-URL image to a canvas and reading its pixels. If it doesn't, `artMask` fails and the new `geomMask()` fallback takes over: it finds the topmost shape's paint at each point with `isPointInStroke` and `isPointInFill`, every 2 px with a 2 px wider margin. Which path runs in the live Artifact is unknown.
+- **Fallback verified here:** `HTMLImageElement.prototype.decode` was forced to reject (8 renders blocked) and the same five 16:9 cases were run. An independent checker at 1 px steps found no label on artwork (the radio's hidden side panel aside), and the pixel path re-checked at 1 px was also clean.
 
 ## Faster changes (Claude Code, 2026-11-24, third change)
 
