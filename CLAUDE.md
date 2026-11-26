@@ -21,6 +21,24 @@ This repo is shared between Claude and Codex. Both follow the same workflow.
 
    Say clearly if a change is still pending (unmerged, unpushed) or hasn't been verified. If `HANDOFF.md` and the branch disagree, say so instead of guessing.
 
+## Infographic design and review
+
+### Required anchor before the next generation: TYPOGRAPHY_BY_SUBJECT_V1
+
+Read [Typography by subject](docs/visual-communication-research.md#typography-by-subject). Choose from its 12 topic-aware pairs according to the story and tone, with script-capable alternatives when needed; do not impose one font pair or one grid on every infographic. Keep `TYPOGRAPHY_PAIRS` / `TYPOGRAPHY_RULES` in `index.html` synchronized with that section. The anchor overrides older font mood menus and example typography only.
+
+Before generating in the live Claude Artifact, publish the updated branch's `index.html` to the existing Artifact with its capabilities preserved, then record the version in `HANDOFF.md`. Reading GitHub does not update the Artifact or its generation prompt. Preserve its current pair on ordinary revisions unless the user requests a typography change or changes the subject/tone.
+
+When designing, changing, or reviewing infographic generation, consult [the visual communication research guide](docs/visual-communication-research.md). Use it to identify the reader's question, choose a visual form that fits the source, and check that the result communicates the intended takeaway.
+
+**Default (owner's standing preference): prefer visual representation over text.** Apply this to every source you turn into an infographic:
+
+- Put each essential part of the answer in the main visual or in direct labels attached to its evidence. Omit supplemental prose and reserve the footer for the citation.
+- When a recurring object is useful as a mark, give it a recognizable symbol with a consistent meaning and colour. Place any key inside the visual. A repeated symbol can represent a count when its unit is clear.
+- Keep words where they carry meaning: headlines and the takeaway, units and denominators, and qualifiers such as "reported", "estimated" or "about".
+- Give every symbol an accessible name, so the piece still reads without the pictures.
+- Reference example: the Harvard period-products infographic, where a tampon, pad, liner, cup and period underwear replace the product names.
+
 ## Before handing work back
 
 1. Update `HANDOFF.md` (format below).
