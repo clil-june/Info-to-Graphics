@@ -134,6 +134,18 @@ Last updated 2026-11-28 (Claude Code: SVG asset library v3, 131 assets; Artifact
   - Layout e) now covers change over time. Rule 10 flags plain bars, columns, striped blocks and any unit a reader could not name.
   - **Verified with a stand-in:** the prompt contains the new rule, the layout text and the check.
 - **Still open:** labels scattered across the slide in one result, most likely moved by the no-overlap guard (`clearArtwork`). This was not reproduced locally because the page HTML is unavailable.
+- **Owner's test, "Pets come for company…" in both styles (16:9, 4:5, A4):** labels drifted away from their objects. "32% cats: rescue centres" fell under the next column, "42% for company" moved left, and in Poster A4 "16%" overlapped "13% in 2024".
+  - **Cause, `fitLabels()` step b:** two labels side by side on one row only tried a 0.8 shrink. Then `makeRoom()` moved the lower label and everything below it down across the whole drawing, so one wide qualifier pushed other columns' labels around.
+- **Fix, Artifact version 15 (`1795854980-4503`), both styles:**
+  - **Same-row collisions** now try, in order: wrap the wider label onto two lines; wrap the other; shrink the smaller to 0.9; push the two apart sideways if the drawing has room (once per label); only then move one down.
+  - **`makeRoom()`** now moves only labels and marks in the same column (horizontally overlapping the moved label). Step c passes the label's span too.
+  - **Isometric rule 10** gains a label-width check: estimate widths, keep each label inside its column with 10 units to spare, break long ones into two tspans, and keep each value and its qualifier as one block under its own object.
+  - **Verified** in the built-in Chromium pane on the local static server, with `.claude/stub-pets.js` (a local test helper, not part of the app) rendering a 16:9 Isometric pets page whose qualifiers were wider than their columns.
+    - Before the fix, "got a pet for company" fell under the neighbouring column and the qualifiers shrank.
+    - After it, every qualifier wrapped to two lines under its own animal, kept its 19-unit size, and moved nowhere else.
+    - The Poster coffee example renders with no text overlaps and no console errors.
+  - **Pre-existing, not addressed:** in the Poster 4:5 coffee example, "≈95 mg" ends up at the bottom, under "1 bean = 5 mg". It does the same with the code before this fix.
+  - **Unverified:** real generations on claude.ai.
 - **Library gaps to request from the owner's designer:** male and female variants of key poses (reading, holding, working, drinking); a book stack and a shelf. (Aircraft arrived in v3.)
 - **Next step:** in the Artifact, rerun the orange juice process, the pens timeline, one animal or plant comparison and one process, then one Poster ↔ Isometric switch.
 

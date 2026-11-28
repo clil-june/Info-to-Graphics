@@ -1145,10 +1145,19 @@ function fitLabels(root){
     const movers = [...texts, ...marks];
     const moverBox = el => marks.includes(el) ? markBox(el) : box(el);
     const shift = (el, dy) => el.setAttribute('transform', ('translate(0 ' + Math.round(dy * 10) / 10 + ') ' + (el.getAttribute('transform') || '')).trim());
-    const makeRoom = (cutPx, deltaPx, keep) => {
+    // Move down only what lies below the cut AND in the same column (overlapping the span horizontally),
+    // so a collision in one column never shifts the labels of the others.
+    const makeRoom = (cutPx, deltaPx, keep, span) => {
       const d = deltaPx * unit();
-      movers.forEach(el => { if (el !== keep && moverBox(el).t >= cutPx - 0.5) shift(el, d); });
+      movers.forEach(el => {
+        if (el === keep) return;
+        const b = moverBox(el);
+        if (b.t < cutPx - 0.5) return;
+        if (span && (b.r < span.l - 4 || b.l > span.r + 4)) return;
+        shift(el, d);
+      });
     };
+    const nudgeX = (el, dxPx) => el.setAttribute('transform', ('translate(' + Math.round(dxPx * unit() * 10) / 10 + ' 0) ' + (el.getAttribute('transform') || '')).trim());
     const setSize = (t, v) => t.setAttribute('font-size', String(Math.round(v * 10) / 10));
     const shrinkTo = (t, f) => { const v = Math.max(+t.dataset.fs0 * f, Math.min(10, +t.dataset.fs0)); if (size(t) <= v + 0.05) return false; setSize(t, v); return true; };
     const wrap = t => {
@@ -1185,9 +1194,24 @@ function fitLabels(root){
         if (!hit(p, q)) continue;
         changed = true;
         const sameRow = Math.abs(p.t - q.t) < Math.min(p.h, q.h) * 0.5;
-        if (sameRow){ const small = +texts[j].dataset.fs0 <= +texts[i].dataset.fs0 ? j : i; if (shrinkTo(texts[small], 0.8)) continue; }
+        if (sameRow){
+          // side by side: break the wider label onto two lines, then make the smaller one a little smaller,
+          // then push the two apart sideways if the drawing has room; only then move one down
+          const wide = p.w >= q.w ? i : j;
+          if (!texts[wide].dataset.wrapped && wrap(texts[wide])) continue;
+          const other = wide === i ? j : i;
+          if (!texts[other].dataset.wrapped && wrap(texts[other])) continue;
+          const small = +texts[j].dataset.fs0 <= +texts[i].dataset.fs0 ? j : i;
+          if (shrinkTo(texts[small], 0.9)) continue;
+          const [L, Rt] = p.l <= q.l ? [i, j] : [j, i], over = R[L].r - R[Rt].l + gap * 2, sv = svg.getBoundingClientRect();
+          if (R[L].l - over / 2 >= sv.left + 2 && R[Rt].r + over / 2 <= sv.right - 2 && !texts[L].dataset.nudged && !texts[Rt].dataset.nudged){
+            nudgeX(texts[L], -over / 2); nudgeX(texts[Rt], over / 2);
+            texts[L].dataset.nudged = texts[Rt].dataset.nudged = '1';
+            continue;
+          }
+        }
         const lo = q.t > p.t || (q.t === p.t && sameRow) ? j : i, hi = lo === j ? i : j;
-        makeRoom(R[lo].t, R[hi].b - R[lo].t + gap, texts[hi]);
+        makeRoom(R[lo].t, R[hi].b - R[lo].t + gap, texts[hi], R[lo]);
       }
       // c. a bar or rule cutting through a label (a short touch, like a leader line's end, is fine; a label sitting inside its bar is fine)
       for (let i = 0; i < texts.length && !changed; i++) for (const m of marks){
@@ -1197,7 +1221,7 @@ function fitLabels(root){
         if (ox <= 6 || ox <= p.w * 0.15 || oy <= 1) continue;
         if (q.l <= p.l + 0.5 && q.r >= p.r - 0.5 && q.t <= p.t + 0.5 && q.b >= p.b - 0.5) continue;
         changed = true;
-        if (q.t < p.t) makeRoom(p.t, q.b - p.t + gap, m); else makeRoom(q.t, p.b - q.t + gap, texts[i]);
+        if (q.t < p.t) makeRoom(p.t, q.b - p.t + gap, m, p); else makeRoom(q.t, p.b - q.t + gap, texts[i], q);
       }
       if (!changed) break;
     }
@@ -1934,6 +1958,7 @@ ${ISO_HOUSE_STYLE}
    - hands drawn as circles, dots or rings; leader dots large or looking like hands; any round white mark that could be confused with a leader dot
    - stiff, front-facing, symmetric people with stick arms; whole people where hands acting on a large subject would show the step better
    - any gradient, texture, grain or glow; faces with more than dot eyes and a smile, or outlined heads; people who do nothing for the story; decoration with no meaning
+   - a label wider than its own column: estimate every label's width before placing it (about 0.55 × font-size per character, 0.62 for bold), keep it inside the space between its neighbours with at least 10 units to spare, and break a longer one into two tspans (same x, dy="1.2em") or shorten it. A value and its qualifier form one block under (or above) their own object; never let a block drift under a neighbouring column
    - rule 0: any text crossing artwork, a leader or other text, or anything cut off at the edge
    - a fact stranded in a paragraph outside the drawing, or a supporting item as big or bright as the answer`;
 const ISO_EXAMPLE = "<div class=\"ig-symdefs\" data-key=\"none\" data-bg=\"#FFFFFF\" data-ink=\"#252525\" data-muted=\"#666666\" data-accent=\"#F2594B\" data-font=\"Plus Jakarta Sans\" data-body=\"Plus Jakarta Sans\" data-texture=\"none\"><\/div>\n<header class=\"ig-head\"><h1 class=\"ig-h1\">Inside a mechanical pencil<\/h1><\/header>\n<figure class=\"ig-hero\"><svg viewBox=\"0 0 400 340\" role=\"img\" aria-label=\"A mechanical pencil at an isometric angle with a window cut into its barrel. The lead runs back from the tip to the clutch, which grips it. Behind the clutch, a coral spring resets the clutch after each click. The eraser sits under the end cap, shown pulled off.\">\n<g data-artwork><g transform=\"translate(40 290) rotate(-30)\">\n<rect x=\"18\" y=\"20\" width=\"282\" height=\"24\" rx=\"12\" fill=\"#ECECEC\"/>\n<rect x=\"318\" y=\"16\" width=\"72\" height=\"20\" rx=\"10\" fill=\"#ECECEC\"/>\n<rect x=\"-18\" y=\"-2.2\" width=\"20\" height=\"4.4\" rx=\"2\" fill=\"#252525\"/>\n<polygon points=\"0,-5 42,-17 42,17 0,5\" fill=\"#D9D9D9\"/>\n<polygon points=\"0,-5 42,-17 42,0 0,0\" fill=\"#F2F2F2\"/>\n<rect x=\"42\" y=\"-20\" width=\"56\" height=\"40\" fill=\"#666666\"/>\n<rect x=\"42\" y=\"-20\" width=\"56\" height=\"11\" fill=\"#7E7E7E\"/>\n<rect x=\"42\" y=\"11\" width=\"56\" height=\"9\" fill=\"#4F4F4F\"/>\n<rect x=\"98\" y=\"-20\" width=\"202\" height=\"40\" fill=\"#A6A6A6\"/>\n<rect x=\"98\" y=\"-20\" width=\"202\" height=\"12\" fill=\"#D9D9D9\"/>\n<rect x=\"98\" y=\"11\" width=\"202\" height=\"9\" fill=\"#8C8C8C\"/>\n<rect x=\"114\" y=\"-12\" width=\"126\" height=\"25\" rx=\"3\" fill=\"#666666\"/>\n<rect x=\"118\" y=\"-9\" width=\"118\" height=\"19\" fill=\"#F7F7F7\"/>\n<rect x=\"118\" y=\"-9\" width=\"118\" height=\"5\" fill=\"#E3E3E3\"/>\n<rect x=\"118\" y=\"-1.8\" width=\"46\" height=\"3.6\" fill=\"#252525\"/>\n<rect x=\"168\" y=\"-1.8\" width=\"56\" height=\"3.6\" fill=\"#252525\"/>\n<rect x=\"150\" y=\"-8\" width=\"20\" height=\"16\" rx=\"2\" fill=\"#FFFFFF\"/>\n<rect x=\"164\" y=\"-8\" width=\"6\" height=\"16\" fill=\"#D9D9D9\"/>\n<g fill=\"none\" stroke=\"#F2594B\" stroke-width=\"3.4\"><ellipse cx=\"178\" cy=\"0\" rx=\"3.6\" ry=\"9\"/><ellipse cx=\"185.5\" cy=\"0\" rx=\"3.6\" ry=\"9\"/><ellipse cx=\"193\" cy=\"0\" rx=\"3.6\" ry=\"9\"/><ellipse cx=\"200.5\" cy=\"0\" rx=\"3.6\" ry=\"9\"/><ellipse cx=\"208\" cy=\"0\" rx=\"3.6\" ry=\"9\"/><ellipse cx=\"215.5\" cy=\"0\" rx=\"3.6\" ry=\"9\"/><\/g>\n<rect x=\"220\" y=\"-9\" width=\"14\" height=\"18\" rx=\"2\" fill=\"#FFFFFF\"/>\n<rect x=\"229\" y=\"-9\" width=\"5\" height=\"18\" fill=\"#D9D9D9\"/>\n<rect x=\"205\" y=\"-27\" width=\"86\" height=\"9\" rx=\"4.5\" fill=\"#F2F2F2\"/>\n<rect x=\"300\" y=\"-17\" width=\"6\" height=\"34\" fill=\"#D9D9D9\"/>\n<rect x=\"318\" y=\"-11\" width=\"24\" height=\"22\" rx=\"3\" fill=\"#F2F2F2\"/>\n<rect x=\"318\" y=\"-11\" width=\"24\" height=\"7\" fill=\"#FFFFFF\"/>\n<ellipse cx=\"318\" cy=\"0\" rx=\"3\" ry=\"11\" fill=\"#E0E0E0\"/>\n<rect x=\"352\" y=\"-21\" width=\"38\" height=\"42\" rx=\"6\" fill=\"#666666\"/>\n<rect x=\"352\" y=\"-21\" width=\"38\" height=\"12\" fill=\"#7E7E7E\"/>\n<rect x=\"352\" y=\"12\" width=\"38\" height=\"9\" fill=\"#4F4F4F\"/>\n<\/g><\/g>\n<g data-callout=\"primary\"><line data-leader x1=\"208.9\" y1=\"192.5\" x2=\"246\" y2=\"248\" stroke=\"#252525\" stroke-width=\"1.8\"/><circle cx=\"208.9\" cy=\"192.5\" r=\"4.5\" fill=\"#F2594B\" stroke=\"#FFFFFF\" stroke-width=\"2\"/><g data-label><text x=\"248\" y=\"264\" font-size=\"20\" font-weight=\"800\" fill=\"#252525\">Spring<\/text><text x=\"248\" y=\"283\" font-size=\"15\" font-weight=\"500\" fill=\"#666666\">resets the clutch<\/text><\/g><\/g>\n<g data-callout=\"secondary\"><line data-leader x1=\"179.4\" y1=\"209.5\" x2=\"144\" y2=\"153\" stroke=\"#252525\" stroke-width=\"1.8\"/><circle cx=\"179.4\" cy=\"209.5\" r=\"4.5\" fill=\"#F2594B\" stroke=\"#FFFFFF\" stroke-width=\"2\"/><g data-label><text x=\"140\" y=\"132\" text-anchor=\"end\" font-size=\"20\" font-weight=\"800\" fill=\"#252525\">Clutch<\/text><text x=\"140\" y=\"150\" text-anchor=\"end\" font-size=\"15\" font-weight=\"500\" fill=\"#666666\">grips the lead<\/text><\/g><\/g>\n<g data-callout=\"secondary\"><line data-leader x1=\"154.3\" y1=\"224\" x2=\"104\" y2=\"208\" stroke=\"#252525\" stroke-width=\"1.8\"/><circle cx=\"154.3\" cy=\"224\" r=\"4.5\" fill=\"#F2594B\" stroke=\"#FFFFFF\" stroke-width=\"2\"/><g data-label><text x=\"100\" y=\"214\" text-anchor=\"end\" font-size=\"20\" font-weight=\"800\" fill=\"#252525\">Lead<\/text><\/g><\/g>\n<g data-callout=\"secondary\"><line data-leader x1=\"324.9\" y1=\"125.5\" x2=\"356\" y2=\"178\" stroke=\"#252525\" stroke-width=\"1.8\"/><circle cx=\"324.9\" cy=\"125.5\" r=\"4.5\" fill=\"#F2594B\" stroke=\"#FFFFFF\" stroke-width=\"2\"/><g data-label><text x=\"392\" y=\"196\" text-anchor=\"end\" font-size=\"20\" font-weight=\"800\" fill=\"#252525\">Eraser<\/text><\/g><\/g>\n<\/svg><\/figure>\n<footer class=\"ig-foot\"><p><strong>Source:<\/strong> illustrative example, not from a real source<\/p><\/footer>";
