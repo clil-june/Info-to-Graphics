@@ -62,12 +62,14 @@ def build():
         body = "".join(compact(c) for c in tree if c.tag.replace(SVG, "") in ("g", "path", "ellipse"))
         accent = [p for g in tree.iter(SVG + "g") if g.get("data-accent")
                   for el in g.iter() if el.tag in (SVG + "path", SVG + "ellipse") for p in points(el)]
-        at = None
+        at = ab = None
         if accent:
             xs, ys = [p[0] for p in accent], [p[1] for p in accent]
             at = [round(((min(xs) + max(xs)) / 2 - vx) / vw, 2), round(((min(ys) + max(ys)) / 2 - vy) / vh, 2)]
+            # the accent part's box in the asset's own coordinates: where a held object can be swapped in
+            ab = [round(min(xs), 1), round(min(ys), 1), round(max(xs) - min(xs), 1), round(max(ys) - min(ys), 1)]
         lib[a["id"]] = {"label": a["label"], "cat": a["category"], "vb": [vx, vy, vw, vh],
-                        "accent": a.get("accent_layers") or [], "at": at, "svg": body}
+                        "accent": a.get("accent_layers") or [], "at": at, "ab": ab, "svg": body}
     return lib
 
 

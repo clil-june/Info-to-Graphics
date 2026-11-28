@@ -146,6 +146,29 @@ Last updated 2026-11-28 (Claude Code: SVG asset library v3, 131 assets; Artifact
     - The Poster coffee example renders with no text overlaps and no console errors.
   - **Pre-existing, not addressed:** in the Poster 4:5 coffee example, "≈95 mg" ends up at the bottom, under "1 bean = 5 mg". It does the same with the code before this fix.
   - **Unverified:** real generations on claude.ai.
+- **Owner's comparison, Poster vs Isometric (coffee topics, 28 November):** Isometric was judged less informative.
+  - A person held a meaningless round shape (the `holding` pose's placeholder object).
+  - People were used where an object tells more (an iced glass for "cold").
+  - The single muted accent looked dated, and the numbers were black like the text.
+  - **Owner's decisions:** (1) variant A: natural muted colours for objects, people grey, white background; (2) change the existing style rather than add one; (3) let poses hold real library objects; (4) soften the people rule.
+- **Change, Artifact version 16 (`1795856506-e6c1`):**
+  - **Asset markup:**
+    - `data-tint="#HEX"` maps an asset's five greys onto tones of one hue (white and graphite kept; people and hands exempt).
+    - `data-hold="ID"` swaps a pose's accent part (its held object) for any library object, fitted to the part's box, which the build script now stores as `ab`. It is inserted where the placeholder was, so the hands stay on top.
+    - Without `data-accent`, a tinted asset's accent part takes its tint.
+  - **Palette:** `FLAT_ISOMETRIC_PALETTE_V2` gives natural muted colours (at most 3–4 hues), people grey, the subject strongest, and key numbers large and coloured in the subject's tone.
+  - **Rules:**
+    - House-style colour and label bullets were rewritten. ONE ACCENT GROUP became ONE LEADING ITEM.
+    - The people rule became PEOPLE AND OBJECTS: the object carries the information; a person holds it (`data-hold`) or stands beside it; a person is never shown instead of the object or holding a meaningless shape.
+    - The library rules explain `data-tint` and `data-hold` and require `data-hold` on the holding pose.
+    - The reference-image note says the references' grey-plus-accent colour is older and should not be copied.
+  - **Verified** in the built-in Chromium pane on the local static server, with `.claude/stub-coffee.js` (a local test helper, not part of the app):
+    - `holding` with `data-hold="cup"` drew the man holding a terracotta cup with his hands over it;
+    - `shop` and `cup` tinted terracotta, `glass` tinted muted blue;
+    - the coloured key numbers rendered;
+    - the prompt contains the V2 palette, tint, hold, people and number rules;
+    - no console errors.
+  - **Unverified:** real generations on claude.ai; how often Claude uses `data-tint` and `data-hold` well.
 - **Library gaps to request from the owner's designer:** male and female variants of key poses (reading, holding, working, drinking); a book stack and a shelf. (Aircraft arrived in v3.)
 - **Next step:** in the Artifact, rerun the orange juice process, the pens timeline, one animal or plant comparison and one process, then one Poster ↔ Isometric switch.
 
