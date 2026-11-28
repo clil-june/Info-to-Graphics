@@ -1,6 +1,18 @@
 # Handoff
 
-Last updated 2026-11-28 (Claude Code: SVG asset library v3.1, 134 assets; Artifact version 19 in the owner's current account).
+Last updated 2026-11-28 (Claude Code: Isometric v2 experiment branch set up).
+
+## Isometric v2 experiments (Claude Code, 2026-11-28)
+
+- **Current task:** improve Flat Isometric results without risking the working version. The owner asked to be able to roll back.
+  - Planned steps: (1) drawn examples in the current colour style, built from library assets; (2) prune and de-conflict the Isometric prompt; (3) replace the old grey reference images; (4) layout templates filled by Claude.
+- **Branch / PR:** work on `feature/isometric-v2`, branched from `feature/four-elements` at `ae8702a`. `feature/four-elements` and [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2) stay at `ae8702a` until the owner approves merging the experiments.
+- **Restore points:**
+  - Git tag `isometric-v19-stable` (annotated, pushed) on `ae8702a` = SVG library v3.1, the main Artifact's version 19.
+  - **Main Artifact** https://claude.ai/artifact/Q7iCc5Rf2E7vbMiekyiPZp stays at version 19 (`1795858251-1848`). To restore it after any change, republish `index.html` from `isometric-v19-stable` (minus the outer wrapper) with the six `references/flat-isometric/prompt/*.webp` files and the same capabilities.
+  - **Test Artifact** "Info to Graphics (test)" https://claude.ai/artifact/W5yhe4sb99mtNeJP9fvsHF, version 1 (`1795858786-b55e`), is a copy of main version 19 with only the title changed. Its capabilities and the six reference images are the same. Publish experiments here, not to the main Artifact.
+- **What was verified:** the tag and branch exist on GitHub (`git push` output); the test Artifact was published with the expected capabilities.
+- **Next step:** start with steps 1–3 on `feature/isometric-v2`, publish them to the test Artifact, and compare with the main one.
 
 ## Flat Isometric drawing style (Claude Code, 2026-11-26)
 
