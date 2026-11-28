@@ -12,7 +12,23 @@ Last updated 2026-11-28 (Claude Code: Isometric v2 experiment branch set up).
   - **Main Artifact** https://claude.ai/artifact/Q7iCc5Rf2E7vbMiekyiPZp stays at version 19 (`1795858251-1848`). To restore it after any change, republish `index.html` from `isometric-v19-stable` (minus the outer wrapper) with the six `references/flat-isometric/prompt/*.webp` files and the same capabilities.
   - **Test Artifact** "Info to Graphics (test)" https://claude.ai/artifact/W5yhe4sb99mtNeJP9fvsHF, version 1 (`1795858786-b55e`), is a copy of main version 19 with only the title changed. Its capabilities and the six reference images are the same. Publish experiments here, not to the main Artifact.
 - **What was verified:** the tag and branch exist on GitHub (`git push` output); the test Artifact was published with the expected capabilities.
-- **Next step:** start with steps 1–3 on `feature/isometric-v2`, publish them to the test Artifact, and compare with the main one.
+- **Steps 1–3 done (Claude Code, 2026-11-28), test Artifact version 2 (`1795859160-d040`):**
+  - **Step 1, examples:** the old monochrome pencil example (`ISO_EXAMPLE`, 4.8k characters) is replaced by `ISO_EXAMPLES`, one per format, built from library assets in the current colour rules:
+    - 16:9: three coffee facts in columns — cup-and-saucer, shop + takeaway-cup, glass tinted blue with a coffee accent — with coloured 48-unit key numbers;
+    - 4:5: an orange-juice process with the cutting, pouring and drinking poses, terracotta accents and arrows;
+    - A4: a 3 × 2 grid of library apples, four coral and two grey, with "4 of 6" and "2 of 6".
+
+    Each is about 2k characters. The example note says what it shows and not to copy its subject.
+  - **Step 2, prompt:** `ISO_HOUSE_STYLE`, `ISO_PALETTE_RULES` (V2), `ISO_ADDITIONS` (rules 11 and 12), `ISO_CHECKS` and `ISO_LIBRARY_RULES` were rewritten as one set with each owner decision once. The library list is grouped by category. The Isometric 16:9 prompt dropped from about 69,800 to 44,000 characters before sources; the Poster prompt is about 43,200.
+  - **Step 3, references:** sending the reference pictures is off (`ISO_SEND_REFERENCES = false`), because they show the old grey-plus-accent colours. The images and code remain; switch it back on when references in the current colours exist.
+  - **Verified** in the built-in Chromium pane on the local static server, with `.claude/stub-example.js` (it answers with the prompt's own example):
+    - all three examples render with their assets expanded, no guard revert and no console errors;
+    - the 16:9 numbers sit on one line after lowering them clear of the shadows;
+    - the third person in the 4:5 example was enlarged;
+    - the Isometric prompt has rules 8, 11 and 12, the grouped library and no reference note or images;
+    - the Poster prompt is unchanged (house style, coffee example, no isometric text).
+  - **Unverified:** real generations in the test Artifact.
+- **Next step:** the owner compares the test Artifact with the main one on the same topics. If it is better, step 4 (layout templates) follows; then merge into `feature/four-elements` and publish to the main Artifact.
 
 ## Flat Isometric drawing style (Claude Code, 2026-11-26)
 
