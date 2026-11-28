@@ -28,6 +28,12 @@ Last updated 2026-11-28 (Claude Code: Isometric v2 experiment branch set up).
     - the Isometric prompt has rules 8, 11 and 12, the grouped library and no reference note or images;
     - the Poster prompt is unchanged (house style, coffee example, no isometric text).
   - **Unverified:** real generations in the test Artifact.
+- **Owner's test of test-Artifact version 2 (coffee, 16:9):** judged worse. The man held a takeaway cup that looked pasted on top of his hands, and "cold" became a plain glass of coffee without ice.
+  - **Causes:** `data-hold` places the object over the pose's hands, because hands and body share layers in the asset. The new 16:9 example taught the plain `glass` asset for "cold".
+- **Fix, test Artifact version 3 (`1795859501-0f94`):**
+  - The rules no longer recommend `data-hold` or the holding pose: the object stands beside the person, or a library hand that holds it is used instead. The markup line drops `data-hold`, and rule 10 flags the holding pose and objects pasted into hands. The code still supports `data-hold`.
+  - The 16:9 example draws a straw and ice cubes over the library glass ("drank it iced"), showing how to add your own details to an asset.
+  - **Verified** in the local pane: the example renders, and the prompt has the no-hold rule and no `data-hold` in the markup line.
 - **Next step:** the owner compares the test Artifact with the main one on the same topics. If it is better, step 4 (layout templates) follows; then merge into `feature/four-elements` and publish to the main Artifact.
 
 ## Flat Isometric drawing style (Claude Code, 2026-11-26)
