@@ -1367,6 +1367,32 @@ function maskMixed(mask, b){
   return false;
 }
 const fitRuns = new WeakMap();
+/* The pieces the guard moves: a label group (<g data-label>) moves as one block, but a group whose lines are far
+   apart (a value above an object and its year below it) would make a block covering the object itself, which never
+   finds a clean spot and drifts to the bottom; such a group is split into its compact runs of lines. */
+function labelUnits(texts){
+  const units = [], seen = new Set();
+  for (const t of texts){
+    const g = t.closest('g[data-label]');
+    if (!g){ units.push(t); continue; }
+    if (seen.has(g)) continue;
+    seen.add(g);
+    const own = texts.filter(x => x.closest('g[data-label]') === g).map(x => ({x, r: x.getBoundingClientRect()})).sort((a, b) => a.r.top - b.r.top);
+    const runs = [];
+    for (const item of own){
+      const run = runs[runs.length - 1], prev = run && run[run.length - 1];
+      if (prev && item.r.top - prev.r.bottom <= Math.max(prev.r.height, item.r.height) * 0.8) run.push(item); else runs.push([item]);
+    }
+    if (runs.length < 2 || own.some(o => o.x.parentNode !== g)){ units.push(g); continue; }
+    for (const run of runs){
+      if (run.length === 1){ units.push(run[0].x); continue; }
+      const part = document.createElementNS(SVGNS, 'g');
+      run[0].x.before(part); run.forEach(o => part.append(o.x));
+      units.push(part);
+    }
+  }
+  return units;
+}
 async function clearArtwork(root){
   const run = (fitRuns.get(root) || 0) + 1; fitRuns.set(root, run);
   let fieldEl = root, field = null;
@@ -1377,7 +1403,7 @@ async function clearArtwork(root){
     if (!svg.getBoundingClientRect().width) continue;
     const texts = [...svg.querySelectorAll('text')].filter(t => t.textContent.trim() && !t.closest('defs, clipPath'));
     if (!texts.length) continue;
-    const units = [...new Set(texts.map(t => t.closest('g[data-label]') || t))];
+    const units = labelUnits(texts);
     const pad = 1, grow = (r, p) => ({left: r.left - p, right: r.right + p, top: r.top - p, bottom: r.bottom + p, width: r.width + 2 * p, height: r.height + 2 * p});
     const lines = [...svg.querySelectorAll('line')].filter(l => !l.closest('defs'));
     // pointer lines that end at a label are part of that label, not artwork
@@ -1462,6 +1488,11 @@ async function clearArtwork(root){
       });
       t.dataset.wrapped = '1'; return true;
     };
+    // snapshot, so a run that would scatter the labels can be undone (see the end of this loop)
+    const vb0 = String(svg.getAttribute('viewBox') || ''), vbH0 = Number(vb0.trim().split(/[\s,]+/)[3]) || 0;
+    const before = new Map(units.map(u => [u, u.getAttribute('transform')]));
+    const lineBefore = new Map(lines.map(l => [l, ['x1', 'y1', 'x2', 'y2'].map(k => l.getAttribute(k))]));
+    const kids0 = new Set(svg.children);
     for (const unit of units){
       const parts = unit.matches('text') ? [unit] : [...unit.querySelectorAll('text')];
       if (unit.getBoundingClientRect().width > maxW){
@@ -1516,6 +1547,16 @@ async function clearArtwork(root){
     const top = Math.min(...all.map(r => r.top)), bottom = Math.max(...all.map(r => r.bottom));
     const addTop = top < s2.top ? (s2.top - top) * u + 3 : 0, addBottom = bottom > s2.bottom ? (bottom - s2.bottom) * u + 3 : 0;
     if (addTop || addBottom) svg.setAttribute('viewBox', [vb[0], vb[1] - addTop, vb[2], vb[3] + addTop + addBottom].map(n => Math.round(n * 10) / 10).join(' '));
+    // runaway guard: if moving labels grew the drawing by more than a third, the moves scattered the labels
+    // (a staircase of labels below a shrunken picture); put every label back where it was written instead
+    const vbH1 = Number(String(svg.getAttribute('viewBox') || '').trim().split(/[\s,]+/)[3]) || 0;
+    if (vbH0 && vbH1 > vbH0 * 1.33){
+      before.forEach((tr, u) => { if (tr === null) u.removeAttribute('transform'); else u.setAttribute('transform', tr); });
+      lineBefore.forEach((v, l) => ['x1', 'y1', 'x2', 'y2'].forEach((k, i) => { if (v[i] === null) l.removeAttribute(k); else l.setAttribute(k, v[i]); }));
+      [...svg.children].forEach(c => { if (!kids0.has(c) && c.hasAttribute('data-pointer')) c.remove(); });
+      svg.setAttribute('viewBox', vb0);
+      svg.setAttribute('data-guard', 'reverted');
+    }
   }
 }
 function leaderContrast(root){

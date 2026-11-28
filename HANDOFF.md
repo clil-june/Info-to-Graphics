@@ -169,6 +169,17 @@ Last updated 2026-11-28 (Claude Code: SVG asset library v3, 131 assets; Artifact
     - the prompt contains the V2 palette, tint, hold, people and number rules;
     - no console errors.
   - **Unverified:** real generations on claude.ai; how often Claude uses `data-tint` and `data-hold` well.
+- **Owner's test after version 16, "Americans' book reading falls to a record low" (16:9):** the information improved, but the layout broke. The drawing shrank to a tiny strip, and the value and year labels fell into a diagonal staircase below it, with long pointers.
+  - **Cause, reproduced in the built-in Chromium pane with `.claude/stub-books2.js`:** the no-overlap guard `clearArtwork()` moves each `<g data-label>` as one block. Claude had put a value above a book stack and its year below it in one group, so the block's box covered the stack itself and never found a clean spot. The guard then placed each block at the bottom and grew the drawing, which shrank the picture.
+  - **Reproduction numbers:** with the code before this fix (`HEAD` at `10fb142`), the viewBox height grew from 300 to 579 and the drawing width fell from 449 to 251 px.
+- **Fix, Artifact version 17 (`1795857174-55f9`), both styles:**
+  - **Splitting groups:** `labelUnits()` splits a label group whose lines are far apart (a gap of more than 0.8 line heights) into compact runs, each moved on its own.
+  - **Runaway guard:** if moving labels grows the drawing's height by more than a third, every label, leader end and viewBox is restored to where Claude wrote it, new pointer lines are removed, and the svg is marked `data-guard="reverted"`.
+  - **Verified** in the same pane:
+    - the book stub now keeps viewBox height 258 (cropped, not grown), and every value sits above its stack with its year below;
+    - the pets stub has no text overlaps and no guard revert;
+    - no console errors from the app (two 404s came from a temporary copy served from `.claude/`).
+  - **Unverified:** real generations on claude.ai. The guard's revert branch was not triggered by any test page.
 - **Library gaps to request from the owner's designer:** male and female variants of key poses (reading, holding, working, drinking); a book stack and a shelf. (Aircraft arrived in v3.)
 - **Next step:** in the Artifact, rerun the orange juice process, the pens timeline, one animal or plant comparison and one process, then one Poster ↔ Isometric switch.
 
