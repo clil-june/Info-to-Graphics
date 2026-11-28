@@ -1,6 +1,6 @@
 {
   "name": "Info-to-Graphics | Flat Isometric asset library",
-  "version": "2.0",
+  "version": "3.0",
   "palette": {
     "white": "#FFFFFF",
     "paper": "#F2F2F2",
@@ -949,6 +949,1796 @@
         -25,
         787,
         504
+      ]
+    },
+    {
+      "id": "airliner",
+      "category": "transport",
+      "label": "Passenger airliner",
+      "file": "transport/airliner.svg",
+      "tags": [
+        "aviation",
+        "passenger airplane",
+        "jet",
+        "commercial flight",
+        "aircraft"
+      ],
+      "accent_layers": [
+        "fuselage"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        505,
+        385
+      ]
+    },
+    {
+      "id": "propeller-plane",
+      "category": "transport",
+      "label": "Light propeller aircraft",
+      "file": "transport/propeller-plane.svg",
+      "tags": [
+        "aviation",
+        "airplane",
+        "light aircraft",
+        "propeller",
+        "general aviation"
+      ],
+      "accent_layers": [
+        "fuselage"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        472,
+        341
+      ]
+    },
+    {
+      "id": "biplane",
+      "category": "transport",
+      "label": "Vintage biplane",
+      "file": "transport/biplane.svg",
+      "tags": [
+        "aviation",
+        "history",
+        "airplane",
+        "propeller",
+        "vintage aircraft"
+      ],
+      "accent_layers": [
+        "fuselage"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        485,
+        371
+      ]
+    },
+    {
+      "id": "cargo-aircraft",
+      "category": "transport",
+      "label": "Cargo aircraft",
+      "file": "transport/cargo-aircraft.svg",
+      "tags": [
+        "aviation",
+        "airplane",
+        "freight",
+        "logistics",
+        "cargo"
+      ],
+      "accent_layers": [
+        "cargo-door"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        504,
+        402
+      ]
+    },
+    {
+      "id": "helicopter",
+      "category": "transport",
+      "label": "Civilian helicopter",
+      "file": "transport/helicopter.svg",
+      "tags": [
+        "aviation",
+        "rescue",
+        "transport",
+        "rotorcraft",
+        "helicopter"
+      ],
+      "accent_layers": [
+        "fuselage"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        472,
+        356
+      ]
+    },
+    {
+      "id": "hot-air-balloon",
+      "category": "transport",
+      "label": "Hot air balloon",
+      "file": "transport/hot-air-balloon.svg",
+      "tags": [
+        "aviation",
+        "balloon",
+        "flight",
+        "aircraft"
+      ],
+      "accent_layers": [
+        "envelope"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        339,
+        455
+      ]
+    },
+    {
+      "id": "bus",
+      "category": "transport",
+      "label": "City bus",
+      "file": "transport/bus.svg",
+      "tags": [
+        "bus",
+        "transit",
+        "public transport",
+        "road"
+      ],
+      "accent_layers": [
+        "doors"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        509,
+        405
+      ]
+    },
+    {
+      "id": "delivery-truck",
+      "category": "transport",
+      "label": "Delivery truck",
+      "file": "transport/delivery-truck.svg",
+      "tags": [
+        "truck",
+        "delivery",
+        "logistics",
+        "freight",
+        "road"
+      ],
+      "accent_layers": [
+        "cargo"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        480,
+        420
+      ]
+    },
+    {
+      "id": "motorcycle",
+      "category": "transport",
+      "label": "Motorcycle",
+      "file": "transport/motorcycle.svg",
+      "tags": [
+        "motorcycle",
+        "motorbike",
+        "vehicle",
+        "road"
+      ],
+      "accent_layers": [
+        "tank"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        468,
+        411
+      ]
+    },
+    {
+      "id": "electric-scooter",
+      "category": "transport",
+      "label": "Electric scooter",
+      "file": "transport/electric-scooter.svg",
+      "tags": [
+        "scooter",
+        "electric mobility",
+        "road",
+        "vehicle"
+      ],
+      "accent_layers": [
+        "deck"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        394,
+        456
+      ]
+    },
+    {
+      "id": "container-ship",
+      "category": "transport",
+      "label": "Container ship",
+      "file": "transport/container-ship.svg",
+      "tags": [
+        "ship",
+        "freight",
+        "maritime",
+        "logistics",
+        "cargo"
+      ],
+      "accent_layers": [
+        "containers"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        510,
+        462
+      ]
+    },
+    {
+      "id": "sailboat",
+      "category": "transport",
+      "label": "Sailing yacht",
+      "file": "transport/sailboat.svg",
+      "tags": [
+        "boat",
+        "sailing",
+        "yacht",
+        "maritime",
+        "wind"
+      ],
+      "accent_layers": [
+        "sail"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        445,
+        492
+      ]
+    },
+    {
+      "id": "teaching",
+      "category": "people",
+      "label": "Teaching",
+      "file": "people/teaching.svg",
+      "tags": [
+        "teacher",
+        "student",
+        "education",
+        "school",
+        "explaining"
+      ],
+      "accent_layers": [
+        "board"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        381,
+        485
+      ]
+    },
+    {
+      "id": "examining-patient",
+      "category": "people",
+      "label": "Examining a patient",
+      "file": "people/examining-patient.svg",
+      "tags": [
+        "doctor",
+        "clinician",
+        "patient",
+        "healthcare",
+        "examination"
+      ],
+      "accent_layers": [
+        "stethoscope"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        426,
+        481
+      ]
+    },
+    {
+      "id": "reviewing-plans",
+      "category": "people",
+      "label": "Reviewing plans",
+      "file": "people/reviewing-plans.svg",
+      "tags": [
+        "engineer",
+        "architecture",
+        "planning",
+        "construction",
+        "design"
+      ],
+      "accent_layers": [
+        "plans"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        382,
+        491
+      ]
+    },
+    {
+      "id": "running",
+      "category": "people",
+      "label": "Running",
+      "file": "people/running.svg",
+      "tags": [
+        "person",
+        "movement",
+        "sports",
+        "running",
+        "exercise"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -16,
+        -16,
+        401,
+        491
+      ]
+    },
+    {
+      "id": "repairing",
+      "category": "people",
+      "label": "Repairing with a tool",
+      "file": "people/repairing.svg",
+      "tags": [
+        "mechanic",
+        "repair",
+        "maintenance",
+        "wrench",
+        "workshop"
+      ],
+      "accent_layers": [
+        "wrench"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        468,
+        448
+      ]
+    },
+    {
+      "id": "watering-plant",
+      "category": "people",
+      "label": "Watering a seedling",
+      "file": "people/watering-plant.svg",
+      "tags": [
+        "farmer",
+        "gardening",
+        "watering",
+        "plant",
+        "agriculture"
+      ],
+      "accent_layers": [
+        "plant"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        459,
+        471
+      ]
+    },
+    {
+      "id": "handshake",
+      "category": "hands",
+      "label": "Handshake",
+      "file": "hands/handshake.svg",
+      "tags": [
+        "hand",
+        "shaking hands",
+        "agreement",
+        "cooperation",
+        "gesture"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -16,
+        -16,
+        500,
+        293
+      ]
+    },
+    {
+      "id": "thumbs-up",
+      "category": "hands",
+      "label": "Thumbs up",
+      "file": "hands/thumbs-up.svg",
+      "tags": [
+        "hand",
+        "thumb",
+        "approval",
+        "gesture"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -12,
+        -12,
+        370,
+        359
+      ]
+    },
+    {
+      "id": "holding-phone",
+      "category": "hands",
+      "label": "Holding a phone",
+      "file": "hands/holding-phone.svg",
+      "tags": [
+        "hand",
+        "phone",
+        "smartphone",
+        "grip",
+        "device"
+      ],
+      "accent_layers": [
+        "screen"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        402,
+        434
+      ]
+    },
+    {
+      "id": "writing-pencil",
+      "category": "hands",
+      "label": "Writing with a pencil",
+      "file": "hands/writing-pencil.svg",
+      "tags": [
+        "hand",
+        "writing",
+        "pencil",
+        "grip",
+        "education"
+      ],
+      "accent_layers": [
+        "pencil"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        478,
+        370
+      ]
+    },
+    {
+      "id": "pressing-button",
+      "category": "hands",
+      "label": "Pressing a button",
+      "file": "hands/pressing-button.svg",
+      "tags": [
+        "hand",
+        "press",
+        "push",
+        "button",
+        "interaction"
+      ],
+      "accent_layers": [
+        "button"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        456,
+        358
+      ]
+    },
+    {
+      "id": "holding-tool",
+      "category": "hands",
+      "label": "Holding a tool",
+      "file": "hands/holding-tool.svg",
+      "tags": [
+        "hand",
+        "grasp",
+        "tool",
+        "screwdriver",
+        "repair"
+      ],
+      "accent_layers": [
+        "handle"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        433,
+        426
+      ]
+    },
+    {
+      "id": "smartphone",
+      "category": "objects",
+      "label": "Smartphone",
+      "file": "objects/smartphone.svg",
+      "tags": [
+        "phone",
+        "smartphone",
+        "device",
+        "communication"
+      ],
+      "accent_layers": [
+        "screen"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        414,
+        363
+      ]
+    },
+    {
+      "id": "tablet",
+      "category": "objects",
+      "label": "Tablet",
+      "file": "objects/tablet.svg",
+      "tags": [
+        "tablet",
+        "computer",
+        "device",
+        "screen"
+      ],
+      "accent_layers": [
+        "screen"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        497,
+        395
+      ]
+    },
+    {
+      "id": "headphones",
+      "category": "objects",
+      "label": "Headphones",
+      "file": "objects/headphones.svg",
+      "tags": [
+        "headphone",
+        "audio",
+        "music",
+        "technology"
+      ],
+      "accent_layers": [
+        "ear-cups"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        399,
+        459
+      ]
+    },
+    {
+      "id": "wall-clock",
+      "category": "objects",
+      "label": "Wall clock",
+      "file": "objects/wall-clock.svg",
+      "tags": [
+        "clock",
+        "time",
+        "schedule",
+        "analog"
+      ],
+      "accent_layers": [
+        "hands"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        404,
+        438
+      ]
+    },
+    {
+      "id": "camera",
+      "category": "objects",
+      "label": "Camera",
+      "file": "objects/camera.svg",
+      "tags": [
+        "camera",
+        "photo",
+        "photography",
+        "technology"
+      ],
+      "accent_layers": [
+        "lens-ring"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        445,
+        399
+      ]
+    },
+    {
+      "id": "office-chair",
+      "category": "objects",
+      "label": "Office chair",
+      "file": "objects/office-chair.svg",
+      "tags": [
+        "chair",
+        "furniture",
+        "seating",
+        "office"
+      ],
+      "accent_layers": [
+        "seat"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        355,
+        499
+      ]
+    },
+    {
+      "id": "saucepan",
+      "category": "objects",
+      "label": "Saucepan",
+      "file": "objects/saucepan.svg",
+      "tags": [
+        "saucepan",
+        "pot",
+        "cooking",
+        "kitchen"
+      ],
+      "accent_layers": [
+        "handles"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        439,
+        339
+      ]
+    },
+    {
+      "id": "frying-pan",
+      "category": "objects",
+      "label": "Frying pan",
+      "file": "objects/frying-pan.svg",
+      "tags": [
+        "pan",
+        "frying",
+        "cooking",
+        "kitchen"
+      ],
+      "accent_layers": [
+        "handle"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        492,
+        359
+      ]
+    },
+    {
+      "id": "cutlery",
+      "category": "objects",
+      "label": "Spoon and fork",
+      "file": "objects/cutlery.svg",
+      "tags": [
+        "utensils",
+        "spoon",
+        "fork",
+        "dining",
+        "kitchen"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -15,
+        -15,
+        461,
+        376
+      ]
+    },
+    {
+      "id": "kettle",
+      "category": "objects",
+      "label": "Electric kettle",
+      "file": "objects/kettle.svg",
+      "tags": [
+        "kettle",
+        "water",
+        "boiling",
+        "kitchen"
+      ],
+      "accent_layers": [
+        "body"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        366,
+        418
+      ]
+    },
+    {
+      "id": "refrigerator",
+      "category": "objects",
+      "label": "Refrigerator",
+      "file": "objects/refrigerator.svg",
+      "tags": [
+        "fridge",
+        "refrigerator",
+        "appliance",
+        "storage",
+        "food"
+      ],
+      "accent_layers": [
+        "handle"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        297,
+        462
+      ]
+    },
+    {
+      "id": "kitchen-scale",
+      "category": "objects",
+      "label": "Kitchen scale",
+      "file": "objects/kitchen-scale.svg",
+      "tags": [
+        "scale",
+        "weighing",
+        "measurement",
+        "kitchen"
+      ],
+      "accent_layers": [
+        "display"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        370,
+        398
+      ]
+    },
+    {
+      "id": "carrot",
+      "category": "organic",
+      "label": "Carrot",
+      "file": "organic/carrot.svg",
+      "tags": [
+        "carrot",
+        "vegetable",
+        "food",
+        "root"
+      ],
+      "accent_layers": [
+        "root"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        392,
+        438
+      ]
+    },
+    {
+      "id": "broccoli",
+      "category": "organic",
+      "label": "Broccoli",
+      "file": "organic/broccoli.svg",
+      "tags": [
+        "broccoli",
+        "vegetable",
+        "food",
+        "greens"
+      ],
+      "accent_layers": [
+        "crown"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        437,
+        438
+      ]
+    },
+    {
+      "id": "wheat",
+      "category": "organic",
+      "label": "Wheat stalks",
+      "file": "organic/wheat.svg",
+      "tags": [
+        "wheat",
+        "grain",
+        "cereal",
+        "agriculture"
+      ],
+      "accent_layers": [
+        "grains"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        343,
+        451
+      ]
+    },
+    {
+      "id": "banana",
+      "category": "organic",
+      "label": "Banana",
+      "file": "organic/banana.svg",
+      "tags": [
+        "banana",
+        "fruit",
+        "food"
+      ],
+      "accent_layers": [
+        "fruit"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        418,
+        386
+      ]
+    },
+    {
+      "id": "bread",
+      "category": "organic",
+      "label": "Bread loaf",
+      "file": "organic/bread.svg",
+      "tags": [
+        "bread",
+        "loaf",
+        "food",
+        "grain"
+      ],
+      "accent_layers": [
+        "crust"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        492,
+        402
+      ]
+    },
+    {
+      "id": "tomato",
+      "category": "organic",
+      "label": "Tomato",
+      "file": "organic/tomato.svg",
+      "tags": [
+        "tomato",
+        "food",
+        "vegetable",
+        "fruit"
+      ],
+      "accent_layers": [
+        "fruit"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        411,
+        414
+      ]
+    },
+    {
+      "id": "conifer",
+      "category": "organic",
+      "label": "Conifer tree",
+      "file": "organic/conifer.svg",
+      "tags": [
+        "pine",
+        "fir",
+        "conifer",
+        "tree",
+        "forest"
+      ],
+      "accent_layers": [
+        "foliage"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        379,
+        469
+      ]
+    },
+    {
+      "id": "cactus",
+      "category": "organic",
+      "label": "Potted cactus",
+      "file": "organic/cactus.svg",
+      "tags": [
+        "cactus",
+        "succulent",
+        "desert",
+        "houseplant"
+      ],
+      "accent_layers": [
+        "plant"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        345,
+        451
+      ]
+    },
+    {
+      "id": "palm-tree",
+      "category": "organic",
+      "label": "Palm tree",
+      "file": "organic/palm-tree.svg",
+      "tags": [
+        "palm tree",
+        "tropical",
+        "foliage",
+        "plant"
+      ],
+      "accent_layers": [
+        "fronds"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        443,
+        461
+      ]
+    },
+    {
+      "id": "tulip",
+      "category": "organic",
+      "label": "Tulip",
+      "file": "organic/tulip.svg",
+      "tags": [
+        "tulip",
+        "bloom",
+        "flower",
+        "plant"
+      ],
+      "accent_layers": [
+        "flower"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        301,
+        454
+      ]
+    },
+    {
+      "id": "mushrooms",
+      "category": "organic",
+      "label": "Mushrooms",
+      "file": "organic/mushrooms.svg",
+      "tags": [
+        "mushroom",
+        "fungi",
+        "forest",
+        "food"
+      ],
+      "accent_layers": [
+        "caps"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        419,
+        392
+      ]
+    },
+    {
+      "id": "shrub",
+      "category": "organic",
+      "label": "Leafy shrub",
+      "file": "organic/shrub.svg",
+      "tags": [
+        "shrub",
+        "bush",
+        "leaves",
+        "gardening"
+      ],
+      "accent_layers": [
+        "foliage"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        476,
+        391
+      ]
+    },
+    {
+      "id": "horse",
+      "category": "animals",
+      "label": "Horse",
+      "file": "animals/horse.svg",
+      "tags": [
+        "horse",
+        "equine",
+        "mammal",
+        "farm",
+        "animal"
+      ],
+      "accent_layers": [
+        "hooves"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        473,
+        490
+      ]
+    },
+    {
+      "id": "cow",
+      "category": "animals",
+      "label": "Cow",
+      "file": "animals/cow.svg",
+      "tags": [
+        "cow",
+        "cattle",
+        "livestock",
+        "farm",
+        "animal"
+      ],
+      "accent_layers": [
+        "collar"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        505,
+        448
+      ]
+    },
+    {
+      "id": "deer",
+      "category": "animals",
+      "label": "Deer",
+      "file": "animals/deer.svg",
+      "tags": [
+        "deer",
+        "antlers",
+        "wildlife",
+        "mammal"
+      ],
+      "accent_layers": [
+        "antlers"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        359,
+        512
+      ]
+    },
+    {
+      "id": "eagle",
+      "category": "animals",
+      "label": "Eagle",
+      "file": "animals/eagle.svg",
+      "tags": [
+        "eagle",
+        "bird",
+        "wings",
+        "flight",
+        "wildlife"
+      ],
+      "accent_layers": [
+        "feathers"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        530,
+        390
+      ]
+    },
+    {
+      "id": "dolphin",
+      "category": "animals",
+      "label": "Dolphin",
+      "file": "animals/dolphin.svg",
+      "tags": [
+        "dolphin",
+        "ocean",
+        "marine mammal",
+        "flippers"
+      ],
+      "accent_layers": [
+        "flippers"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        497,
+        415
+      ]
+    },
+    {
+      "id": "turtle",
+      "category": "animals",
+      "label": "Turtle",
+      "file": "animals/turtle.svg",
+      "tags": [
+        "turtle",
+        "tortoise",
+        "reptile",
+        "wildlife",
+        "shell"
+      ],
+      "accent_layers": [
+        "shell"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        481,
+        337
+      ]
+    },
+    {
+      "id": "hospital",
+      "category": "buildings",
+      "label": "Hospital",
+      "file": "buildings/hospital.svg",
+      "tags": [
+        "hospital",
+        "clinic",
+        "health",
+        "architecture"
+      ],
+      "accent_layers": [
+        "cross-sign"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        449,
+        422
+      ]
+    },
+    {
+      "id": "school",
+      "category": "buildings",
+      "label": "School",
+      "file": "buildings/school.svg",
+      "tags": [
+        "school",
+        "education",
+        "campus",
+        "architecture"
+      ],
+      "accent_layers": [
+        "roof"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        464,
+        374
+      ]
+    },
+    {
+      "id": "factory",
+      "category": "buildings",
+      "label": "Factory",
+      "file": "buildings/factory.svg",
+      "tags": [
+        "factory",
+        "industrial",
+        "production",
+        "architecture"
+      ],
+      "accent_layers": [
+        "roof"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        439,
+        436
+      ]
+    },
+    {
+      "id": "warehouse",
+      "category": "buildings",
+      "label": "Warehouse",
+      "file": "buildings/warehouse.svg",
+      "tags": [
+        "warehouse",
+        "storage",
+        "logistics",
+        "architecture"
+      ],
+      "accent_layers": [
+        "door"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        445,
+        352
+      ]
+    },
+    {
+      "id": "airport-terminal",
+      "category": "buildings",
+      "label": "Airport terminal",
+      "file": "buildings/airport-terminal.svg",
+      "tags": [
+        "airport",
+        "terminal",
+        "aviation",
+        "architecture"
+      ],
+      "accent_layers": [
+        "canopy"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        535,
+        409
+      ]
+    },
+    {
+      "id": "apartment-block",
+      "category": "buildings",
+      "label": "Apartment block",
+      "file": "buildings/apartment-block.svg",
+      "tags": [
+        "apartment",
+        "residential",
+        "housing",
+        "architecture"
+      ],
+      "accent_layers": [
+        "balconies"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        363,
+        438
+      ]
+    },
+    {
+      "id": "bridge",
+      "category": "infrastructure",
+      "label": "Bridge",
+      "file": "infrastructure/bridge.svg",
+      "tags": [
+        "bridge",
+        "connection",
+        "roads",
+        "transport",
+        "engineering"
+      ],
+      "accent_layers": [
+        "supports"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        482,
+        371
+      ]
+    },
+    {
+      "id": "wind-turbine",
+      "category": "infrastructure",
+      "label": "Wind turbine",
+      "file": "infrastructure/wind-turbine.svg",
+      "tags": [
+        "wind",
+        "turbine",
+        "renewable energy",
+        "electricity"
+      ],
+      "accent_layers": [
+        "rotor"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        346,
+        499
+      ]
+    },
+    {
+      "id": "solar-panel",
+      "category": "infrastructure",
+      "label": "Solar panel",
+      "file": "infrastructure/solar-panel.svg",
+      "tags": [
+        "solar",
+        "photovoltaic",
+        "renewable energy",
+        "electricity"
+      ],
+      "accent_layers": [
+        "panel"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        424,
+        397
+      ]
+    },
+    {
+      "id": "dam",
+      "category": "infrastructure",
+      "label": "Hydroelectric dam",
+      "file": "infrastructure/dam.svg",
+      "tags": [
+        "dam",
+        "hydroelectric",
+        "water",
+        "infrastructure",
+        "energy"
+      ],
+      "accent_layers": [
+        "water"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        484,
+        431
+      ]
+    },
+    {
+      "id": "container-crane",
+      "category": "infrastructure",
+      "label": "Container crane",
+      "file": "infrastructure/container-crane.svg",
+      "tags": [
+        "crane",
+        "logistics",
+        "port",
+        "shipping",
+        "infrastructure"
+      ],
+      "accent_layers": [
+        "structure"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        433,
+        433
+      ]
+    },
+    {
+      "id": "rail-track",
+      "category": "infrastructure",
+      "label": "Rail track",
+      "file": "infrastructure/rail-track.svg",
+      "tags": [
+        "rail",
+        "railway",
+        "track",
+        "rail transport"
+      ],
+      "accent_layers": [
+        "rails"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        505,
+        336
+      ]
+    },
+    {
+      "id": "microscope",
+      "category": "science-technology",
+      "label": "Microscope",
+      "file": "science-technology/microscope.svg",
+      "tags": [
+        "microscope",
+        "laboratory",
+        "optics",
+        "research",
+        "science"
+      ],
+      "accent_layers": [
+        "stage"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        335,
+        511
+      ]
+    },
+    {
+      "id": "beaker",
+      "category": "science-technology",
+      "label": "Beaker",
+      "file": "science-technology/beaker.svg",
+      "tags": [
+        "beaker",
+        "laboratory",
+        "science",
+        "glassware"
+      ],
+      "accent_layers": [
+        "liquid"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        326,
+        406
+      ]
+    },
+    {
+      "id": "test-tube-rack",
+      "category": "science-technology",
+      "label": "Test tube rack",
+      "file": "science-technology/test-tube-rack.svg",
+      "tags": [
+        "test tubes",
+        "laboratory",
+        "glassware",
+        "science"
+      ],
+      "accent_layers": [
+        "liquid"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        416,
+        419
+      ]
+    },
+    {
+      "id": "battery",
+      "category": "science-technology",
+      "label": "Battery",
+      "file": "science-technology/battery.svg",
+      "tags": [
+        "battery",
+        "energy",
+        "electricity",
+        "storage",
+        "technology"
+      ],
+      "accent_layers": [
+        "label"
+      ],
+      "viewBox": [
+        -12,
+        -12,
+        225,
+        381
+      ]
+    },
+    {
+      "id": "circuit-board",
+      "category": "science-technology",
+      "label": "Circuit board",
+      "file": "science-technology/circuit-board.svg",
+      "tags": [
+        "circuit",
+        "electronics",
+        "chip",
+        "computer",
+        "technology"
+      ],
+      "accent_layers": [
+        "chip"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        526,
+        370
+      ]
+    },
+    {
+      "id": "robotic-arm",
+      "category": "science-technology",
+      "label": "Robotic arm",
+      "file": "science-technology/robotic-arm.svg",
+      "tags": [
+        "robot",
+        "automation",
+        "manufacturing",
+        "technology"
+      ],
+      "accent_layers": [
+        "arm"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        446,
+        469
+      ]
+    },
+    {
+      "id": "heart",
+      "category": "health-anatomy",
+      "label": "Human heart",
+      "file": "health-anatomy/heart.svg",
+      "tags": [
+        "heart",
+        "anatomy",
+        "organ",
+        "circulation",
+        "health"
+      ],
+      "accent_layers": [
+        "muscle"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        390,
+        500
+      ]
+    },
+    {
+      "id": "lungs",
+      "category": "health-anatomy",
+      "label": "Human lungs",
+      "file": "health-anatomy/lungs.svg",
+      "tags": [
+        "lungs",
+        "organ",
+        "anatomy",
+        "respiratory",
+        "health"
+      ],
+      "accent_layers": [
+        "lobes"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        461,
+        465
+      ]
+    },
+    {
+      "id": "brain",
+      "category": "health-anatomy",
+      "label": "Human brain",
+      "file": "health-anatomy/brain.svg",
+      "tags": [
+        "brain",
+        "nervous system",
+        "anatomy",
+        "health"
+      ],
+      "accent_layers": [
+        "cerebrum"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        473,
+        432
+      ]
+    },
+    {
+      "id": "eye",
+      "category": "health-anatomy",
+      "label": "Human eye",
+      "file": "health-anatomy/eye.svg",
+      "tags": [
+        "eye",
+        "vision",
+        "anatomy",
+        "health",
+        "iris"
+      ],
+      "accent_layers": [
+        "iris"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        447,
+        327
+      ]
+    },
+    {
+      "id": "ear",
+      "category": "health-anatomy",
+      "label": "Human ear",
+      "file": "health-anatomy/ear.svg",
+      "tags": [
+        "ear",
+        "hearing",
+        "human anatomy",
+        "health"
+      ],
+      "accent_layers": [
+        "outer-ear"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        309,
+        462
+      ]
+    },
+    {
+      "id": "first-aid-kit",
+      "category": "health-anatomy",
+      "label": "First aid kit",
+      "file": "health-anatomy/first-aid-kit.svg",
+      "tags": [
+        "first aid",
+        "safety",
+        "kit",
+        "healthcare"
+      ],
+      "accent_layers": [
+        "cross-sign"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        448,
+        427
+      ]
+    },
+    {
+      "id": "mountains",
+      "category": "geography",
+      "label": "Mountain peaks",
+      "file": "geography/mountains.svg",
+      "tags": [
+        "mountains",
+        "geography",
+        "landscape",
+        "altitude"
+      ],
+      "accent_layers": [
+        "summits"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        483,
+        389
+      ]
+    },
+    {
+      "id": "river",
+      "category": "geography",
+      "label": "River",
+      "file": "geography/river.svg",
+      "tags": [
+        "river",
+        "waterway",
+        "geography",
+        "landscape"
+      ],
+      "accent_layers": [
+        "water"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        472,
+        406
+      ]
+    },
+    {
+      "id": "island",
+      "category": "geography",
+      "label": "Island",
+      "file": "geography/island.svg",
+      "tags": [
+        "island",
+        "ocean",
+        "geography",
+        "landscape"
+      ],
+      "accent_layers": [
+        "water"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        505,
+        391
+      ]
+    },
+    {
+      "id": "waterfall",
+      "category": "geography",
+      "label": "Waterfall",
+      "file": "geography/waterfall.svg",
+      "tags": [
+        "waterfall",
+        "river",
+        "nature",
+        "geography"
+      ],
+      "accent_layers": [
+        "water"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        477,
+        452
+      ]
+    },
+    {
+      "id": "volcano",
+      "category": "geography",
+      "label": "Volcano",
+      "file": "geography/volcano.svg",
+      "tags": [
+        "volcano",
+        "geology",
+        "landscape",
+        "lava"
+      ],
+      "accent_layers": [
+        "lava"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        455,
+        449
+      ]
+    },
+    {
+      "id": "forest",
+      "category": "geography",
+      "label": "Forest patch",
+      "file": "geography/forest.svg",
+      "tags": [
+        "forest",
+        "trees",
+        "environment",
+        "geography"
+      ],
+      "accent_layers": [
+        "foliage"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        475,
+        435
       ]
     }
   ]

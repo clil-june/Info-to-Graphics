@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-28 (Claude Code: Flat Isometric drawing style, SVG asset library; Artifact version 11 in the owner's current account).
+Last updated 2026-11-28 (Claude Code: SVG asset library v3, 131 assets; Artifact version 12 in the owner's current account).
 
 ## Flat Isometric drawing style (Claude Code, 2026-11-26)
 
@@ -118,7 +118,16 @@ Last updated 2026-11-28 (Claude Code: Flat Isometric drawing style, SVG asset li
   - **Recipe and library rules:** plinths are no longer suggested as a stand. Unlisted subjects (aircraft, phones) must be drawn large and simple.
   - **References:** `isoLayoutFor()` sends the seed picture only for plant or growth questions; evolution, history and timeline questions now get the comparison picture.
   - **Verified with a stand-in:** "How did airliners evolve?" → image 1 COMPARISON with the c2 rule; "How does a seed grow…" → image 1 GROWTH.
-- **Library gaps to request from the owner's designer:** male and female variants of key poses (reading, holding, working, drinking); a book stack and a shelf; aircraft (biplane, propeller airliner, jet) and other common subjects that Claude draws badly.
+- **SVG asset library v3 (owner, 2026-11-28), Artifact version 12 (`1795852992-785f`):**
+  - **Source:** `Info-to-Graphics_Flat-Isometric_SVG-Library_v3.zip` (manifest 3.0), 131 SVGs. All 47 v2 files are byte-identical; 84 are new.
+  - **New categories:** infrastructure, science-technology, health-anatomy and geography. **Grown categories:** people 18, hands 12, objects 22, organic 18, animals 11, transport 16 (including biplane, propeller plane, airliner, cargo aircraft, helicopter), buildings 10.
+  - **Scan:** only `svg/g/path/ellipse/title`; no scripts, links, images or styles.
+  - **Files:** `assets/flat-isometric/` was replaced with v3, and the build was re-run. `index.html` is now about 2.39 MB (about 1.95 M characters of library).
+  - **Prompt changes:** `ISO_PERSON` tags the six new poses (teaching: woman; examining-patient: woman doctor with a man patient; reviewing-plans: man in a hard hat; running: man; repairing: man mechanic; watering-plant: woman gardener). The library rules now name the new categories, list the new poses and gestures, and drop "aircraft or phones" as things to draw by hand.
+  - **Prompt size:** the Isometric prompt is now about 59,000 characters (~15k tokens) before sources, because the list has 131 lines.
+  - **Verified** in the built-in Chromium pane on the local static server, with a stand-in `sample` using biplane, propeller-plane, airliner, running, heart and volcano: all six expanded, only the airliner took the accent, the prompt lists 131 assets, and there were no console errors.
+  - **Unverified:** real generation with v3 on claude.ai.
+- **Library gaps to request from the owner's designer:** male and female variants of key poses (reading, holding, working, drinking); a book stack and a shelf. (Aircraft arrived in v3.)
 - **Next step:** in the Artifact, rerun the orange juice process, the pens timeline, one animal or plant comparison and one process, then one Poster ↔ Isometric switch.
 
 ## White welcome and inline project list (Codex, 2026-11-24)
