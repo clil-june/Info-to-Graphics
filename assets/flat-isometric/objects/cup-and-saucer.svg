@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 260" role="img" aria-label="Cup and saucer"><title>Cup and saucer</title>
+<ellipse cx="157" cy="199" rx="144" ry="45" fill="#A6A6A6"/>
+<ellipse cx="157" cy="189" rx="144" ry="45" fill="#D9D9D9"/>
+<ellipse cx="157" cy="186" rx="126" ry="36" fill="#F2F2F2"/>
+<ellipse cx="153" cy="187" rx="83" ry="24" fill="#D9D9D9"/>
+<path d="M224 82 Q264 61 281 86 Q298 110 277 137 Q263 155 226 150 L224 134 Q254 137 264 120 Q275 103 258 97 Q244 92 225 104Z" fill="#A6A6A6"/>
+<path d="M225 84 Q267 66 281 88 Q291 109 275 129 Q262 145 229 144 L229 132 Q253 135 264 119 Q273 103 258 97 Q243 93 225 105Z" fill="#F2F2F2"/>
+<path d="M63 86 Q63 54 153 54 Q243 54 243 86 L236 127 Q228 180 155 192 Q82 180 70 127 Z" fill="#D9D9D9"/>
+<path d="M190 74 Q226 66 243 86 L236 127 Q228 179 155 192 Q186 174 199 145 Q207 113 190 74Z" fill="#A6A6A6"/>
+<path d="M71 92 Q74 125 89 151 Q101 165 116 170 Q91 134 94 95Z" fill="#F2F2F2"/>
+<ellipse cx="153" cy="83" rx="90" ry="33" fill="#F2F2F2"/>
+<ellipse cx="153" cy="83" rx="77" ry="26" fill="#A6A6A6"/>
+<g id="accent-beverage" data-accent="beverage">
+ <ellipse cx="153" cy="86" rx="74" ry="23" fill="#B9784D" data-tone="base" data-recolor-fill="true"/>
+ <path d="M84 84 Q100 67 153 67 Q201 67 222 83 Q192 76 153 77 Q107 76 84 84Z" fill="#98603F" data-tone="shade" data-recolor-fill="true"/>
+</g>
+<path d="M63 83 Q63 108 151 116 Q239 108 243 83 Q242 111 152 120 Q63 112 63 83Z" fill="#F2F2F2"/>
+</svg>

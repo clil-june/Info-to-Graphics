@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated 2026-11-28 (Claude Code: SVG asset library v3, 131 assets; Artifact version 12 in the owner's current account).
+Last updated 2026-11-28 (Claude Code: SVG asset library v3.1, 134 assets; Artifact version 19 in the owner's current account).
 
 ## Flat Isometric drawing style (Claude Code, 2026-11-26)
 
@@ -188,7 +188,14 @@ Last updated 2026-11-28 (Claude Code: SVG asset library v3, 131 assets; Artifact
   - **Library rules:** first choose the most telling, specific objects and combine them (rule 7), then use a library asset when it has that object; draw the specific object when the library's is generic. Assets and hand-drawn objects may be mixed in one scene.
   - **Verified with a stand-in `sample`:** the Isometric prompt has each of rules 7, 9 and 10 once, the isometric rule 8 and not the poster one, the isometric checks inside rule 10, rules 11 and 12, and the new library wording. The Poster prompt is unchanged (its rule 8, no isometric text).
   - **Unverified:** real generations.
-- **Library wish list from this test:** a takeaway cup with lid, a cup and saucer, a wine glass.
+- **Library wish list from this test:** a takeaway cup with lid, a cup and saucer, a wine glass (all delivered in v3.1).
+- **SVG asset library v3.1 (owner, 2026-11-28), Artifact version 19 (`1795858251-1848`):**
+  - **Source:** `Info-to-Graphics_Flat-Isometric_SVG-Library_v3.1.zip`, 134 SVGs. All 131 v3 files are byte-identical. New: `objects/cup-and-saucer`, `objects/takeaway-cup`, `objects/wine-glass`. That fulfils the wish list from the coffee test.
+  - **Scan:** only `svg/g/path/ellipse/title`; no scripts, links, images or styles.
+  - **Files:** `assets/flat-isometric/` was replaced and the build re-run; `index.html` is about 2.41 MB.
+  - **Code and prompt:** `ISO_GREYS` also tints the two extra greys the new assets use (`#848484`, `#4A4A4A`). The library-rule examples no longer cite the cup and saucer or the takeaway cup as missing.
+  - **Verified** in the built-in Chromium pane on the local static server, with `.claude/stub-coffee31.js`: cup-and-saucer and takeaway-cup tinted terracotta, wine-glass tinted muted blue, beside the tinted shop; the prompt lists all three; no new console errors.
+  - **Unverified:** real generations.
 - **Library gaps to request from the owner's designer:** male and female variants of key poses (reading, holding, working, drinking); a book stack and a shelf. (Aircraft arrived in v3.)
 - **Next step:** in the Artifact, rerun the orange juice process, the pens timeline, one animal or plant comparison and one process, then one Poster ↔ Isometric switch.
 

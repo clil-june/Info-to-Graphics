@@ -1,6 +1,6 @@
-# Flat Isometric asset library — V3
+# Flat Isometric asset library — V3.1
 
-131 self-contained SVG illustrations for Info-to-Graphics. Each SVG is a transparent, resolution-independent drawing, with an English title, intrinsic viewBox, and separate accent paths where applicable. The illustrations use original reference-style drawings converted to editable vector contours, with a unified neutral palette and semantic accent colors. There are no embedded raster images or linked fonts.
+134 self-contained SVG illustrations for Info-to-Graphics. Each SVG is a transparent, resolution-independent drawing, with an English title, intrinsic viewBox, and separate accent paths where applicable. The illustrations use original reference-style drawings converted to editable vector contours, with a unified neutral palette and semantic accent colors. There are no embedded raster images or linked fonts.
 
 ## Using the assets
 
@@ -12,11 +12,11 @@
 
 ## Catalog coverage
 
-V3 retains all 47 V2 SVG files and adds 84 new SVGs. See catalog.png for the complete visual index.
+V3.1 retains all 131 V3 SVG files and adds three beverage vessels. See catalog.png for the complete visual index.
 
 - people: 18 assets
 - hands: 12 assets
-- objects: 22 assets
+- objects: 25 assets
 - organic: 18 assets
 - animals: 11 assets
 - transport: 16 assets

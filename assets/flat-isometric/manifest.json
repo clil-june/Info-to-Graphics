@@ -1,6 +1,6 @@
 {
   "name": "Info-to-Graphics | Flat Isometric asset library",
-  "version": "3.0",
+  "version": "3.1",
   "palette": {
     "white": "#FFFFFF",
     "paper": "#F2F2F2",
@@ -2739,6 +2739,92 @@
         -15,
         475,
         435
+      ]
+    },
+    {
+      "id": "takeaway-cup",
+      "category": "objects",
+      "label": "Takeaway cup with lid",
+      "file": "objects/takeaway-cup.svg",
+      "tags": [
+        "takeaway coffee",
+        "disposable cup",
+        "paper cup",
+        "lid",
+        "sleeve",
+        "hot drink",
+        "coffee",
+        "tea",
+        "cafe",
+        "beverage",
+        "food service",
+        "to go"
+      ],
+      "accent_layers": [
+        "sleeve"
+      ],
+      "viewBox": [
+        0,
+        0,
+        260,
+        280
+      ]
+    },
+    {
+      "id": "cup-and-saucer",
+      "category": "objects",
+      "label": "Cup and saucer",
+      "file": "objects/cup-and-saucer.svg",
+      "tags": [
+        "coffee cup",
+        "coffee",
+        "tea",
+        "cafe",
+        "ceramic",
+        "saucer",
+        "espresso",
+        "cappuccino",
+        "hot drink",
+        "beverage",
+        "tableware",
+        "breakfast"
+      ],
+      "accent_layers": [
+        "beverage"
+      ],
+      "viewBox": [
+        0,
+        0,
+        320,
+        260
+      ]
+    },
+    {
+      "id": "wine-glass",
+      "category": "objects",
+      "label": "Stemmed wine glass",
+      "file": "objects/wine-glass.svg",
+      "tags": [
+        "wine glass",
+        "goblet",
+        "stemware",
+        "glass",
+        "red wine",
+        "wine",
+        "cocktail",
+        "beverage",
+        "restaurant",
+        "drink",
+        "tableware"
+      ],
+      "accent_layers": [
+        "beverage"
+      ],
+      "viewBox": [
+        0,
+        0,
+        240,
+        300
       ]
     }
   ]

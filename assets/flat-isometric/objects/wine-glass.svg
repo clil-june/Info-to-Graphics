@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300" role="img" aria-label="Stemmed wine glass"><title>Stemmed wine glass</title>
+<ellipse cx="120" cy="270" rx="66" ry="17" fill="#A6A6A6"/>
+<ellipse cx="120" cy="264" rx="66" ry="17" fill="#D9D9D9"/>
+<ellipse cx="120" cy="262" rx="51" ry="11" fill="#F2F2F2"/>
+<path d="M111 179 H129 V257 Q129 263 120 264 Q111 263 111 257Z" fill="#D9D9D9"/>
+<path d="M120 179 H129 V257 Q129 262 120 264Z" fill="#A6A6A6"/>
+<path d="M53 49 Q53 26 120 26 Q187 26 187 49 L187 102 Q187 148 152 177 Q137 189 120 191 Q103 189 88 177 Q53 148 53 102Z" fill="#F2F2F2"/>
+<path d="M53 49 L53 102 Q53 148 88 177 Q103 189 120 191 Q100 179 87 160 Q65 131 65 97 V49Z" fill="#D9D9D9"/>
+<path d="M175 49 V102 Q175 148 145 174 Q135 184 120 191 Q153 186 173 157 Q187 130 187 102 V49Z" fill="#D9D9D9"/>
+<g id="accent-beverage" data-accent="beverage">
+ <path d="M65 111 Q65 91 120 91 Q175 91 175 111 Q175 147 145 173 Q133 183 120 184 Q107 183 95 173 Q65 147 65 111Z" fill="#CB665C" data-tone="base" data-recolor-fill="true"/>
+ <path d="M144 105 Q167 100 175 111 Q175 147 145 173 Q133 183 120 184 Q146 162 151 133Z" fill="#A44F48" data-tone="shade" data-recolor-fill="true"/>
+ <ellipse cx="120" cy="110" rx="55" ry="19" fill="#D88D85" data-tone="light" data-recolor-fill="true"/>
+</g>
+<path d="M75 61 Q74 99 84 125 Q91 144 102 151 Q88 124 85 63Z" fill="#FFFFFF" fill-opacity=".85"/>
+<ellipse cx="120" cy="49" rx="67" ry="23" fill="none" stroke="#A6A6A6" stroke-width="4"/>
+<path d="M56 49 Q66 68 120 68 Q174 68 184 49" fill="none" stroke="#D9D9D9" stroke-width="4" stroke-linecap="round"/>
+</svg>

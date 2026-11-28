@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 280" role="img" aria-label="Takeaway cup with lid"><title>Takeaway cup with lid</title>
+<path d="M53 68 C53 53 87 41 130 41 C173 41 207 53 207 68 L186 235 C185 251 161 261 130 261 C99 261 75 251 74 235 Z" fill="#D9D9D9"/>
+<path d="M156 48 Q193 50 207 68 L186 235 Q184 248 165 254 Q174 195 179 126Z" fill="#A6A6A6"/>
+<path d="M64 83 L75 231 Q78 249 106 253 L91 88Z" fill="#F2F2F2"/>
+<g id="accent-sleeve" data-accent="sleeve">
+ <path d="M62 125 Q130 151 198 125 L188 200 Q130 225 72 200Z" fill="#438A90" data-tone="base" data-recolor-fill="true"/>
+ <path d="M169 135 Q185 132 198 125 L188 200 Q173 206 157 209 Z" fill="#376F74" data-tone="shade" data-recolor-fill="true"/>
+</g>
+<path d="M46 64 Q48 43 70 37 Q83 17 130 17 Q177 17 190 37 Q212 43 214 64 L214 76 Q214 91 130 95 Q46 91 46 76Z" fill="#666666"/>
+<path d="M51 61 Q52 48 76 40 Q90 27 130 27 Q170 27 184 40 Q208 48 209 61 Q192 80 130 82 Q68 80 51 61Z" fill="#848484"/>
+<ellipse cx="130" cy="47" rx="55" ry="20" fill="#A6A6A6"/>
+<path d="M151 31 Q171 30 180 39 L158 46 Q147 45 143 40Z" fill="#252525"/>
+<path d="M46 70 Q71 89 130 89 Q189 89 214 70 L214 78 Q210 93 130 96 Q50 93 46 78Z" fill="#4A4A4A"/>
+</svg>
