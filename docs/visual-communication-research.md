@@ -371,7 +371,11 @@ Flat Isometric combines flat design (simple geometry, flat fills, hard-edged sha
 
 ### Typography and runtime
 
-`FLAT_ISOMETRIC_TYPE_V1` fixes Plus Jakarta Sans for this style (see the exception in section 8). In `index.html`, the `STYLES` registry holds each style's art direction, palette rules (`FLAT_ISOMETRIC_PALETTE_V1`), drawing rules, typography, texture and example. Flat Isometric has its own drawing rules 7 to 10 (`ISO_DRAWING_RULES`):
+`FLAT_ISOMETRIC_TYPE_V1` fixes Plus Jakarta Sans for this style (see the exception in section 8). In `index.html`, the `STYLES` registry holds each style's art direction, palette rules (`FLAT_ISOMETRIC_PALETTE_V2`), drawing rules, typography, texture and example.
+
+**Shared construction (owner's decision, 28 November 2026).** Both styles build the infographic with the same construction rules: the Poster's rules 0 to 7, 9 and 10 (answer first, the hero carries the answer, the picture illustrates the answer itself, the failure-mode check). Flat Isometric changes only how things are drawn and coloured: its own house style (rule 8), its palette and typography, its checks added to rule 10 (`ISO_CHECKS`), two additions (`ISO_ADDITIONS`: rule 11 composition and rule 12 drawing recipe) and the asset library. The library is a helper, not a limit. Claude first decides which objects tell the fact most specifically and combines them (a takeaway cup beside a café), takes them from the library when it has them, and draws the specific object itself when the library only has a generic one. The Poster's rules are unchanged.
+
+The additions in rules 11 and 12:
 
 - **Size first.** The artwork fills the drawing; objects that carry the answer are illustrations of at least 90 units on a 400-unit drawing, never icons.
 - **Layouts by the shape of the answer** (each matches a reference in `references/flat-isometric/`; see its README):

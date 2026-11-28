@@ -1936,9 +1936,9 @@ Object colours: give each object its natural colour from these muted hues: Coral
 - One colour, one meaning, across the whole infographic: the same object always has the same colour. Text stays Graphite except the key numbers, which take their subject's strong tone where it passes the contrast rules below (3:1 for large numbers).
 ${CONTRAST_RULES}`;
 const ISO_TYPOGRAPHY = `   Fonts: FLAT_ISOMETRIC_TYPE_V1, the owner's fixed choice for this style, which replaces TYPOGRAPHY_BY_SUBJECT_V1 here: always set data-font="Plus Jakarta Sans" and data-body="Plus Jakarta Sans". Set the headline in ExtraBold (800), large and tight; labels and key numbers bold (700 to 800) in Graphite; qualifiers and the source regular (400 to 500). Do not choose another family. Language exception: Plus Jakarta Sans has no Hebrew letters, so for Hebrew set both to "Rubik" and add data-dir="rtl".`;
-/* Flat Isometric has its own rules 7 to 10: the poster rules assume one hero on a bold colour field and say nothing
-   about isometric layouts, so a six-item timeline came out as tiny pens in a column with the labels stacked below. */
-const ISO_DRAWING_RULES = `7. Plan the composition before drawing. SIZE FIRST:
+/* Flat Isometric additions: the Poster's construction rules say nothing about isometric layouts, size floors or
+   chart units (a six-item timeline once came out as tiny pens in a column), so these extend them for this style. */
+const ISO_ADDITIONS = `11. Flat Isometric additions to rule 7 (the construction rules above apply first; these add what this style needs). SIZE FIRST:
    - FILL THE FORMAT'S SHAPE. The app crops the empty margins around your artwork and scales what is left to the space on the canvas, so the artwork's OWN proportions decide how much of the canvas it fills. A flat strip (a single row of small items, about 4:1 or flatter) stays a thin band and leaves the rest of the canvas empty. Make the artwork with its labels match the drawing area: Presentation 16:9 wide (data-layout="wide") about 2.5:1 (viewBox 800 × 320); Presentation beside an answer about 1.1:1 (400 × 360); Instagram 4:5 about 1.2:1 to 1:1 (400 × 320 to 420); Print A4 about 0.9:1 (400 × 440). Fill that viewBox edge to edge, with only a 12 to 20 unit margin.
    - ITEMS PER ROW. Give every item a cell that is about square or taller: 16:9 at most 3 or 4 items in a row (5 or 6 items go in two rows of 3); 4:5 and A4 at most 2 in a row (3 to 6 items in two columns). If one row is still flatter than the format, make each item taller (stand it up, add the person using it, raise it on a counter) rather than leaving space empty.
    - SIZE. The objects that carry the answer take at least half of the drawing area. Each one is at least a fifth of the viewBox width and a third of its height (its row's height when there are two rows). They are illustrations, never small icons. If the plan makes them smaller, change the layout, never shrink them.
@@ -1963,8 +1963,7 @@ const ISO_DRAWING_RULES = `7. Plan the composition before drawing. SIZE FIRST:
      - Every unit must be recognisable on its own at a glance: a book shows its cover colour, spine band and pale page edge, with small differences in width and colour between books. A striped block, a column with lines on it or an isometric box with stripes is NOT a stack of books: it reads as an abstract bar. If you cannot draw the stack so each item is obvious, use a row or grid of library assets (book, apple, cup, car, person) as the units instead.
    - VALUES ON CHARTS: put each value directly above its own bar or stack (or directly below its base), centred on it, on the plain field, with no leader. Never place a label on a bar or stack. A leader is at most about 60 units long and never crosses another label, number, bar or leader.
    - Labels sit on the plain page field, never on a shape. Keep each label close to its object (within about 40 units, or at the end of a short leader).
-${ISO_HOUSE_STYLE}
-9. Drawing recipe (SVG units, y grows downwards):
+12. Flat Isometric drawing recipe (SVG units, y grows downwards):
    - Isometric box: choose its front-bottom corner (X, Y) (the lowest point), width w along the right axis, depth d along the left axis, and height h.
      Right face: X,Y  X+0.866w,Y-0.5w  X+0.866w,Y-0.5w-h  X,Y-h.
      Left face: X,Y  X-0.866d,Y-0.5d  X-0.866d,Y-0.5d-h  X,Y-h.
@@ -1981,11 +1980,13 @@ ${ISO_HOUSE_STYLE}
    - Shadows: one flat Light gray ellipse or polygon under each object, all on the same side.
    - Craft: keep real proportions; resize only with the same factor on both axes. Put repeated marks in ONE path with many subpaths. A repeated object (an apple, a soil block) is drawn once and repeated with transform="translate(x y)" groups.
    - Text: names and values 20 to 28 units, bold Graphite; qualifiers 14 to 16 units, Dark gray; nothing under 13 units on a 400-unit-wide drawing.
-10. Before you write, check the drawing against these failure modes and fix any you find:
-   - a drawing that sits in a narrow column, a corner, a small cluster or a thin row, leaving more than a quarter of the canvas empty (compare the artwork's proportions with the format's in rule 7)
+`;
+/* Added to the end of rule 10's failure modes. */
+const ISO_CHECKS = `
+   - a drawing that sits in a narrow column, a corner, a small cluster or a thin row, leaving more than a quarter of the canvas empty (compare the artwork's proportions with the format's in rule 11)
    - plinths, pedestals, tiles, platforms or blocks under items that do not really stand on such a thing (the most common mistake: remove them); process steps without the person doing them
    - any part of a drawing outside the viewBox or cut off by its edge (check the topmost and outermost points: wings, masts, raised arms)
-   - any object that carries the answer drawn smaller than the size floor in rule 7, or drawn as an icon
+   - any object that carries the answer drawn smaller than the size floor in rule 11, or drawn as an icon
    - labels detached from their objects: a separate list or column of names and dates, or a label far from its thing
    - a label on top of a shape, or a background blob or panel behind a label
    - built objects at different isometric angles, organic subjects forced into stiff boxes, or light from different sides
@@ -2017,7 +2018,9 @@ const STYLES = {
     id: 'isometric', name: 'Flat Isometric', paletteName: 'FLAT_ISOMETRIC_PALETTE_V2',
     artDirection: '6. Art direction from the subject. Draw the main visual in the Flat Isometric house style (rule 8). First decide which object, part or process carries the answer: it alone gets the accent colour. Use FLAT_ISOMETRIC_TYPE_V1. If the user writes in Hebrew, write in Hebrew and use its Hebrew exception.',
     get palette(){ return ISO_PALETTE_RULES; },
-    get drawing(){ return ISO_DRAWING_RULES + (Object.keys(ISO_LIBRARY).length ? '\n' + ISO_LIBRARY_RULES() : ''); },
+    // Owner's decision 2026-11-28: the construction rules are the Poster's (rules 7, 9, 10); only how things are drawn
+    // and coloured changes (rule 8, the palette, the additions in rules 11-12 and the asset library).
+    get drawing(){ return drawingRules(ISO_HOUSE_STYLE, ISO_CHECKS) + '\n' + ISO_ADDITIONS + (Object.keys(ISO_LIBRARY).length ? '\n' + ISO_LIBRARY_RULES() : ''); },
     typography: ISO_TYPOGRAPHY,
     texture: 'Texture: set data-texture="none"; this style has no texture.',
     example: format => `Example in the Flat Isometric style, for the question "What is inside a mechanical pencil?" It is composed for Instagram 4:5; follow the format rules above for the chosen canvas. Use it for the style, structure and labelling only. Choose the subject, composition, accent and facts for the actual brief, and do not copy its picture.
@@ -2050,14 +2053,15 @@ function isoLibraryList(){
     return `   ${id} (${a.cat}): ${a.label}${who}; width/height ${ratio}${part}`;
   }).join('\n');
 }
-const ISO_LIBRARY_RULES = () => `ASSET LIBRARY. The owner has a library of finished Flat Isometric illustrations. ALWAYS use a library asset for anything it contains (people, hands, animals, plants and food, everyday objects, vehicles and aircraft, buildings, infrastructure and energy, science equipment, human organs, landscapes), instead of drawing your own version: the assets are drawn far better than hand-written paths. Place one with an empty group inside the drawing:
+const ISO_LIBRARY_RULES = () => `ASSET LIBRARY. The owner has a library of finished Flat Isometric illustrations. FIRST decide, as in rule 7, which objects tell the fact best and most specifically (a cup and saucer with latte art for specialty coffee, a takeaway cup beside a cafe for drinking out of home, an iced glass with a straw for cold coffee), and combine objects so that together they tell the story. THEN look for each one in this library: when the library has that object (or a close enough one), use the asset, because assets are drawn far better than hand-written paths; people, hands, animals and vehicles should nearly always come from the library. When the library only has a more generic or a different object (a plain mug where the fact needs a cup and saucer or a takeaway cup), draw the specific object yourself in the house style, large and simple, rather than settling for the generic asset. Place one with an empty group inside the drawing:
    <g data-asset="ID" data-box="x y width height" data-accent="#HEX or none" data-flip="x (optional, mirrors it)"></g>
    - The app draws the asset inside data-box, keeping its proportions: it is scaled to fit, centred horizontally and stands on the bottom edge of the box. Give the box the asset's width/height ratio listed below, so it fills the box exactly.
    - Colour: data-tint="#HEX" recolours the asset's whole grey drawing into tones of that hue: use each object's natural muted colour (people and hands stay grey whatever you set). data-accent="#HEX" colours the asset's accent part (named below) more strongly: give the subject's asset its strong tone there; set data-accent="none" when the part has no meaning. Without data-accent, a tinted asset's accent part takes its tint.
    - Held objects: on a person or hand whose accent part is a held object (holding: object, drinking: cup, carrying: box, pinch: object, holding-cup: cup, pouring: drink, cutting: fruit, reading: book), set data-hold="ID" to put any library object in that place instead (holding + data-hold="cup", carrying + data-hold="book", pinch + data-hold="apple"). The held object is coloured with data-accent or data-tint. Never leave a person holding the plain round placeholder of the holding pose: always set data-hold on it.
    - To point a leader at the accent part, start the leader at x + fx × width, y + fy × height of the box, where fx,fy are the listed fractions (with data-flip="x" use 1 − fx).
+   - Mix assets and your own drawings freely in one scene (a library cafe with your own takeaway cup beside it); give them the same viewpoint, scale logic, colours and shadows.
    - People assets already hold their action objects (the cutting pose has its board, knife and fruit; pouring has its jug and glass): do not draw those objects again.
-   - Size assets by rule 7: they are the main illustrations. Reuse one asset several times for a count or a sequence. Draw yourself only what the library lacks: floors, counters, ground lines, soil blocks, arrows, simple shapes, and subjects not listed (draw those large and simple, in a clean side or three-quarter view, following rule 9). Check the list before drawing anything yourself. When you must draw a person, hand or animal yourself, follow rule 8.
+   - Size assets by rule 7: they are the main illustrations. Reuse one asset several times for a count or a sequence. Draw yourself only what the library lacks: floors, counters, ground lines, soil blocks, arrows, simple shapes, and subjects not listed (draw those large and simple, in a clean side or three-quarter view, following rules 8 and 12). Check the list before drawing anything yourself. When you must draw a person, hand or animal yourself, follow rule 8.
    Library (id (category): description; width/height; accent part and its position as fractions of the box):
 ${isoLibraryList()}`;
 /* Replace each <g data-asset> in a sanitised drawing with the library drawing (trusted, built from the repo). */
@@ -2163,7 +2167,7 @@ async function isoReferenceImages(sample, brief){
 }
 function isoReferenceNote(keys){
   return `REFERENCE IMAGES. ${keys.length} pictures in the owner's Flat Isometric style are attached. ${keys.map((k, i) => `Image ${i + 1} shows ${ISO_REFERENCES[k]}.`).join(' ')}
-Match their look: soft simple silhouettes, the scale of the illustrations (they fill the picture), bold labels with bent leaders and small ringed dots. Their colour is older (grey with one accent): follow the colour rules above instead (natural muted colours, people grey, the subject strongest, key numbers coloured). Their people are drawn by an image generator: do not try to match them with stiff figures; follow rule 8 (hands at work, or a three-quarter figure with curved arms). Image 1 shows a layout for this kind of answer: use it if it fits the sources, otherwise choose the layout from rule 7. Draw your own subject from the sources. Do not copy the pictures' subjects, text, numbers or exact compositions. They are raster pictures for reference only; your answer is still HTML with SVG only.`;
+Match their look: soft simple silhouettes, the scale of the illustrations (they fill the picture), bold labels with bent leaders and small ringed dots. Their colour is older (grey with one accent): follow the colour rules above instead (natural muted colours, people grey, the subject strongest, key numbers coloured). Their people are drawn by an image generator: do not try to match them with stiff figures; follow rule 8 (hands at work, or a three-quarter figure with curved arms). Image 1 shows a layout for this kind of answer: use it if it fits the sources, otherwise choose the layout from rules 7 and 11. Draw your own subject from the sources. Do not copy the pictures' subjects, text, numbers or exact compositions. They are raster pictures for reference only; your answer is still HTML with SVG only.`;
 }
 function styleSwitchRules(style){
   return `This is a change of drawing style to ${style.name}. Keep: the question, every fact, value, unit and qualifier, and the subject. Redo: the palette, the fonts, the texture, the theme attributes in div.ig-symdefs and every drawn shape, following rule 8 and ${style.paletteName}. Place the labels again for the new drawing and apply rule 0 (nothing overlaps).`;

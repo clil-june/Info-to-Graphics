@@ -180,6 +180,15 @@ Last updated 2026-11-28 (Claude Code: SVG asset library v3, 131 assets; Artifact
     - the pets stub has no text overlaps and no guard revert;
     - no console errors from the app (two 404s came from a temporary copy served from `.claude/`).
   - **Unverified:** real generations on claude.ai. The guard's revert branch was not triggered by any test page.
+- **Owner's comparison after version 17 (coffee, 16:9):** Isometric now looked good, but Poster's composition was smarter: a takeaway cup beside the café, and a cup and saucer with latte art instead of a plain mug. The owner's conclusion: the construction rules should be the same, and only the pictures and the colouring change. Poster's rules stay unchanged for now; new SVGs are coming.
+  - **Cause:** Isometric had its own rules 7 to 10, which were thinner on storytelling. Its library rule also said "ALWAYS use a library asset", so a generic mug beat a more telling cup and saucer, and nothing was added beside the shop.
+- **Change, Artifact version 18 (`1795857925-a68e`):**
+  - **Shared construction:** Isometric's drawing rules are now `drawingRules(ISO_HOUSE_STYLE, ISO_CHECKS)` (the Poster's rules 7, 9 and 10 with the isometric rule 8 and isometric checks appended to rule 10), then `ISO_ADDITIONS` as rule 11 (fill the format, items per row, size floor, layouts, people and objects, one leading item, numbers as things, values, labels) and rule 12 (the drawing recipe), then the library rules.
+  - **Renames:** `ISO_DRAWING_RULES` was split into `ISO_ADDITIONS` and `ISO_CHECKS`. Rule references were updated (size floor and proportions → rule 11; drawing unlisted subjects → rules 8 and 12; layouts → rules 7 and 11).
+  - **Library rules:** first choose the most telling, specific objects and combine them (rule 7), then use a library asset when it has that object; draw the specific object when the library's is generic. Assets and hand-drawn objects may be mixed in one scene.
+  - **Verified with a stand-in `sample`:** the Isometric prompt has each of rules 7, 9 and 10 once, the isometric rule 8 and not the poster one, the isometric checks inside rule 10, rules 11 and 12, and the new library wording. The Poster prompt is unchanged (its rule 8, no isometric text).
+  - **Unverified:** real generations.
+- **Library wish list from this test:** a takeaway cup with lid, a cup and saucer, a wine glass.
 - **Library gaps to request from the owner's designer:** male and female variants of key poses (reading, holding, working, drinking); a book stack and a shelf. (Aircraft arrived in v3.)
 - **Next step:** in the Artifact, rerun the orange juice process, the pens timeline, one animal or plant comparison and one process, then one Poster ↔ Isometric switch.
 
