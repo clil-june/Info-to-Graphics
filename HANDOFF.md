@@ -127,6 +127,13 @@ Last updated 2026-11-28 (Claude Code: SVG asset library v3, 131 assets; Artifact
   - **Prompt size:** the Isometric prompt is now about 59,000 characters (~15k tokens) before sources, because the list has 131 lines.
   - **Verified** in the built-in Chromium pane on the local static server, with a stand-in `sample` using biplane, propeller-plane, airliner, running, heart and volcano: all six expanded, only the airliner took the accent, the prompt lists 131 assets, and there were no console errors.
   - **Unverified:** real generation with v3 on claude.ai.
+- **Owner's test, book-reading questions (16:9, two results):** both used plain bar charts. One used grey and red columns beside library people; the other used striped blocks, with labels scattered across the slide. Owner: plain bars, and stacks where it is unclear what is drawn, are not the wanted result.
+- **Fix, Artifact versions 13 (`1795853348-b673`) and 14, owner's rule NUMBERS AS THINGS, NEVER PLAIN BARS:**
+  - A number is shown by the subject itself: a stack of real things whose height is the value, a row or grid of identical units with a stated unit, or repeated library assets. The scale stays honest, from a common baseline.
+  - Every unit must be recognisable on its own. Striped blocks and lined columns count as abstract bars; when a clear stack is not possible, use library assets as the units.
+  - Layout e) now covers change over time. Rule 10 flags plain bars, columns, striped blocks and any unit a reader could not name.
+  - **Verified with a stand-in:** the prompt contains the new rule, the layout text and the check.
+- **Still open:** labels scattered across the slide in one result, most likely moved by the no-overlap guard (`clearArtwork`). This was not reproduced locally because the page HTML is unavailable.
 - **Library gaps to request from the owner's designer:** male and female variants of key poses (reading, holding, working, drinking); a book stack and a shelf. (Aircraft arrived in v3.)
 - **Next step:** in the Artifact, rerun the orange juice process, the pens timeline, one animal or plant comparison and one process, then one Poster ↔ Isometric switch.
 
