@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 230" role="img" aria-label="Orange slice"><title>Orange slice</title>
+<g id="accent-fruit" data-accent="fruit">
+<path d="M28 94 C28 61 74 33 130 33 C186 33 232 61 232 94 L232 125 C232 168 185 200 130 200 C75 200 28 168 28 125 Z" fill="#98603F" data-recolor-fill="true" data-tone="shade"/>
+<ellipse cx="130" cy="94" rx="102" ry="72" fill="#B9784D" data-recolor-fill="true" data-tone="base"/>
+</g>
+<ellipse cx="130" cy="94" rx="95" ry="65" fill="#F2F2F2"/>
+<g id="accent-segments" data-accent="fruit">
+<path d="M136.47 95.91 L215.97 95.57 A86 56 0 0 1 192.49 132.47 Z" fill="#B9784D" data-recolor-fill="true" data-tone="base"/>
+<path d="M132.68 98.62 L189.08 134.69 A86 56 0 0 1 132.41 149.98 Z" fill="#B9784D" data-recolor-fill="true" data-tone="base"/>
+<path d="M127.32 98.62 L127.59 149.98 A86 56 0 0 1 70.92 134.69 Z" fill="#B9784D" data-recolor-fill="true" data-tone="base"/>
+<path d="M123.53 95.91 L67.51 132.47 A86 56 0 0 1 44.03 95.57 Z" fill="#B9784D" data-recolor-fill="true" data-tone="base"/>
+<path d="M123.53 92.09 L44.03 92.43 A86 56 0 0 1 67.51 55.53 Z" fill="#B9784D" data-recolor-fill="true" data-tone="base"/>
+<path d="M127.32 89.38 L70.92 53.31 A86 56 0 0 1 127.59 38.02 Z" fill="#B9784D" data-recolor-fill="true" data-tone="base"/>
+<path d="M132.68 89.38 L132.41 38.02 A86 56 0 0 1 189.08 53.31 Z" fill="#B9784D" data-recolor-fill="true" data-tone="base"/>
+<path d="M136.47 92.09 L192.49 55.53 A86 56 0 0 1 215.97 92.43 Z" fill="#B9784D" data-recolor-fill="true" data-tone="base"/>
+</g>
+</svg>

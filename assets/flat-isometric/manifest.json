@@ -1,0 +1,955 @@
+{
+  "name": "Info-to-Graphics | Flat Isometric asset library",
+  "version": "2.0",
+  "palette": {
+    "white": "#FFFFFF",
+    "paper": "#F2F2F2",
+    "light": "#D9D9D9",
+    "mid": "#A6A6A6",
+    "dark": "#666666",
+    "graphite": "#252525",
+    "coral": "#CB665C",
+    "terracotta": "#B9784D",
+    "ochre": "#A98942",
+    "sage": "#608B69",
+    "muted-teal": "#438A90",
+    "muted-blue": "#6083BA",
+    "lavender": "#8677AC",
+    "dusty-rose": "#B0718A"
+  },
+  "assets": [
+    {
+      "id": "cutting",
+      "category": "people",
+      "label": "Cutting food",
+      "file": "people/cutting.svg",
+      "tags": [
+        "person",
+        "pose",
+        "cutting"
+      ],
+      "accent_layers": [
+        "fruit"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        396,
+        505
+      ]
+    },
+    {
+      "id": "pouring",
+      "category": "people",
+      "label": "Pouring a drink",
+      "file": "people/pouring.svg",
+      "tags": [
+        "person",
+        "pose",
+        "pouring"
+      ],
+      "accent_layers": [
+        "drink"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        425,
+        503
+      ]
+    },
+    {
+      "id": "reading",
+      "category": "people",
+      "label": "Reading a book",
+      "file": "people/reading.svg",
+      "tags": [
+        "person",
+        "pose",
+        "reading"
+      ],
+      "accent_layers": [
+        "book"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        376,
+        496
+      ]
+    },
+    {
+      "id": "holding",
+      "category": "people",
+      "label": "Holding an object",
+      "file": "people/holding.svg",
+      "tags": [
+        "person",
+        "pose",
+        "holding"
+      ],
+      "accent_layers": [
+        "object"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        251,
+        532
+      ]
+    },
+    {
+      "id": "pointing",
+      "category": "people",
+      "label": "Pointing at a detail",
+      "file": "people/pointing.svg",
+      "tags": [
+        "person",
+        "pose",
+        "pointing"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -17,
+        -17,
+        363,
+        532
+      ]
+    },
+    {
+      "id": "walking",
+      "category": "people",
+      "label": "Walking",
+      "file": "people/walking.svg",
+      "tags": [
+        "person",
+        "pose",
+        "walking"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -17,
+        -17,
+        356,
+        530
+      ]
+    },
+    {
+      "id": "carrying",
+      "category": "people",
+      "label": "Carrying a box",
+      "file": "people/carrying.svg",
+      "tags": [
+        "person",
+        "pose",
+        "carrying"
+      ],
+      "accent_layers": [
+        "box"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        340,
+        522
+      ]
+    },
+    {
+      "id": "reaching",
+      "category": "people",
+      "label": "Reaching upward",
+      "file": "people/reaching.svg",
+      "tags": [
+        "person",
+        "pose",
+        "reaching"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -17,
+        -17,
+        306,
+        531
+      ]
+    },
+    {
+      "id": "working",
+      "category": "people",
+      "label": "Working at a laptop",
+      "file": "people/working.svg",
+      "tags": [
+        "person",
+        "pose",
+        "working"
+      ],
+      "accent_layers": [
+        "laptop"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        427,
+        514
+      ]
+    },
+    {
+      "id": "writing",
+      "category": "people",
+      "label": "Writing a note",
+      "file": "people/writing.svg",
+      "tags": [
+        "person",
+        "pose",
+        "writing"
+      ],
+      "accent_layers": [
+        "notebook"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        381,
+        514
+      ]
+    },
+    {
+      "id": "drinking",
+      "category": "people",
+      "label": "Drinking from a cup",
+      "file": "people/drinking.svg",
+      "tags": [
+        "person",
+        "pose",
+        "drinking"
+      ],
+      "accent_layers": [
+        "cup"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        274,
+        539
+      ]
+    },
+    {
+      "id": "presenting",
+      "category": "people",
+      "label": "Presenting information",
+      "file": "people/presenting.svg",
+      "tags": [
+        "person",
+        "pose",
+        "presenting"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -17,
+        -17,
+        341,
+        521
+      ]
+    },
+    {
+      "id": "open-palm",
+      "category": "hands",
+      "label": "Open palm",
+      "file": "hands/open-palm.svg",
+      "tags": [
+        "hand",
+        "gesture"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -15,
+        -15,
+        481,
+        427
+      ]
+    },
+    {
+      "id": "pointing-finger",
+      "category": "hands",
+      "label": "Pointing finger",
+      "file": "hands/pointing-finger.svg",
+      "tags": [
+        "hand",
+        "gesture"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -17,
+        -17,
+        539,
+        330
+      ]
+    },
+    {
+      "id": "pinch",
+      "category": "hands",
+      "label": "Precision pinch",
+      "file": "hands/pinch.svg",
+      "tags": [
+        "hand",
+        "gesture"
+      ],
+      "accent_layers": [
+        "object"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        444,
+        441
+      ]
+    },
+    {
+      "id": "grip",
+      "category": "hands",
+      "label": "Closed grip",
+      "file": "hands/grip.svg",
+      "tags": [
+        "hand",
+        "gesture"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -15,
+        -15,
+        420,
+        472
+      ]
+    },
+    {
+      "id": "holding-cup",
+      "category": "hands",
+      "label": "Hand holding cup",
+      "file": "hands/holding-cup.svg",
+      "tags": [
+        "hand",
+        "gesture"
+      ],
+      "accent_layers": [
+        "cup"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        523,
+        397
+      ]
+    },
+    {
+      "id": "supporting-palm",
+      "category": "hands",
+      "label": "Supporting palm",
+      "file": "hands/supporting-palm.svg",
+      "tags": [
+        "hand",
+        "gesture"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -17,
+        -17,
+        535,
+        394
+      ]
+    },
+    {
+      "id": "knife",
+      "category": "objects",
+      "label": "Kitchen knife",
+      "file": "objects/knife.svg",
+      "tags": [
+        "knife",
+        "cut",
+        "kitchen"
+      ],
+      "accent_layers": [
+        "handle"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        474,
+        414
+      ]
+    },
+    {
+      "id": "cutting-board",
+      "category": "objects",
+      "label": "Cutting board",
+      "file": "objects/cutting-board.svg",
+      "tags": [
+        "board",
+        "cooking",
+        "kitchen"
+      ],
+      "accent_layers": [
+        "edge"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        513,
+        394
+      ]
+    },
+    {
+      "id": "cup",
+      "category": "objects",
+      "label": "Cup",
+      "file": "objects/cup.svg",
+      "tags": [
+        "cup",
+        "mug",
+        "drink"
+      ],
+      "accent_layers": [
+        "body"
+      ],
+      "viewBox": [
+        -12,
+        -12,
+        389,
+        392
+      ]
+    },
+    {
+      "id": "glass",
+      "category": "objects",
+      "label": "Glass of water",
+      "file": "objects/glass.svg",
+      "tags": [
+        "water",
+        "glass",
+        "drink"
+      ],
+      "accent_layers": [
+        "water"
+      ],
+      "viewBox": [
+        -13,
+        -13,
+        312,
+        425
+      ]
+    },
+    {
+      "id": "bottle",
+      "category": "objects",
+      "label": "Bottle",
+      "file": "objects/bottle.svg",
+      "tags": [
+        "bottle",
+        "water",
+        "household"
+      ],
+      "accent_layers": [
+        "label"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        245,
+        476
+      ]
+    },
+    {
+      "id": "pitcher",
+      "category": "objects",
+      "label": "Pitcher",
+      "file": "objects/pitcher.svg",
+      "tags": [
+        "jug",
+        "pitcher",
+        "pour",
+        "kitchen"
+      ],
+      "accent_layers": [
+        "liquid"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        438,
+        469
+      ]
+    },
+    {
+      "id": "plate",
+      "category": "objects",
+      "label": "Plate",
+      "file": "objects/plate.svg",
+      "tags": [
+        "plate",
+        "dish",
+        "food",
+        "kitchen"
+      ],
+      "accent_layers": [],
+      "viewBox": [
+        -19,
+        -19,
+        591,
+        413
+      ]
+    },
+    {
+      "id": "book",
+      "category": "objects",
+      "label": "Open book",
+      "file": "objects/book.svg",
+      "tags": [
+        "book",
+        "reading",
+        "education"
+      ],
+      "accent_layers": [
+        "cover"
+      ],
+      "viewBox": [
+        -23,
+        -23,
+        704,
+        458
+      ]
+    },
+    {
+      "id": "laptop",
+      "category": "objects",
+      "label": "Laptop",
+      "file": "objects/laptop.svg",
+      "tags": [
+        "laptop",
+        "computer",
+        "screen"
+      ],
+      "accent_layers": [
+        "screen"
+      ],
+      "viewBox": [
+        -18,
+        -18,
+        564,
+        531
+      ]
+    },
+    {
+      "id": "lamp",
+      "category": "objects",
+      "label": "Desk lamp",
+      "file": "objects/lamp.svg",
+      "tags": [
+        "lamp",
+        "household",
+        "light"
+      ],
+      "accent_layers": [
+        "shade"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        365,
+        508
+      ]
+    },
+    {
+      "id": "apple",
+      "category": "organic",
+      "label": "Apple",
+      "file": "organic/apple.svg",
+      "tags": [
+        "apple",
+        "fruit",
+        "food"
+      ],
+      "accent_layers": [
+        "fruit"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        398,
+        447
+      ]
+    },
+    {
+      "id": "orange",
+      "category": "organic",
+      "label": "Orange slice",
+      "file": "organic/orange.svg",
+      "tags": [
+        "orange",
+        "citrus",
+        "fruit",
+        "food"
+      ],
+      "accent_layers": [
+        "fruit"
+      ],
+      "viewBox": [
+        0,
+        0,
+        260,
+        230
+      ]
+    },
+    {
+      "id": "tree",
+      "category": "organic",
+      "label": "Deciduous tree",
+      "file": "organic/tree.svg",
+      "tags": [
+        "tree",
+        "foliage",
+        "plant",
+        "nature"
+      ],
+      "accent_layers": [
+        "foliage"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        493,
+        504
+      ]
+    },
+    {
+      "id": "potted-plant",
+      "category": "organic",
+      "label": "Potted broadleaf plant",
+      "file": "organic/potted-plant.svg",
+      "tags": [
+        "plant",
+        "leaves",
+        "potted",
+        "nature"
+      ],
+      "accent_layers": [
+        "foliage"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        447,
+        528
+      ]
+    },
+    {
+      "id": "root-cutaway",
+      "category": "organic",
+      "label": "Root system cutaway",
+      "file": "organic/root-cutaway.svg",
+      "tags": [
+        "plant",
+        "soil",
+        "roots",
+        "cutaway"
+      ],
+      "accent_layers": [
+        "roots"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        411,
+        505
+      ]
+    },
+    {
+      "id": "leaf",
+      "category": "organic",
+      "label": "Broad leaf",
+      "file": "organic/leaf.svg",
+      "tags": [
+        "leaf",
+        "foliage",
+        "plant",
+        "nature"
+      ],
+      "accent_layers": [
+        "leaf"
+      ],
+      "viewBox": [
+        -14,
+        -14,
+        412,
+        447
+      ]
+    },
+    {
+      "id": "cat",
+      "category": "animals",
+      "label": "Cat",
+      "file": "animals/cat.svg",
+      "tags": [
+        "cat",
+        "pet",
+        "animal",
+        "paws"
+      ],
+      "accent_layers": [
+        "paws"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        451,
+        501
+      ]
+    },
+    {
+      "id": "duck",
+      "category": "animals",
+      "label": "Duck",
+      "file": "animals/duck.svg",
+      "tags": [
+        "duck",
+        "bird",
+        "animal",
+        "feet"
+      ],
+      "accent_layers": [
+        "feet"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        412,
+        500
+      ]
+    },
+    {
+      "id": "fish",
+      "category": "animals",
+      "label": "Fish",
+      "file": "animals/fish.svg",
+      "tags": [
+        "fish",
+        "animal",
+        "fin",
+        "marine"
+      ],
+      "accent_layers": [
+        "tail"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        516,
+        353
+      ]
+    },
+    {
+      "id": "dog",
+      "category": "animals",
+      "label": "Dog",
+      "file": "animals/dog.svg",
+      "tags": [
+        "dog",
+        "pet",
+        "animal"
+      ],
+      "accent_layers": [
+        "collar"
+      ],
+      "viewBox": [
+        -15,
+        -15,
+        484,
+        481
+      ]
+    },
+    {
+      "id": "butterfly",
+      "category": "animals",
+      "label": "Butterfly",
+      "file": "animals/butterfly.svg",
+      "tags": [
+        "insect",
+        "butterfly",
+        "wings",
+        "wildlife"
+      ],
+      "accent_layers": [
+        "wings"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        494,
+        388
+      ]
+    },
+    {
+      "id": "car",
+      "category": "transport",
+      "label": "Passenger car",
+      "file": "transport/car.svg",
+      "tags": [
+        "car",
+        "vehicle",
+        "transport",
+        "passenger"
+      ],
+      "accent_layers": [
+        "doors"
+      ],
+      "viewBox": [
+        -23,
+        -23,
+        707,
+        507
+      ]
+    },
+    {
+      "id": "train",
+      "category": "transport",
+      "label": "Passenger train",
+      "file": "transport/train.svg",
+      "tags": [
+        "train",
+        "rail",
+        "vehicle",
+        "transit"
+      ],
+      "accent_layers": [
+        "doors"
+      ],
+      "viewBox": [
+        -24,
+        -24,
+        757,
+        539
+      ]
+    },
+    {
+      "id": "ferry",
+      "category": "transport",
+      "label": "Passenger ferry",
+      "file": "transport/ferry.svg",
+      "tags": [
+        "boat",
+        "ship",
+        "ferry",
+        "marine",
+        "transport"
+      ],
+      "accent_layers": [
+        "deck"
+      ],
+      "viewBox": [
+        -23,
+        -23,
+        710,
+        520
+      ]
+    },
+    {
+      "id": "bicycle",
+      "category": "transport",
+      "label": "Bicycle",
+      "file": "transport/bicycle.svg",
+      "tags": [
+        "bike",
+        "bicycle",
+        "transport"
+      ],
+      "accent_layers": [
+        "frame"
+      ],
+      "viewBox": [
+        -21,
+        -21,
+        655,
+        512
+      ]
+    },
+    {
+      "id": "house",
+      "category": "buildings",
+      "label": "House",
+      "file": "buildings/house.svg",
+      "tags": [
+        "house",
+        "residential",
+        "architecture"
+      ],
+      "accent_layers": [
+        "roof"
+      ],
+      "viewBox": [
+        -16,
+        -16,
+        505,
+        515
+      ]
+    },
+    {
+      "id": "office",
+      "category": "buildings",
+      "label": "Office block",
+      "file": "buildings/office.svg",
+      "tags": [
+        "building",
+        "office",
+        "architecture"
+      ],
+      "accent_layers": [
+        "entrance"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        469,
+        527
+      ]
+    },
+    {
+      "id": "shop",
+      "category": "buildings",
+      "label": "Shop",
+      "file": "buildings/shop.svg",
+      "tags": [
+        "shop",
+        "store",
+        "commercial",
+        "building"
+      ],
+      "accent_layers": [
+        "awning"
+      ],
+      "viewBox": [
+        -17,
+        -17,
+        533,
+        487
+      ]
+    },
+    {
+      "id": "station",
+      "category": "buildings",
+      "label": "Station",
+      "file": "buildings/station.svg",
+      "tags": [
+        "station",
+        "transit",
+        "building",
+        "architecture"
+      ],
+      "accent_layers": [
+        "sign-band"
+      ],
+      "viewBox": [
+        -25,
+        -25,
+        787,
+        504
+      ]
+    }
+  ]
+}

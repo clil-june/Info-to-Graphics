@@ -25,7 +25,7 @@ This repo is shared between Codex and Claude. Both follow the same workflow.
 
 ### Required anchor before the next generation: TYPOGRAPHY_BY_SUBJECT_V1
 
-Read [Typography by subject](docs/visual-communication-research.md#typography-by-subject). Choose from its 12 topic-aware pairs according to the story and tone, with script-capable alternatives when needed; do not impose one font pair or one grid on every infographic. Keep `TYPOGRAPHY_PAIRS` / `TYPOGRAPHY_RULES` in `index.html` synchronized with that section. The anchor overrides older font mood menus and example typography only.
+Read [Typography by subject](docs/visual-communication-research.md#typography-by-subject). Choose from its 12 topic-aware pairs according to the story and tone, with script-capable alternatives when needed; do not impose one font pair or one grid on every infographic. Exception (owner decision, 2026-11-26): the Flat Isometric drawing style uses one fixed family, Plus Jakarta Sans (`FLAT_ISOMETRIC_TYPE_V1`); see [Flat Isometric style](docs/visual-communication-research.md#flat-isometric-style). Keep `TYPOGRAPHY_PAIRS` / `TYPOGRAPHY_RULES` in `index.html` synchronized with that section. The anchor overrides older font mood menus and example typography only.
 
 Before generating in the live Claude Artifact, publish the updated branch's `index.html` to the existing Artifact with its capabilities preserved, then record the version in `HANDOFF.md`. Reading GitHub does not update the Artifact or its generation prompt. Preserve its current pair on ordinary revisions unless the user requests a typography change or changes the subject/tone.
 

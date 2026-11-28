@@ -1,6 +1,125 @@
 # Handoff
 
-Last updated 2026-11-24 (Codex: white welcome and inline project list; published by Claude Code as Artifact version 52).
+Last updated 2026-11-28 (Claude Code: Flat Isometric drawing style, SVG asset library; Artifact version 11 in the owner's current account).
+
+## Flat Isometric drawing style (Claude Code, 2026-11-26)
+
+- **Current task:** add a second drawing style that the user picks manually: **Flat Isometric** (owner's guide and references in `references/flat-isometric/`).
+- **Branch / PR:** `feature/four-elements`, [PR #2](https://github.com/clil-june/Info-to-Graphics/pull/2).
+- **What changed:**
+  - `index.html`:
+    - New `STYLES` registry (`poster`, `isometric`). Rule 6, the palette rules, house-style rule 8, extra failure checks, typography, texture and example now come from the chosen style.
+    - `CONTRAST_RULES` is split out of `READABILITY_AND_PALETTE_V3` so both styles share it. `POSTER_RULES` and `DRAWING_RULES` became `posterRules(style)` and `drawingRules(houseStyle, extraChecks)`.
+    - Poster output is unchanged.
+  - **Isometric style:**
+    - Greys with ONE accent from the owner's eight. A more saturated version of the same hue is allowed.
+    - One projection, cutaways, Corporate Memphis people.
+    - Fixed Plus Jakarta Sans (`FLAT_ISOMETRIC_TYPE_V1`, with Rubik for Hebrew) and no texture.
+    - One drawn 4:5 example (mechanical-pencil cutaway with a coral spring) is used for every format.
+  - **UI and versions:**
+    - Poster / Isometric switch above the format picker. The collapsed project list now shows five lines.
+    - Each version stores `style`; the draft keeps it too.
+    - Changing only the style redraws the current version (`refinePrompt` with `styleChanged`, complex tier, label "New style").
+    - Font links also request weight 800.
+  - **Docs:** README; guide section 10 "Flat Isometric style" plus the style exception in section 8; the same exception in `CLAUDE.md` and `AGENTS.md`.
+- **What was verified:** built-in Chromium pane, standalone `index.html` on a local static server, with a stand-in `window.claude` injected in the console (it echoes the prompt's example):
+  - **Page:** loads without console errors.
+  - **Style switch:** shows Poster/Isometric and saves the choice.
+  - **Isometric Generate:** sends one complex-tier prompt containing `FLAT_ISOMETRIC_PALETTE_V1`, `FLAT_ISOMETRIC_TYPE_V1`, the shared contrast rules and the pencil example, and no Material palette, topic-pair catalogue or poster house style. The example rendered with Plus Jakarta Sans, its labels and leaders.
+  - **Switching to Poster and Generate:** sends a complex-tier revision with the "change of drawing style" rules, the Material palette and the coffee example. Versions are stored with `style: "isometric"` then `"poster"`, labelled "First version" and "New style".
+- **Unverified:** real generation by Claude in either style inside the claude.ai Artifact; the 16:9 and A4 layouts in Isometric; Hebrew in Isometric; export of an Isometric poster.
+- **Still open:** the example pencil is fairly small in the card, with the spring as a small part of it. Consider a closer crop or a thicker pencil if real results come out too small.
+- **Published (Claude Code, 2026-11-26):** `index.html` from this change (before commit) went to a new Info to Graphics Artifact in the owner's current claude.ai account, https://claude.ai/artifact/Q7iCc5Rf2E7vbMiekyiPZp. That artifact's version 1 (`1795712158-82e1`) was `d83647a`; this change is **version 2, `1795719549-14a3`**. Capabilities: `sample` with images, `downloads`, `mcp` `host:claude_browser` (`preview_start`, `get_page_text`). The older Artifact (version 52) is in another account and was not updated.
+- **First real test (owner, version 2):** "From reed to ballpoint: 5,000 years of pens" came out tiny and odd. Six pens were drawn small in a narrow column on a pale blob, with the dates and names stacked as a list below the drawing and most of the card empty. The HTML was not available, so the cause is inferred:
+  - the poster-oriented rules 7, 9 and 10 gave no isometric layout and no size floor;
+  - the style allowed background blobs, and the app's no-overlap guard moves any label that sits on a blob, which explains the stacked list.
+- **Fix, Artifact version 3 (`1795720278-7fb4`):** Isometric now has its own rules 7 to 10 (`ISO_DRAWING_RULES`); `STYLES.*.drawing` replaces the shared `drawingRules`.
+  - **Rule 7, size first:** artwork spans at least 85% of the width and 75% of the height, and answer objects are at least 90 units long. Layouts per answer shape: anatomy, process, timeline/series, comparison, quantity, place.
+  - **Rule 8:** the house style, now without blobs; labels only on the plain field.
+  - **Rule 9:** an isometric recipe with exact polygon formulas for box faces, cylinders, lying objects, cutaways, people, shadows and text sizes.
+  - **Rule 10:** isometric failure modes such as a narrow column, icon-sized objects, labels as a detached list, or labels on shapes.
+  - **Example:** the blob was removed from the pencil example.
+  - **Verified with the stand-in:** the Isometric prompt has these rules once each and no poster rules 8 or 9. The Poster prompt is unchanged (its house style, Craft, Material palette and topic pairs are all present).
+- **Owner's second reference set (10 images), added to `references/flat-isometric/` with notes in its README:**
+  - layout references: seed to plant, orange to juice, two types of feet, 4 of 6 apples, park in the neighbourhood;
+  - object references: animal tails, passenger deck, root systems, reading glasses, passenger doors.
+  - The owner decided not to send reference images with the generation request for now.
+- **Rules revised from those references (`ISO_HOUSE_STYLE`, `ISO_DRAWING_RULES`, palette line):**
+  - **Viewpoint:** isometry only where it helps. Built objects share one isometric angle; animals, people, plants and fruit are drawn flat from the side.
+  - **People and animals:** simple faces (two dot eyes and a smile) are now allowed, as are thin Graphite line details. There are recipes for animals, plants (cloud canopy, monstera slits, roots, cut soil block or pot) and vehicles.
+  - **Details:** a magnified detail may sit in a pale circle beside its owner. Leaders have bends, ringed dots and an end tick; a quantity label points to its whole group.
+  - **Layouts a–f** now follow the references: the same person at stations on one counter; the same container repeated as a sequence; magnified circles for comparisons; a grid for shares; isometric blocks for places.
+  - **Accent:** muted by default; a more saturated version of the same hue only when the muted one would not stand out.
+- **Published as Artifact version 4 (`1795722370-54b1`).** Checked with the stand-in: the Isometric prompt contains the new viewpoint, faces, magnified-detail, quantity-group and muted-accent rules, and no longer contains "no facial features" or "ONE isometric projection for every object".
+- **Owner's test of version 4 (16:9):** "Fresh orange juice in four steps" and "The pen's evolution" were judged to look bad. Both drawings were a thin strip (about 5:1) across the top with the bottom ~45% of the slide empty. The steps were objects on small tiles with no people, the oranges were mustard (Ochre), and the pens were small.
+  - **Cause:** `fitPresentation()` crops the SVG viewBox to the artwork's bounding box and scales it to the hero width, so a flat strip stays flat. The "90 units on a 400-wide viewBox" floor also halves on Claude's 800-wide slide drawings.
+- **Fix, Artifact version 5 (`1795722862-c456`), rule 7:**
+  - FILL THE FORMAT'S SHAPE: target artwork proportions per format (16:9 wide about 2.5:1, 4:5 about 1.2:1 to 1:1, A4 about 0.9:1).
+  - ITEMS PER ROW: 16:9 at most 3–4, otherwise two rows; 4:5 and A4 at most 2.
+  - Relative size floor: each answer object at least a fifth of the width and a third of the height.
+  - Processes draw the same person at every station.
+  - Series use real containers or a shared shelf, never decorative tiles.
+- **Fix, palette:** the accent follows a subject's strong real colour (oranges → Terracotta, leaves → Sage, water → Muted blue).
+- **Fix, rule 10:** checks for thin rows and for tiles or steps without people.
+- **Reference images sent with Isometric generations (owner decision, 2026-11-26), Artifact version 6 (`1795723136-f285`):**
+  - **Files:** six 1000 × 563 WebP copies of the owner's references (anatomy, process, sequence, comparison, quantity, place; 19–30 KB each, about 750 input tokens each) are in `references/flat-isometric/prompt/`. They are published beside the page and fetched by relative URL, so the standalone page needs that folder too.
+  - **Selection:** `isoLayoutFor(brief)` picks the layout reference from English and Russian keywords, defaulting to anatomy. A second picture is added for drawing style: process, or anatomy when the layout is already process.
+  - **Prompt note:** `isoReferenceNote()` says what each picture shows and not to copy its subjects, text or numbers.
+  - **Sending:** `ask()` passes `images` only when `sample.limits()` reports image support. WebP is converted to PNG if the view does not accept WebP. Poster never sends images.
+  - **Verified** with a stand-in `sample`: two WebP blobs per Isometric call with the expected pairs (orange juice → process + anatomy; pens evolve → sequence + process; feet differ → comparison + process; the Russian "Сколько яблок…" → quantity + process; inside a pencil → anatomy + process), and none for Poster. The published artifact lists all six images. **Unverified:** real calls with images on claude.ai.
+- **Owner's test of version 6, "Fresh orange juice in four steps" (16:9):** better fill, people at every step, terracotta juice and attached labels, but still judged bad.
+  - **Problems:** stiff, front-facing, symmetric robot-like people with stick arms; hands drawn as white circles that read like leader dots; crude tools; a flat counter.
+  - **Root cause discussed with the owner:** Claude writes SVG coordinates blind, so it cannot match image-generator references for people and organic forms.
+  - **Options given:** (1) quick rule fixes, (2) hand-drawn SVG examples, (3) a library of pre-drawn SVG elements (people poses, hands, objects, plants, animals) that Claude places instead of drawing; option 3 is the only route to reference quality. The owner chose option 1 now.
+- **Option 1, Artifact version 7 (`1795724582-76b0`):**
+  - **People and hands:** people only when a person is part of the answer; otherwise hands at work (forearms from the edge acting on a large subject). Hands are one mitten path with a Graphite outline, never circles, dots or rings. When people are needed: three-quarter, asymmetric, leaning, curved tapered arms, no outlined heads.
+  - **Leader dots:** small ringed dots (radius 3–4.5 on 400 units, 6–8 on 800), one per label, with no look-alike white marks nearby.
+  - **Layouts and recipes:** process stations show the subject and tool large with hands doing the step. New recipes for forearms, hands and common kitchen tools.
+  - **Checks and image note:** new failure checks for circle hands, big dots and stiff figures. The reference-image note says the references' people come from an image generator and should not be imitated with stiff figures.
+- **SVG asset library (option 3), Artifact version 8 (`1795774155-f236`), 2026-11-27:**
+  - **Source:** the owner supplied `Info-to-Graphics_Flat-Isometric_SVG-Library_v1.zip` (manifest v2.0): 47 SVGs in 12 people poses, 6 hand gestures, 10 objects, 6 plants and fruit, 5 animals, 4 vehicles and 4 buildings. It was scanned before use: only `svg/g/path/ellipse/title` with fill, fill-rule and `data-*` attributes; no scripts, links or images. It is copied unchanged to `assets/flat-isometric/`, including `catalog.png` and `manifest.json`.
+  - **Build:** `tools/build_iso_library.py` (standard library only) compacts each SVG (1-decimal coordinates, no ids or titles), measures the centre of its accent part as fractions of the viewBox, and writes `const ISO_LIBRARY = {...}` between `/*ISO_LIBRARY:START*/` and `/*ISO_LIBRARY:END*/` in `index.html`. That adds about 728,000 characters, so `index.html` is now about 1.16 MB. Re-run the script after changing the library.
+  - **Markup and rendering:** Claude places an asset with `<g data-asset="ID" data-box="x y w h" data-accent="#HEX|none" data-flip="x">`. `SVG_ATTR` now allows `data-asset`, `data-accent` and `data-flip`. `expandAssets()` runs in `renderIG` after the maps:
+    - it fits the asset into the box keeping its proportions, centred and standing on the bottom edge;
+    - it recolours the `data-recolor-fill` paths (base = accent, shade = 22% darker, light = 35% lighter), and turns them grey when `data-accent` is none or missing;
+    - it adds role and aria-label.
+    - `fitLabels` never treats an asset as a movable label mark.
+  - **Prompt:** the Isometric drawing rules end with `ISO_LIBRARY_RULES()`:
+    - always use a library asset when one exists, and give the accent only to the subject asset;
+    - leader anchors come from the listed fractions;
+    - people poses already include their action objects;
+    - then the list of all 47 assets with their ratio and accent position.
+    - Process layout b) now prefers library poses and gestures.
+  - **Verified** in the built-in Chromium pane on the local static server, with a stand-in `sample` returning a 16:9 "cut, pour, drink" page built from `cutting`, `pouring` and `drinking` assets: the prompt contains the library rules and lists 47 assets; all three assets expanded (19 paths) with no empty placeholders; the accent parts became terracotta `#B9784D` (with a lighter tone); no console errors. The screenshot looked like the references.
+  - **Unverified:** real generation using assets on claude.ai; PNG/PDF export of a page with assets; `data-flip`; how well Claude uses the accent fractions for leaders.
+- **Owner's test of version 8 ("Americans read fewer books", 5 results):** the results with library people looked much better.
+  - **Problems in Isometric:** the female `reading` pose was used for "Men" and reused for every group; long leaders crossed labels and the values moved below the shelf; all stacks were in the accent.
+  - **Poster:** one dark result had its labels scattered. That is not addressed yet.
+- **Fix, Artifact version 9:**
+  - **Rule 7 additions:**
+    - PEOPLE IN DATA ABOUT PEOPLE: a library person beside each group, matching the group, a different person per group, and the group's object instead of a wrong person.
+    - ONE ACCENT GROUP.
+    - VALUES ON CHARTS: values directly above or below their own bar, no labels on bars, leaders of at most ~60 units that cross nothing.
+  - **Rule 10:** matching checks.
+  - **Library list:** `ISO_PERSON` says who each of the 12 people poses is (read from `catalog.png`), e.g. reading = a woman with long hair.
+  - **Verified with a stand-in:** the prompt contains the new rules and the annotated list; `data-accent="none"` turns the accent part grey (`#A6A6A6`).
+- **Owner's rule (2026-11-27), Artifact version 10:** when an infographic talks about people, people MUST be visible: a person or a body part (hands, feet, a head). Objects alone are not enough. The fallback order when no library person matches a group is:
+  1. the closest pose with a person who does match, with the group's object beside them;
+  2. library hands (neutral) doing the activity;
+  3. a person drawn by Claude following rule 8.
+
+  The earlier fallback "show the group's object instead" was removed. Checked with a stand-in that the prompt carries the new rule and no longer has the old fallback.
+- **Owner's test, "From biplane to jetliner in 46 years" (4:5 and 16:9):** every plane stood on a grey isometric plinth, all four planes were in the accent blue, the planes (not in the library) were drawn poorly, and in 4:5 the biplane was cut off at the top.
+  - **Cause of the plinths:** rule 7c told Claude to repeat "the same container (a cut soil block, a plinth, a step)", and `isoLayoutFor()` sent the seed-in-soil-blocks picture as image 1 for any evolution or history question.
+- **Fix, Artifact version 11:**
+  - **Rule 7c** split into c) growth of a living thing (real containers such as a soil block, pot or pond) and c2) timeline, evolution, history or series: the things side by side with NO plinths, pedestals, tiles or blocks; vehicles on one ground line; aircraft in the air; date and name directly above; only one item in the accent.
+  - **ONE ACCENT GROUP:** now covers series ("four planes are four groups").
+  - **Rule 10:** plinths under items that don't really stand on them are flagged as the most common mistake; new check for anything cut off at the viewBox edge.
+  - **Recipe and library rules:** plinths are no longer suggested as a stand. Unlisted subjects (aircraft, phones) must be drawn large and simple.
+  - **References:** `isoLayoutFor()` sends the seed picture only for plant or growth questions; evolution, history and timeline questions now get the comparison picture.
+  - **Verified with a stand-in:** "How did airliners evolve?" → image 1 COMPARISON with the c2 rule; "How does a seed grow…" → image 1 GROWTH.
+- **Library gaps to request from the owner's designer:** male and female variants of key poses (reading, holding, working, drinking); a book stack and a shelf; aircraft (biplane, propeller airliner, jet) and other common subjects that Claude draws badly.
+- **Next step:** in the Artifact, rerun the orange juice process, the pens timeline, one animal or plant comparison and one process, then one Poster ↔ Isometric switch.
 
 ## White welcome and inline project list (Codex, 2026-11-24)
 

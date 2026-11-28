@@ -245,6 +245,8 @@ This brief is a curated synthesis and product proposal. No application code or U
 
 **Owner decision · 19 November 2026 · Anchor: `TYPOGRAPHY_BY_SUBJECT_V1`.** This is the current typography policy for new infographic generations. It supersedes older unrestricted font menus, subject examples and example-poster fonts. It does not prescribe a shared grid, fixed type sizes, palette or illustration treatment.
 
+**Style exception (owner decision, 26 November 2026):** this catalogue applies to the **Poster** drawing style. The **Flat Isometric** style uses one fixed family instead, `FLAT_ISOMETRIC_TYPE_V1`: Plus Jakarta Sans for both headline (ExtraBold 800) and labels (700–800; qualifiers and source 400–500), or Rubik for Hebrew. See [Flat Isometric style](#flat-isometric-style).
+
 Choose ONE pair from the topic catalogue below for a new infographic. First identify the subject AND the story's tone (a car's history differs from its speed record); the topic groups are starting points, not rigid categories. For food or craft, start with the nature/everyday-life pairs; for business or general data, start with Archivo + Inter or Work Sans + JetBrains Mono. For any other subject, choose the closest tonal fit from these same 12 pairs. An explicit user font request takes precedence.
 
 Use the display family for the headline and large takeaway numbers; use the text family for captions, direct SVG labels, units, dates, legends and source notes. Maximum two families per infographic. Use two or three weight levels across the piece, choosing weights the families support. Keep numbers, units and qualifiers readable together; use tabular numerals for aligned numerical comparisons, never compress or distort letters to fit. Size SVG labels at their intended display width using [Text readability and contextual palettes](#text-readability-and-contextual-palettes).
@@ -341,4 +343,45 @@ Anchor a leader to the exact feature it describes, preferably on the edge neares
 
 ### Generator rule
 
-`READABILITY_AND_PALETTE_V3` and the drawing instructions in `index.html` supply the rules to Generate, Change it and Try a different picture. For a callout, the generated SVG provides a fixed evidence anchor and a separate label group. The renderer moves this group together and redraws the leader's label end. During revisions, apply the checks to affected elements and preserve unrelated design decisions. Verify colour, label size and connections in the composed result, including the HTML export.
+`READABILITY_AND_PALETTE_V3` (Poster style) or `FLAT_ISOMETRIC_PALETTE_V1` (Flat Isometric style), both sharing the contrast rules in `CONTRAST_RULES`, and the drawing instructions in `index.html` supply the rules to Generate, Change it and Try a different picture. For a callout, the generated SVG provides a fixed evidence anchor and a separate label group. The renderer moves this group together and redraws the leader's label end. During revisions, apply the checks to affected elements and preserve unrelated design decisions. Verify colour, label size and connections in the composed result, including the HTML export.
+
+<a id="flat-isometric-style"></a>
+## 10. Flat Isometric style
+
+**Owner decision, 26 November 2026.** The user picks the drawing style beside the canvas format: **Poster** (the original flat mid-century poster with one bold colour field, sections 8 and 9) or **Flat Isometric**. Each version stores its style, so revisions and format changes keep it; switching only the style redraws the same answer in the other style. References: `references/flat-isometric/` (the palette, 7 layout references and 5 object references, with the owner's notes in its README).
+
+Flat Isometric combines flat design (simple geometry, flat fills, hard-edged shadows), isometric illustration (one spatial projection, cutaways, exploded parts) and Corporate Memphis people (simplified anatomy, slightly exaggerated proportions, expressive silhouettes, minimal faces). Its character is professional, engineering-like, minimal and a little playful.
+
+### Colour carries the information
+
+- Neutral base for space, objects and volume: White `#FFFFFF`, Paper gray `#F2F2F2`, Light gray `#D9D9D9`, Mid gray `#A6A6A6`, Dark gray `#666666`, Graphite `#252525`. Volume comes from two or three greys per object, with the top face lightest.
+- ONE accent per infographic, chosen from the context: Coral `#CB665C`, Terracotta `#B9784D`, Ochre `#A98942`, Sage `#608B69`, Muted teal `#438A90`, Muted blue `#6083BA`, Lavender `#8677AC`, Dusty rose `#B0718A`. All eight are available for every new infographic. Use the muted value by default (one muted colour that carries meaning). Only where it would not stand out from the greys, the owner allows a more saturated version of the same hue (for example a vivid coral or a bright blue, as in the pencil references). Lighter and darker tones of the accent may show its volume.
+- The accent marks exactly the object, detail or process the infographic is about: a coral book on its way back to the shelf, blue water reaching the roots, a red spring inside the pencil, a green leaf in photosynthesis, a blue air flow. The same colour keeps the same meaning throughout. Surrounding objects, people and space stay monochrome.
+
+### Drawing, people, composition and labels
+
+- Isometry where it helps explain. Buildings, streets, rooms, vehicles, machines, soil blocks and plinths share one isometric angle. Animals, people, plants and fruit are drawn flat from the side, with soft rounded silhouettes, on the same ground.
+- Simplify objects to recognisable geometric and organic forms; combine straight lines with soft rounded shapes; keep natural proportions. Show the inside or a detail with a cutaway, a cut soil block or pot, an exploded view, or a magnified detail in a pale circle beside its owner.
+- People take part in the explanation: their action reads from the silhouette. Faces are simple, two dot eyes and a short smile. Thin Graphite lines mark fingers, whiskers and folds.
+- One coherent visual story with a clear hierarchy (main object, secondary elements, text), generous space between parts and a composition adapted to the format.
+- Large, expressive headlines; short labels beside their objects; thin, contrasting leader lines; arrows only for direction, movement or sequence.
+- Not allowed: gradients, photographic textures, random decoration, colour without meaning, text overlapping the illustration, extra text outside the main composition.
+
+### Typography and runtime
+
+`FLAT_ISOMETRIC_TYPE_V1` fixes Plus Jakarta Sans for this style (see the exception in section 8). In `index.html`, the `STYLES` registry holds each style's art direction, palette rules (`FLAT_ISOMETRIC_PALETTE_V1`), drawing rules, typography, texture and example. Flat Isometric has its own drawing rules 7 to 10 (`ISO_DRAWING_RULES`):
+
+- **Size first.** The artwork fills the drawing; objects that carry the answer are illustrations of at least 90 units on a 400-unit drawing, never icons.
+- **Layouts by the shape of the answer** (each matches a reference in `references/flat-isometric/`; see its README):
+  - anatomy: one large object across the drawing, cut away or exploded (pencil, passenger deck);
+  - process: the same person acting at stations along one counter, the subject in the accent at every step, step names with arrows below (orange to juice, library);
+  - sequence, growth or series: the same container repeated with the subject changing in it, each stage labelled (seed becomes a plant);
+  - comparison: subjects side by side at one scale, with magnified detail circles (two types of feet);
+  - quantity: a grid of identical objects with the share in the accent, one label per group (4 of 6 apples);
+  - place: isometric streets and buildings with the answering area in the accent (park in the neighbourhood).
+- **Recipe:** isometric box faces, cylinders, lying objects, people, shadows and text sizes.
+- **Failure checks:** a narrow column, icon-sized objects, labels as a detached list, or labels on shapes. Background blobs are not used, because a label must sit on the plain field.
+
+**Asset library.** The owner's Flat Isometric SVG library lives in `assets/flat-isometric/` (47 illustrations: people poses, hand gestures, everyday objects, plants and fruit, animals, vehicles and buildings, listed in `manifest.json` and shown in `catalog.png`). `tools/build_iso_library.py` inlines it into `index.html`. Claude must use a library asset whenever one fits. It places the asset with `<g data-asset="ID" data-box="x y w h" data-accent="#HEX|none">`, and the app draws it, keeps its proportions and recolours its accent part. Only the subject's asset carries the accent; the others turn grey. Claude draws only what the library lacks: floors, counters, soil blocks, arrows and unlisted subjects.
+
+**Reference images in the request.** Each Isometric generation attaches two of the owner's references from `references/flat-isometric/prompt/`: the layout matching the brief (anatomy, process, sequence, comparison, quantity or place, chosen by keywords) and a second one for drawing style. Together they add roughly 1,500 input tokens per call. The prompt says what each image shows and forbids copying its subjects, text or numbers. Publishing the Artifact must include those six files beside the page. The Flat Isometric prompt carries one drawn example (a mechanical-pencil cutaway composed for 4:5) for every format.
